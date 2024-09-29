@@ -1,0 +1,16 @@
+package com.talk_space.repository;
+
+import com.talk_space.model.domain.Hobby;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface HobbyRepository extends JpaRepository<Hobby, Long> {
+
+  Optional<Hobby> findHobbyByName(String hobbyName);
+
+
+  void deleteHobbyByName(String hobbyName);
+}
