@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .cors().disable()
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/com/talk_space/api/public/**").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
 //                        .requestMatchers("/api/private/**").hasAnyAuthority("ADMIN")
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
