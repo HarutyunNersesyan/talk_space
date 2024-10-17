@@ -2,9 +2,15 @@ package com.talk_space.model.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
+
 
 @Entity
-@Table(name = "user_likes")
+@Table(name = "user_likes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"liker_id", "liked_id"})
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,9 +20,20 @@ public class Like {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "liker_id", nullable = false)
+    private User liker;
 
-    @Column(name = "liked_user_id", nullable = false)
-    private Long likedUserId;
+    @ManyToOne
+    @JoinColumn(name = "liked_id", nullable = false)
+    private User liked;
+
+    @CreatedDate
+    @Column(name = "like_date")
+    private LocalDate likeDate;
+
+    public Like(User liker, User liked) {
+        this.liker = liker;
+        this.liked = liked;
+    }
 }
+

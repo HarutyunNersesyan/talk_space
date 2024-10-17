@@ -1,6 +1,7 @@
 package com.talk_space.model.domain;
 
 
+import com.talk_space.model.dto.SignUp;
 import com.talk_space.model.enums.Education;
 import com.talk_space.model.enums.Gender;
 import com.talk_space.model.enums.Role;
@@ -12,10 +13,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -67,7 +67,7 @@ public class User {
             regexp = "^\\+374\\d{8}$",
             message = "Invalid phone number. Must be a valid Armenian (+374XXXXXXXX) phone number."
     )
-    @Column(name = "phone_number", nullable = false, length = 12, unique = true)
+    @Column(name = "phone_number", length = 12, unique = true)
     private String phoneNumber;
 
     @CreatedDate
@@ -84,11 +84,12 @@ public class User {
     @Column(name = "location")
     private String location;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Like> likes;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<YourLike> yourLikes;
+    @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
+    private Set<Like> liker;
+
+    @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL)
+    private Set<Like> liked;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Chat> chats;
@@ -131,7 +132,6 @@ public class User {
             LocalDate endDate = (zodiac.ordinal() < Zodiac.values().length - 1)
                     ? LocalDate.of(year, Zodiac.values()[zodiac.ordinal() + 1].getMonth(), Zodiac.values()[zodiac.ordinal() + 1].getDay()).minusDays(1)
                     : LocalDate.of(year + 1, Zodiac.ARIES.getMonth(), Zodiac.ARIES.getDay()).minusDays(1);
-
             if (!startDate.isAfter(birthDate) && !endDate.isBefore(birthDate)) {
                 return zodiac;
             }
@@ -139,5 +139,11 @@ public class User {
         return null;
     }
 
-
+    public User(SignUp signUp) {
+        this.firstName = signUp.getFirstName();
+        this.lastName = signUp.getLastName();
+        this.birthDate = signUp.getBirthDate();
+        this.email = signUp.getEmail();
+        this.password = signUp.getPassword();
+    }
 }

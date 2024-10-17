@@ -1,19 +1,25 @@
 package com.talk_space.api.controller.publics;
 
+import com.talk_space.model.domain.Chat;
+import com.talk_space.model.domain.Image;
+import com.talk_space.model.domain.Like;
 import com.talk_space.model.domain.User;
-import com.talk_space.model.dto.ChangePassword;
-import com.talk_space.model.dto.ForgotPassword;
-import com.talk_space.model.dto.Verify;
+import com.talk_space.model.dto.*;
 import com.talk_space.model.enums.Role;
+import com.talk_space.service.ChatService;
+import com.talk_space.service.ImageService;
+import com.talk_space.service.LikeService;
 import com.talk_space.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -22,6 +28,12 @@ import java.util.List;
 public class PublicUserController {
 
     private final UserService userService;
+
+    private final LikeService likeService;
+
+    private final ChatService chatService;
+
+    private final ImageService imageService;
 
 
     @GetMapping("/{id}")
@@ -66,15 +78,44 @@ public class PublicUserController {
     }
 
 
-    @PostMapping("/save")
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        user.setCreatedDate(LocalDate.now());
-        user.setRole(Role.USER);
-        user.setPassword(userService.hashPassword(user.getPassword()));
-        user.setZodiacSign(user.getZodiacSign(user.getBirthDate()));
-        user.setIsActive(false);
-        User savedUser = userService.save(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    @PostMapping("/signUp")
+    public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
+        User createdUser = new User(signUp);
+        userService.save(createdUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
+
+    @DeleteMapping("/delete/account")
+    public ResponseEntity<String> delete(@RequestBody DeleteAccount deleteAccount) {
+        userService.delete(deleteAccount);
+        return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
+    }
+
+
+    @PostMapping("/like")
+    public ResponseEntity<Like> createLike(@RequestBody Like like) {
+        Like savedLike = likeService.saveLike(like);
+        return new ResponseEntity<>(savedLike, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/chats/{id}")
+    public List<Chat> getAllUserChats(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
+        return chatService.getAllUserChats(user.get());
+    }
+
+    @PostMapping("/add/image")
+    public ResponseEntity<Image> addImage(@RequestBody Image image) {
+        Image savedImage = imageService.addImage(image);
+        return new ResponseEntity<>(savedImage, HttpStatus.CREATED);
+    }
+
+
+    @DeleteMapping("/image/delete/{id}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
+        imageService.deleteImage(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 

@@ -55,7 +55,7 @@ public class PublicEmailSenderController {
                 u.setPin(null);
                 userService.save(u);
             }
-        }, 2, TimeUnit.MINUTES);
+        }, 30, TimeUnit.MINUTES);
 
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
@@ -84,7 +84,7 @@ public class PublicEmailSenderController {
                     u.setPin(null);
                     userService.save(u);
                 }
-            }, 2, TimeUnit.MINUTES);
+            }, 30, TimeUnit.MINUTES);
         }
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }

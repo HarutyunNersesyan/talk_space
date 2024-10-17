@@ -1,15 +1,16 @@
 package com.talk_space.service;
 
 
-import com.talk_space.model.domain.Hobby;
 import com.talk_space.model.domain.User;
+import com.talk_space.model.dto.DeleteAccount;
 import com.talk_space.model.dto.ForgotPassword;
+import com.talk_space.model.dto.SignUp;
+import com.talk_space.model.enums.Role;
 import com.talk_space.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +35,6 @@ public class UserService implements UserDetailsService {
 
 
     private final PasswordEncoder passwordEncoder;
-
-
 
 
     @Autowired
@@ -55,6 +56,11 @@ public class UserService implements UserDetailsService {
     }
 
     public User save(User user) {
+        user.setCreatedDate(LocalDate.now());
+        user.setRole(Role.USER);
+        user.setPassword(hashPassword(user.getPassword()));
+        user.setZodiacSign(user.getZodiacSign(user.getBirthDate()));
+        user.setIsActive(false);
         return userRepository.save(user);
     }
 
@@ -62,23 +68,29 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public ResponseEntity<String> delete(DeleteAccount deleteAccount) {
+        User user = userRepository.findById(deleteAccount.getUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getEmail(), deleteAccount.getPassword())
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password.");
+        }
+
+        userRepository.deleteById(deleteAccount.getUserId());
+
+        return ResponseEntity.ok("User account deleted successfully.");
     }
+
+
 
     public String hashPassword(String newPassword) {
         return passwordEncoder.encode(newPassword);
     }
 
-    public void forgotPassword(String email, String newPassword) {
-        Optional<User> user = userRepository.findUserByEmail(email);
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("No user found with this email address.");
-        }
-
-        user.get().setPassword(hashPassword(newPassword));
-        userRepository.save(user.get());
-    }
 
     public ResponseEntity<String> changePassword(String email, String oldPassword, String newPassword, String newPasswordRepeat) {
 
@@ -152,11 +164,4 @@ public class UserService implements UserDetailsService {
 
         return ResponseEntity.ok("Password updated successfully.");
     }
-
-    public void deleteAccount(String password){
-        userRepository.deleteUserByPassword(password);
-    }
-
-
-
 }

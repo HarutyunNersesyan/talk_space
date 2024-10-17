@@ -45,11 +45,11 @@ public class PrivateUserController {
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        userService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<Void> delete(@PathVariable Long id) {
+//        userService.(id);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 
 //    @PutMapping("/changePassword")
 //    public ResponseEntity<?> changePassword(@RequestBody ChangePassword changePassword) {
