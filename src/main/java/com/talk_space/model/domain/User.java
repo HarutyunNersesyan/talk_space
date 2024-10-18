@@ -42,6 +42,9 @@ public class User {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
+    @NotNull(message = "User name cannot be null")
+    @Column(name = "user_name", nullable = false, length = 20)
+    private String userName;
 
     @Column(name = "birth_date", nullable = false)
     @NotNull(message = "Birth date cannot be empty")
@@ -142,6 +145,7 @@ public class User {
     public User(SignUp signUp) {
         this.firstName = signUp.getFirstName();
         this.lastName = signUp.getLastName();
+        this.userName = signUp.getUserName();
         this.birthDate = signUp.getBirthDate();
         this.email = signUp.getEmail();
         this.password = signUp.getPassword();

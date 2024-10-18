@@ -1,15 +1,9 @@
 package com.talk_space.api.controller.privates;
 
-import com.talk_space.model.domain.Chat;
-import com.talk_space.model.domain.Image;
-import com.talk_space.model.domain.Like;
-import com.talk_space.model.domain.User;
+import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.*;
 import com.talk_space.model.enums.Role;
-import com.talk_space.service.ChatService;
-import com.talk_space.service.ImageService;
-import com.talk_space.service.LikeService;
-import com.talk_space.service.UserService;
+import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,11 +20,9 @@ public class PrivateUserController {
 
     private final UserService userService;
 
-    private final LikeService likeService;
+    private final HobbyService hobbyService;
 
-    private final ChatService chatService;
 
-    private final ImageService imageService;
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
@@ -44,75 +36,48 @@ public class PrivateUserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<User> update(@Valid @RequestBody User user) {
-        User updatedUser = userService.update(user);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-    }
 
-    @PutMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePassword changePassword) {
-        return userService.changePassword(changePassword.getEmail(), changePassword.getOldPassword(),
-                changePassword.getNewPassword(), changePassword.getNewPasswordRepeat());
-    }
 
-    @PutMapping("/forgotPassword")
-    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPassword forgotPassword) {
-        return userService.forgotPassword(forgotPassword);
-    }
 
-    @PutMapping("/verify")
-    public ResponseEntity<String> verify(@RequestBody Verify verify) {
-        return userService.findUserByEmail(verify.getEmail())
-                .filter(user -> user.getPin().equals(verify.getPin()))
-                .map(user -> {
-                    user.setIsActive(true);
-                    userService.save(user);
-                    return ResponseEntity.ok("Verifying");
-                })
-                .orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid pin"));
+    @PostMapping("/hobby/save")
+    public ResponseEntity<Hobby> saveHobby(@RequestBody Hobby hobby) {
+        Hobby savedHobby = hobbyService.save(hobby);
+        return new ResponseEntity<>(savedHobby, HttpStatus.CREATED);
     }
 
 
-    @PostMapping("/signUp")
-    public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
-        User createdUser = new User(signUp);
-        userService.save(createdUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    @GetMapping("/hobby/")
+    public List<Hobby> getAllHobbies() {
+        return hobbyService.getAll();
+    }
+
+    @GetMapping("/hobby/{id}")
+    public ResponseEntity<Hobby> getHobbyById(@PathVariable Long id) {
+        return ResponseEntity.ok(hobbyService.getHobbyById(id)
+                .orElseThrow(() -> new RuntimeException("Hobby not found with id: " + id)));
+    }
+
+    @GetMapping("/hobby/{hobbyName}")
+    public ResponseEntity<Hobby> getHobbyByName(@PathVariable String hobbyName) {
+        return ResponseEntity.ok(hobbyService.getHobbyByName(hobbyName)
+                .orElseThrow(() -> new RuntimeException("Hobby not found with id: " + hobbyName)));
+    }
+
+    @DeleteMapping("/remove/id")
+    private ResponseEntity<String> removeHobbyByName(@RequestParam String hobbyName) {
+        hobbyService.deleteHobbyByName(hobbyName);
+        return ResponseEntity.ok().body("Hobby by name " + hobbyName + " removed successfully");
+    }
+
+    @DeleteMapping("/remove/name")
+    private ResponseEntity<String> removeHobbyById(@RequestParam Long id) {
+        hobbyService.deleteHobbyById(id);
+        return ResponseEntity.ok().body("Hobby by id " + id + " removed successfully");
     }
 
 
-    @DeleteMapping("/delete/account")
-    public ResponseEntity<String> delete(@RequestBody DeleteAccount deleteAccount) {
-        userService.delete(deleteAccount);
-        return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
-    }
 
 
-    @PostMapping("/like")
-    public ResponseEntity<Like> createLike(@RequestBody Like like) {
-        Like savedLike = likeService.saveLike(like);
-        return new ResponseEntity<>(savedLike, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/chats/{id}")
-    public List<Chat> getAllUserChats(@PathVariable Long id) {
-        Optional<User> user = userService.getUserById(id);
-        return chatService.getAllUserChats(user.get());
-    }
-
-    @PostMapping("/add/image")
-    public ResponseEntity<Image> addImage(@RequestBody Image image) {
-        Image savedImage = imageService.addImage(image);
-        return new ResponseEntity<>(savedImage, HttpStatus.CREATED);
-    }
-
-
-    @DeleteMapping("/image/delete/{id}")
-    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
-        imageService.deleteImage(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }
 
 

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_likes", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"liker_id", "liked_id"})
+        @UniqueConstraint(columnNames = {"liker", "liked"})
 })
 @Data
 @NoArgsConstructor
@@ -20,11 +20,11 @@ public class Like {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "liker_id", nullable = false)
+    @JoinColumn(name = "liker", nullable = false)
     private User liker;
 
     @ManyToOne
-    @JoinColumn(name = "liked_id", nullable = false)
+    @JoinColumn(name = "liked", nullable = false)
     private User liked;
 
     @CreatedDate

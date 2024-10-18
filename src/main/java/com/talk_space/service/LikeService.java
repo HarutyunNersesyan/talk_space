@@ -31,9 +31,9 @@ public class LikeService {
 
     public Like saveLike(Like like) {
             like.setLikeDate(LocalDate.now());
-            if (likeRepository.findLikeByLikerAndLiked(like.getLiked(), like.getLiker()) != null){
-                chatRepository.save(new Chat(like.getLiker(), like.getLiked().getUserId()));
-                chatRepository.save(new Chat(like.getLiked(), like.getLiker().getUserId()));
+            if (likeRepository.findLikeByLikerAndLiked(like.getLiker(), like.getLiked()) != null){
+                chatRepository.save(new Chat(like.getLiker(), like.getLiked().getUserName()));
+                chatRepository.save(new Chat(like.getLiked(), like.getLiker().getUserName()));
             }
         return likeRepository.save(like);
     }

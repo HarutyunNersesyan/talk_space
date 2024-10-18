@@ -17,15 +17,15 @@ import lombok.*;
         private Long id;
 
         @ManyToOne
-        @JoinColumn(name = "user_id", nullable = false)
+        @JoinColumn(name = "user_name", nullable = false)
         private User user;
 
-        @Column(name = "user_with_chat_id", nullable = false)
-        private Long chatUserId;
+        @Column(name = "user_name_with_chat", nullable = false)
+        private String userName;
 
 
-    public Chat(User user, Long chatUserId) {
+    public Chat(User user, String userName) {
         this.user = user;
-        this.chatUserId = chatUserId;
+        this.userName = userName;
     }
 }

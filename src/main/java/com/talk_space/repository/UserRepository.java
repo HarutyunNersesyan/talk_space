@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
 
     void deleteUserByPassword(String password);
+
+    Optional<User> findUserByUserName(String userName);
 }
