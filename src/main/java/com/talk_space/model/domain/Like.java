@@ -15,16 +15,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Like {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "liker", nullable = false)
-    private User liker;
 
     @ManyToOne
-    @JoinColumn(name = "liked", nullable = false)
+    @JoinColumn(name = "liker", referencedColumnName = "user_name", nullable = false)
+    private User liker;
+
+
+    @ManyToOne
+    @JoinColumn(name = "liked", referencedColumnName = "user_name", nullable = false)
     private User liked;
 
     @CreatedDate
@@ -36,4 +39,5 @@ public class Like {
         this.liked = liked;
     }
 }
+
 

@@ -1,22 +1,18 @@
 package com.talk_space.api.controller.privates;
 
 import com.talk_space.model.domain.*;
-import com.talk_space.model.dto.*;
-import com.talk_space.model.enums.Role;
 import com.talk_space.service.*;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/private/user")
-public class PrivateUserController {
+@RequestMapping("/api/private/admin")
+public class PrivateAdminController {
 
     private final UserService userService;
 
@@ -45,6 +41,12 @@ public class PrivateUserController {
         return new ResponseEntity<>(savedHobby, HttpStatus.CREATED);
     }
 
+    @PostMapping("/hobby/saveAll")
+    public ResponseEntity<List<Hobby>> saveHobbies(@RequestBody List<Hobby> hobbies){
+       List<Hobby> hobbyList =   hobbyService.saveHobbies(hobbies);
+        return new ResponseEntity<>(hobbyList, HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/hobby/")
     public List<Hobby> getAllHobbies() {
@@ -60,16 +62,16 @@ public class PrivateUserController {
     @GetMapping("/hobby/{hobbyName}")
     public ResponseEntity<Hobby> getHobbyByName(@PathVariable String hobbyName) {
         return ResponseEntity.ok(hobbyService.getHobbyByName(hobbyName)
-                .orElseThrow(() -> new RuntimeException("Hobby not found with id: " + hobbyName)));
+                .orElseThrow(() -> new RuntimeException("Hobby not found with hobby name: " + hobbyName)));
     }
 
-    @DeleteMapping("/remove/id")
+    @DeleteMapping("/hobby/remove/hobbyName")
     private ResponseEntity<String> removeHobbyByName(@RequestParam String hobbyName) {
         hobbyService.deleteHobbyByName(hobbyName);
         return ResponseEntity.ok().body("Hobby by name " + hobbyName + " removed successfully");
     }
 
-    @DeleteMapping("/remove/name")
+    @DeleteMapping("/hobby/remove/id")
     private ResponseEntity<String> removeHobbyById(@RequestParam Long id) {
         hobbyService.deleteHobbyById(id);
         return ResponseEntity.ok().body("Hobby by id " + id + " removed successfully");

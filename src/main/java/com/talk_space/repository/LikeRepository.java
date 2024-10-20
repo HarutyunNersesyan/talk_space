@@ -13,6 +13,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     List<Like> findByLikeDateBefore(LocalDate cutoffDate);
 
-    Like findLikeByLikerAndLiked(User liked, User liker);
+    Like findLikeByLikerUserIdAndLikedUserId(Long likerId, Long likedId);
 
 }

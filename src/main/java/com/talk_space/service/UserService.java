@@ -1,11 +1,13 @@
 package com.talk_space.service;
 
 
+import com.talk_space.model.domain.Hobby;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.DeleteAccount;
+import com.talk_space.model.dto.ForHobby;
 import com.talk_space.model.dto.ForgotPassword;
-import com.talk_space.model.dto.SignUp;
 import com.talk_space.model.enums.Role;
+import com.talk_space.repository.HobbyRepository;
 import com.talk_space.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -22,9 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -36,14 +36,15 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final HobbyRepository hobbyRepository;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, HobbyRepository hobbyRepository) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
-
-
+        this.hobbyRepository = hobbyRepository;
     }
 
 
@@ -84,7 +85,6 @@ public class UserService implements UserDetailsService {
 
         return ResponseEntity.ok("User account deleted successfully.");
     }
-
 
 
     public String hashPassword(String newPassword) {
@@ -163,5 +163,32 @@ public class UserService implements UserDetailsService {
         save(existingUser);
 
         return ResponseEntity.ok("Password updated successfully.");
+    }
+
+    public ResponseEntity<String> addHobby(ForHobby forHobby) {
+        if (forHobby.getHobbiesNames().size() > 5) {
+            return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
+        }
+
+        Optional<User> optionalUser = userRepository.findById(forHobby.getUserId());
+        if (optionalUser.isEmpty()) {
+
+        }
+        User user = optionalUser.get();
+        List<Hobby> hobbies = new ArrayList<>();
+
+        if (optionalUser.get().getHobbies().size() + forHobby.getHobbiesNames().size() > 5){
+            return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
+        }
+
+        for (int i = 0; i < forHobby.getHobbiesNames().size(); i++) {
+            hobbies.add(hobbyRepository.findHobbyByName((forHobby.getHobbiesNames().get(i))).get());
+        }
+
+        user.getHobbies().addAll(hobbies);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Hobby added successfully.");
     }
 }

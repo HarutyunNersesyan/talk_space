@@ -43,7 +43,7 @@ public class User {
     private String lastName;
 
     @NotNull(message = "User name cannot be null")
-    @Column(name = "user_name", nullable = false, length = 20)
+    @Column(name = "user_name", nullable = false, unique = true, length = 20)
     private String userName;
 
     @Column(name = "birth_date", nullable = false)
@@ -98,7 +98,6 @@ public class User {
     private List<Chat> chats;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @Column(name = "images")
     private List<Image> images;
 
     @ManyToMany
@@ -111,7 +110,6 @@ public class User {
     private List<Hobby> hobbies;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-
     private List<Speciality> specialities;
 
     @Column(name = "education")
@@ -141,6 +139,7 @@ public class User {
         }
         return null;
     }
+
 
     public User(SignUp signUp) {
         this.firstName = signUp.getFirstName();

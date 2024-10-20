@@ -42,4 +42,11 @@ public class HobbyService {
     public void deleteHobbyByName(String hobbyName){
         hobbyRepository.deleteHobbyByName(hobbyName);
     }
+
+    public List<Hobby> saveHobbies(List<Hobby> hobbies){
+        for (int i = 0; i < hobbies.size() - 1; i++) {
+            hobbyRepository.save(hobbies.get(i));
+        }
+        return hobbies;
+    }
 }

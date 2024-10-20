@@ -5,27 +5,27 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-    @Table(name = "user_chats")
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class Chat {
+@Table(name = "user_chats")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Chat {
 
-        @Column(name = "chat_id")
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-
-        @ManyToOne
-        @JoinColumn(name = "user_name", nullable = false)
-        private User user;
-
-        @Column(name = "user_name_with_chat", nullable = false)
-        private String userName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chat_id")
+    private Long id;
 
 
-    public Chat(User user, String userName) {
+    @ManyToOne
+    @JoinColumn(name = "user_name", referencedColumnName = "user_name", nullable = false)
+    private User user;
+
+    @Column(name = "user_name_with_chat", nullable = false)
+    private String userNameWithChat;
+
+    public Chat(User user, String userNameWithChat) {
         this.user = user;
-        this.userName = userName;
+        this.userNameWithChat = userNameWithChat;
     }
 }

@@ -1,6 +1,7 @@
 package com.talk_space.model.domain;
 
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,8 @@ public class Hobby {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "parent_id")

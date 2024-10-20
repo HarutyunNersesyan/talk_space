@@ -15,7 +15,4 @@ public enum Education {
 
     TECHNICALSCHOOL,
 
-
-
-
 }

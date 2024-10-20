@@ -6,10 +6,7 @@ import com.talk_space.model.domain.Like;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.*;
 import com.talk_space.model.enums.Role;
-import com.talk_space.service.ChatService;
-import com.talk_space.service.ImageService;
-import com.talk_space.service.LikeService;
-import com.talk_space.service.UserService;
+import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -33,6 +30,8 @@ public class PublicUserController {
     private final ChatService chatService;
 
     private final ImageService imageService;
+
+    private final HobbyService hobbyService;
 
 
     @GetMapping("/{id}")
@@ -111,11 +110,19 @@ public class PublicUserController {
     }
 
 
+
     @DeleteMapping("/image/delete/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         imageService.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/add/hobby")
+    public ResponseEntity<String> addHobby(@RequestBody ForHobby forHobby){
+      return  userService.addHobby(forHobby);
+    }
+
+
 
 
 

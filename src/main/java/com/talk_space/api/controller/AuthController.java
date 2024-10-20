@@ -5,9 +5,14 @@ import com.talk_space.api.security.JwtTokenUtils;
 import com.talk_space.model.dto.TokenResponse;
 import com.talk_space.model.dto.UserDto;
 import com.talk_space.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +40,10 @@ public class AuthController {
     }
 
     @GetMapping("/profile/logout")
-    public String logout() {
-        return "redirect:/logout";
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        // Clear the token from client side (usually in frontend)
+        SecurityContextHolder.clearContext(); // Clear authentication from security context
+        return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
     }
+
 }
