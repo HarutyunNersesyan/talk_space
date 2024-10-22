@@ -2,9 +2,15 @@ package com.talk_space.service;
 
 
 import com.talk_space.model.domain.Hobby;
+import com.talk_space.model.domain.User;
+import com.talk_space.model.dto.ForHobby;
 import com.talk_space.repository.HobbyRepository;
+import com.talk_space.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +19,8 @@ import java.util.Optional;
 public class HobbyService {
 
     private final HobbyRepository hobbyRepository;
+
+    private final UserRepository userRepository;
 
     public Hobby save(Hobby hobby){
        return hobbyRepository.save(hobby);
@@ -48,5 +56,32 @@ public class HobbyService {
             hobbyRepository.save(hobbies.get(i));
         }
         return hobbies;
+    }
+
+    public ResponseEntity<String> addHobby(ForHobby forHobby) {
+        if (forHobby.getHobbiesNames().size() > 5) {
+            return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
+        }
+
+        Optional<User> optionalUser = userRepository.findById(forHobby.getUserId());
+        if (optionalUser.isEmpty()) {
+
+        }
+        User user = optionalUser.get();
+        List<Hobby> hobbies = new ArrayList<>();
+
+        if (optionalUser.get().getHobbies().size() + forHobby.getHobbiesNames().size() > 5) {
+            return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
+        }
+
+        for (int i = 0; i < forHobby.getHobbiesNames().size(); i++) {
+            hobbies.add(hobbyRepository.findHobbyByName((forHobby.getHobbiesNames().get(i))).get());
+        }
+
+        user.getHobbies().addAll(hobbies);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Hobby added successfully.");
     }
 }

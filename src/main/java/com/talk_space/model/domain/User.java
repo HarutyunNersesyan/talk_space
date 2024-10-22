@@ -116,6 +116,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Education education;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<SocialNetwork> socialNetwork;
+
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;

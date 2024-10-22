@@ -1,9 +1,6 @@
 package com.talk_space.api.controller.publics;
 
-import com.talk_space.model.domain.Chat;
-import com.talk_space.model.domain.Image;
-import com.talk_space.model.domain.Like;
-import com.talk_space.model.domain.User;
+import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.*;
 import com.talk_space.model.enums.Role;
 import com.talk_space.service.*;
@@ -32,6 +29,8 @@ public class PublicUserController {
     private final ImageService imageService;
 
     private final HobbyService hobbyService;
+
+    private final SocialNetworksService socialNetworksService;
 
 
     @GetMapping("/{id}")
@@ -110,7 +109,6 @@ public class PublicUserController {
     }
 
 
-
     @DeleteMapping("/image/delete/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         imageService.deleteImage(id);
@@ -118,14 +116,21 @@ public class PublicUserController {
     }
 
     @PostMapping("/add/hobby")
-    public ResponseEntity<String> addHobby(@RequestBody ForHobby forHobby){
-      return  userService.addHobby(forHobby);
+    public ResponseEntity<String> addHobby(@RequestBody ForHobby forHobby) {
+        return hobbyService.addHobby(forHobby);
     }
 
+    @PostMapping("/add/socialNetworks")
+    public ResponseEntity<String> addSocialNetworks(@RequestBody SocialNetworkDto sn){
+        return socialNetworksService.addSocialNetworks(sn);
 
+    }
 
-
-
+//    @GetMapping("socialNetworks/{userName}")
+//    public ResponseEntity<List<SocialNetwork>> getAllSocialNetworks(@PathVariable String userName){
+//        List<SocialNetwork> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
+//        return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
+//    }
 }
 
 
