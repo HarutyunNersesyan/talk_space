@@ -1,18 +1,15 @@
 package com.talk_space.service;
 
 
-import com.talk_space.model.domain.Hobby;
-import com.talk_space.model.domain.SocialNetwork;
+import ch.qos.logback.core.joran.conditional.IfAction;
 import com.talk_space.model.domain.User;
-import com.talk_space.model.dto.DeleteAccount;
-import com.talk_space.model.dto.ForHobby;
-import com.talk_space.model.dto.ForgotPassword;
-import com.talk_space.model.dto.SocialNetworkDto;
+import com.talk_space.model.dto.*;
 import com.talk_space.model.enums.Role;
+import com.talk_space.model.enums.Status;
 import com.talk_space.repository.HobbyRepository;
 import com.talk_space.repository.SocialNetworkRepository;
 import com.talk_space.repository.UserRepository;
-import com.talk_space.validation.SocialValidation;
+import com.talk_space.validation.PhoneNumberValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -25,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -36,7 +34,6 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     private final AuthenticationManager authenticationManager;
-
 
     private final PasswordEncoder passwordEncoder;
 
@@ -62,7 +59,8 @@ public class UserService implements UserDetailsService {
         user.setRole(Role.USER);
         user.setPassword(hashPassword(user.getPassword()));
         user.setZodiacSign(user.getZodiacSign(user.getBirthDate()));
-        user.setIsActive(false);
+        user.setVerifyGmail(false);
+        user.setStatus(Status.ACTIVE);
         return userRepository.save(user);
     }
 
@@ -87,6 +85,14 @@ public class UserService implements UserDetailsService {
         return ResponseEntity.ok("User account deleted successfully.");
     }
 
+    public ResponseEntity<String> verify(Verify verify) {
+        Optional<User> user = findUserByEmail(verify.getEmail());
+        if (user.get().getPin().equals(verify.getPin())) {
+            user.get().setVerifyGmail(true);
+            update(user.get());
+            return ResponseEntity.ok("Mail Verified successfully ");
+        } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid pin");
+    }
 
     public String hashPassword(String newPassword) {
         return passwordEncoder.encode(newPassword);
@@ -165,4 +171,33 @@ public class UserService implements UserDetailsService {
 
         return ResponseEntity.ok("Password updated successfully.");
     }
+
+    public ResponseEntity<String> updatePhoneNumber(PhoneNumberDto phoneNumberDto) {
+        Optional<User> user = userRepository.findUserByUserName(phoneNumberDto.getUserName());
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+        if (PhoneNumberValidation.isValidPhoneNumber(phoneNumberDto.getPhoneNumber())) {
+            user.get().setPhoneNumber(phoneNumberDto.getPhoneNumber());
+            userRepository.save(user.get());
+            return ResponseEntity.ok("Phone number updated successfully");
+        }
+        return ResponseEntity.badRequest().body("Invalid phone number. Must be a valid Armenian, USA or Russian phone number.");
+    }
+
+    public ResponseEntity<String> updateEducation(EducationDto educationDto) {
+        Optional<User> user = userRepository.findUserByUserName(educationDto.getUserName());
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+        user.get().setEducation(educationDto.getEducation());
+        userRepository.save(user.get());
+        return ResponseEntity.ok("Education updated successfully");
+    }
+
+//    public List<UserBasicInfo> getActiveUserBasicInfo() {
+//        return userRepository.getBasicInfo();
+//    }
+
+
 }

@@ -2,16 +2,15 @@ package com.talk_space.api.controller.publics;
 
 import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.*;
-import com.talk_space.model.enums.Role;
+import com.talk_space.model.enums.Education;
+import com.talk_space.model.enums.SocialNetworks;
 import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,10 +38,16 @@ public class PublicUserController {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id)));
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAll() {
-        List<User> users = userService.getAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+//    @GetMapping("/find")
+//    public List<UserBasicInfo> getActiveUserBasicInfo() {
+//        return userService.getActiveUserBasicInfo();
+//    }
+
+    @PostMapping("/signUp")
+    public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
+        User createdUser = new User(signUp);
+        userService.save(createdUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/update")
@@ -64,24 +69,8 @@ public class PublicUserController {
 
     @PutMapping("/verify")
     public ResponseEntity<String> verify(@RequestBody Verify verify) {
-        return userService.findUserByEmail(verify.getEmail())
-                .filter(user -> user.getPin().equals(verify.getPin()))
-                .map(user -> {
-                    user.setIsActive(true);
-                    userService.save(user);
-                    return ResponseEntity.ok("Verifying");
-                })
-                .orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid pin"));
+        return userService.verify(verify);
     }
-
-
-    @PostMapping("/signUp")
-    public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
-        User createdUser = new User(signUp);
-        userService.save(createdUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    }
-
 
     @DeleteMapping("/delete/account")
     public ResponseEntity<String> delete(@RequestBody DeleteAccount deleteAccount) {
@@ -102,10 +91,9 @@ public class PublicUserController {
         return chatService.getAllUserChats(user.get());
     }
 
-    @PostMapping("/add/image")
-    public ResponseEntity<Image> addImage(@RequestBody Image image) {
-        Image savedImage = imageService.addImage(image);
-        return new ResponseEntity<>(savedImage, HttpStatus.CREATED);
+    @PostMapping("/update/image")
+    public ResponseEntity<String> updateImage(@RequestBody ImageDto image) {
+        return imageService.addImage(image);
     }
 
 
@@ -115,22 +103,32 @@ public class PublicUserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/add/hobby")
-    public ResponseEntity<String> addHobby(@RequestBody ForHobby forHobby) {
-        return hobbyService.addHobby(forHobby);
+    @PostMapping("/update/hobby")
+    public ResponseEntity<String> updateHobby(@RequestBody HobbyDto hobbyDto) {
+        return hobbyService.addHobby(hobbyDto);
     }
 
-    @PostMapping("/add/socialNetworks")
-    public ResponseEntity<String> addSocialNetworks(@RequestBody SocialNetworkDto sn){
+    @PostMapping("/update/socialNetworks")
+    public ResponseEntity<String> updateSocialNetworks(@RequestBody SocialNetworkDto sn) {
         return socialNetworksService.addSocialNetworks(sn);
 
     }
 
-//    @GetMapping("socialNetworks/{userName}")
-//    public ResponseEntity<List<SocialNetwork>> getAllSocialNetworks(@PathVariable String userName){
-//        List<SocialNetwork> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
-//        return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
-//    }
+    @PutMapping("/update/phoneNumber")
+    public ResponseEntity<String> updatePhoneNumber(@RequestBody PhoneNumberDto phoneNumberDto) {
+        return userService.updatePhoneNumber(phoneNumberDto);
+    }
+
+    @PutMapping("/update/education")
+    public ResponseEntity<String> updateEducation(@RequestBody EducationDto education) {
+        return userService.updateEducation(education);
+    }
+
+    @GetMapping("socialNetworks/{userName}")
+    public ResponseEntity<List<SocialNetworks>> getAllSocialNetworks(@PathVariable String userName) {
+        List<SocialNetworks> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
+        return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
+    }
 }
 
 

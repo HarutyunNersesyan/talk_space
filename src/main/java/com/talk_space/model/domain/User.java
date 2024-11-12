@@ -2,10 +2,7 @@ package com.talk_space.model.domain;
 
 
 import com.talk_space.model.dto.SignUp;
-import com.talk_space.model.enums.Education;
-import com.talk_space.model.enums.Gender;
-import com.talk_space.model.enums.Role;
-import com.talk_space.model.enums.Zodiac;
+import com.talk_space.model.enums.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public class User {
 
     @Column(name = "birth_date", nullable = false)
     @NotNull(message = "Birth date cannot be empty")
-    @PastOrPresent(message = "Birth date must be a past or present date")
+    @PastOrPresent(message = "Birth date must be a past date")
     private LocalDate birthDate;
 
 
@@ -67,8 +66,8 @@ public class User {
     private String password;
 
     @Pattern(
-            regexp = "^\\+374\\d{8}$",
-            message = "Invalid phone number. Must be a valid Armenian (+374XXXXXXXX) phone number."
+            regexp = "^(\\+374[1-9]\\d{1,2}\\d{5}|\\+1\\d{10}|\\+7\\d{10})$",
+            message = "Invalid phone number. Must be a valid Armenian, USA or Russian phone number."
     )
     @Column(name = "phone_number", length = 12, unique = true)
     private String phoneNumber;
@@ -81,8 +80,8 @@ public class User {
     @Column(name = "zodiac")
     private Zodiac zodiacSign;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "verify_gmail")
+    private Boolean verifyGmail;
 
     @Column(name = "location")
     private String location;
@@ -128,6 +127,10 @@ public class User {
     @Column(name = "pin")
     private String pin;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
 
     public Zodiac getZodiacSign(LocalDate birthDate) {
         int year = birthDate.getYear();
@@ -145,11 +148,23 @@ public class User {
     }
 
 
+    public static  LocalDate validateBirthDate(LocalDate birthDate) {
+        LocalDate maxAllowedBirthDate = LocalDate.now().minusYears(16);
+        LocalDate minAllowedBirthDate = LocalDate.now().minusYears(100);
+        if (birthDate.isAfter(maxAllowedBirthDate) || birthDate.isBefore(minAllowedBirthDate)) {
+            throw new IllegalArgumentException("User`s birthday between " + minAllowedBirthDate  + " and " + maxAllowedBirthDate);
+        }
+        return birthDate;
+    }
+
+
+
+
     public User(SignUp signUp) {
         this.firstName = signUp.getFirstName();
         this.lastName = signUp.getLastName();
         this.userName = signUp.getUserName();
-        this.birthDate = signUp.getBirthDate();
+        this.birthDate = validateBirthDate(signUp.getBirthDate());
         this.email = signUp.getEmail();
         this.password = signUp.getPassword();
     }
