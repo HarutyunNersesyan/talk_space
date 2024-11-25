@@ -1,11 +1,8 @@
 package com.talk_space.repository;
 
-import com.talk_space.model.domain.SocialNetwork;
+
 import com.talk_space.model.domain.User;
-import com.talk_space.model.dto.UserBasicInfo;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

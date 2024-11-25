@@ -30,15 +30,13 @@ public class ImageService {
         }
 
         User user = userOptional.get();
-        List<Image> imageList = imageDto.getImageList();
+        List<Image> imageList = imageDto.getImages();
 
         if (user.getImages().size() + imageList.size() > 5) {
             return ResponseEntity.badRequest().body("The number of images cannot exceed 5");
         }
-
         imageList.forEach(image -> image.setUser(user));
         user.getImages().addAll(imageList);
-
         imageRepository.saveAll(imageList);
         userRepository.save(user);
 
@@ -46,7 +44,7 @@ public class ImageService {
     }
 
 
-    public void deleteImage(Long id){
+    public void deleteImage(Long id) {
         imageRepository.deleteById(id);
     }
 }

@@ -1,15 +1,12 @@
 package com.talk_space.service;
 
 
-import ch.qos.logback.core.joran.conditional.IfAction;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.*;
 import com.talk_space.model.enums.Role;
 import com.talk_space.model.enums.Status;
 import com.talk_space.repository.HobbyRepository;
-import com.talk_space.repository.SocialNetworkRepository;
 import com.talk_space.repository.UserRepository;
-import com.talk_space.validation.PhoneNumberValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -39,7 +36,7 @@ public class UserService implements UserDetailsService {
 
 
     @Autowired
-    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, HobbyRepository hobbyRepository, SocialNetworkRepository socialNetworkRepository) {
+    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
@@ -59,7 +56,7 @@ public class UserService implements UserDetailsService {
         user.setRole(Role.USER);
         user.setPassword(hashPassword(user.getPassword()));
         user.setZodiacSign(user.getZodiacSign(user.getBirthDate()));
-        user.setVerifyGmail(false);
+        user.setVerifyMail(false);
         user.setStatus(Status.ACTIVE);
         return userRepository.save(user);
     }
@@ -69,7 +66,7 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<String> delete(DeleteAccount deleteAccount) {
-        User user = userRepository.findById(deleteAccount.getUserId())
+        User user = userRepository.findUserByUserName(deleteAccount.getUserName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         try {
@@ -80,7 +77,8 @@ public class UserService implements UserDetailsService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password.");
         }
 
-        userRepository.deleteById(deleteAccount.getUserId());
+        user.setStatus(Status.DELETED);
+        userRepository.save(user);
 
         return ResponseEntity.ok("User account deleted successfully.");
     }
@@ -88,7 +86,7 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<String> verify(Verify verify) {
         Optional<User> user = findUserByEmail(verify.getEmail());
         if (user.get().getPin().equals(verify.getPin())) {
-            user.get().setVerifyGmail(true);
+            user.get().setVerifyMail(true);
             update(user.get());
             return ResponseEntity.ok("Mail Verified successfully ");
         } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid pin");
@@ -177,19 +175,14 @@ public class UserService implements UserDetailsService {
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
-        if (PhoneNumberValidation.isValidPhoneNumber(phoneNumberDto.getPhoneNumber())) {
-            user.get().setPhoneNumber(phoneNumberDto.getPhoneNumber());
-            userRepository.save(user.get());
-            return ResponseEntity.ok("Phone number updated successfully");
-        }
-        return ResponseEntity.badRequest().body("Invalid phone number. Must be a valid Armenian, USA or Russian phone number.");
+        user.get().setPhoneNumber(phoneNumberDto.getPhoneNumber());
+        userRepository.save(user.get());
+        return ResponseEntity.ok("Phone number updated successfully");
+//        return ResponseEntity.badRequest().body("Invalid phone number. Must be a valid Armenian, USA or Russian phone number.");
     }
 
     public ResponseEntity<String> updateEducation(EducationDto educationDto) {
         Optional<User> user = userRepository.findUserByUserName(educationDto.getUserName());
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
         user.get().setEducation(educationDto.getEducation());
         userRepository.save(user.get());
         return ResponseEntity.ok("Education updated successfully");

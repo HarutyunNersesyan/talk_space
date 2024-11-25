@@ -2,8 +2,6 @@ package com.talk_space.api.controller.publics;
 
 import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.*;
-import com.talk_space.model.enums.Education;
-import com.talk_space.model.enums.SocialNetworks;
 import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -109,7 +107,7 @@ public class PublicUserController {
     }
 
     @PostMapping("/update/socialNetworks")
-    public ResponseEntity<String> updateSocialNetworks(@RequestBody SocialNetworkDto sn) {
+    public ResponseEntity<String> updateSocialNetworks(@RequestBody SocialNetworksDto sn) {
         return socialNetworksService.addSocialNetworks(sn);
 
     }
@@ -124,11 +122,11 @@ public class PublicUserController {
         return userService.updateEducation(education);
     }
 
-    @GetMapping("socialNetworks/{userName}")
-    public ResponseEntity<List<SocialNetworks>> getAllSocialNetworks(@PathVariable String userName) {
-        List<SocialNetworks> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
-        return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
-    }
+//    @GetMapping("socialNetworks/{userName}")
+//    public ResponseEntity<List<SocialNetworks>> getAllSocialNetworks(@PathVariable String userName) {
+//        List<SocialNetworks> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
+//        return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
+//    }
 }
 
 

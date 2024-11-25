@@ -12,7 +12,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -70,6 +69,10 @@ public class User {
             message = "Invalid phone number. Must be a valid Armenian, USA or Russian phone number."
     )
     @Column(name = "phone_number", length = 12, unique = true)
+    @Pattern(
+            regexp = "^(\\+374\\d{8})$|^(\\+7\\d{10})$|^(\\+1\\d{10})$|^(\\+995\\d{9})$",
+            message = "Invalid phone number. Please use the correct format for Armenia (+374), Russia (+7), USA (+1), or Georgia (+995)."
+    )
     private String phoneNumber;
 
     @CreatedDate
@@ -80,8 +83,8 @@ public class User {
     @Column(name = "zodiac")
     private Zodiac zodiacSign;
 
-    @Column(name = "verify_gmail")
-    private Boolean verifyGmail;
+    @Column(name = "verify_mail")
+    private Boolean verifyMail;
 
     @Column(name = "location")
     private String location;
@@ -116,7 +119,7 @@ public class User {
     private Education education;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<SocialNetwork> socialNetwork;
+    private List<SocialNetworks> socialNetwork;
 
 
     @Column(name = "role")
@@ -148,16 +151,14 @@ public class User {
     }
 
 
-    public static  LocalDate validateBirthDate(LocalDate birthDate) {
+    public static LocalDate validateBirthDate(LocalDate birthDate) {
         LocalDate maxAllowedBirthDate = LocalDate.now().minusYears(16);
         LocalDate minAllowedBirthDate = LocalDate.now().minusYears(100);
         if (birthDate.isAfter(maxAllowedBirthDate) || birthDate.isBefore(minAllowedBirthDate)) {
-            throw new IllegalArgumentException("User`s birthday between " + minAllowedBirthDate  + " and " + maxAllowedBirthDate);
+            throw new IllegalArgumentException("User`s birthday between " + minAllowedBirthDate + " and " + maxAllowedBirthDate);
         }
         return birthDate;
     }
-
-
 
 
     public User(SignUp signUp) {

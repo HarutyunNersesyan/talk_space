@@ -53,34 +53,27 @@ public class HobbyService {
     }
 
     public List<Hobby> saveHobbies(List<Hobby> hobbies) {
-        for (int i = 0; i < hobbies.size() - 1; i++) {
-            hobbyRepository.save(hobbies.get(i));
-        }
+        hobbyRepository.saveAll(hobbies);
         return hobbies;
     }
 
     public ResponseEntity<String> addHobby(HobbyDto hobbyDto) {
-        if (hobbyDto.getHobbiesNames().size() > 5) {
+        if (hobbyDto.getHobbies().size() > 5) {
             return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
         }
 
-        Optional<User> optionalUser = userRepository.findById(hobbyDto.getUserId());
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+        Optional<User> optionalUser = userRepository.findUserByUserName(hobbyDto.getUserName());
         User user = optionalUser.get();
         List<Hobby> hobbies = new ArrayList<>();
 
-        if (optionalUser.get().getHobbies().size() + hobbyDto.getHobbiesNames().size() > 5) {
+        if (optionalUser.get().getHobbies().size() + hobbyDto.getHobbies().size() > 5) {
             return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
         }
 
-        for (int i = 0; i < hobbyDto.getHobbiesNames().size(); i++) {
-            hobbies.add(hobbyRepository.findHobbyByName((hobbyDto.getHobbiesNames().get(i))).get());
+        for (int i = 0; i < hobbyDto.getHobbies().size(); i++) {
+            hobbies.add(hobbyRepository.findHobbyByName((hobbyDto.getHobbies().get(i)).getName()).get());
         }
-
         user.getHobbies().addAll(hobbies);
-
         userRepository.save(user);
 
         return ResponseEntity.ok("Hobby added successfully.");
