@@ -1,6 +1,7 @@
 package com.talk_space.service;
 
 
+import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.SocialNetworks;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.SocialNetworksDto;
@@ -20,37 +21,40 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SocialNetworksService {
 
-    private final SocialNetworksRepository socialNetworksRepository;
-
     private final UserRepository userRepository;
 
-    private final SocialMediaValidator socialMediaValidator;
 
-
-    public ResponseEntity<String> addSocialNetworks(SocialNetworksDto sn) {
+    public String addSocialNetworks(SocialNetworksDto sn) throws CustomExceptions.InvalidSocialNetworkException {
+        // Find user by username
         Optional<User> userOptional = userRepository.findUserByUserName(sn.getUserName());
-
+        if (userOptional.isEmpty()) {
+            throw new CustomExceptions.UserNotFoundException("User not found with username: " + sn.getUserName());
+        }
 
         User user = userOptional.get();
         List<SocialNetworks> validSocialNetworks = new ArrayList<>();
 
+        // Validate and collect social networks
         for (SocialNetworks socialNetwork : sn.getSocialNetworks()) {
-            if (socialNetwork != null &&
-                    SocialMediaValidator.mediaValidation(socialNetwork.getPlatform(), socialNetwork.getUrl())) {
+            if (socialNetwork != null && SocialMediaValidator.mediaValidation(socialNetwork.getPlatform(), socialNetwork.getUrl())) {
                 socialNetwork.setUser(user);
                 validSocialNetworks.add(socialNetwork);
             }
         }
 
-
-        if (!validSocialNetworks.isEmpty()) {
-            user.setSocialNetwork(validSocialNetworks);
-            userRepository.save(user);
-            return ResponseEntity.ok("Social networks added successfully");
+        // Check if any valid social networks are present
+        if (validSocialNetworks.isEmpty()) {
+            throw new CustomExceptions.InvalidSocialNetworkException("No valid social networks to add.");
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No valid social networks to add");
+        // Update user's social networks and save
+        user.getSocialNetwork().clear(); // Clear existing social networks if needed
+        user.getSocialNetwork().addAll(validSocialNetworks);
+        userRepository.save(user);
+
+        return "Social networks added successfully.";
     }
+
 
 
 }

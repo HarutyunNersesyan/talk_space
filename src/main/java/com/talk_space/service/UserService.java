@@ -1,12 +1,13 @@
 package com.talk_space.service;
 
 
+import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.*;
 import com.talk_space.model.enums.Role;
 import com.talk_space.model.enums.Status;
-import com.talk_space.repository.HobbyRepository;
 import com.talk_space.repository.UserRepository;
+import com.talk_space.validation.PhoneNumberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -65,65 +65,74 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public ResponseEntity<String> delete(DeleteAccount deleteAccount) {
-        User user = userRepository.findUserByUserName(deleteAccount.getUserName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    /**
+     * @param deleteAccount
+     */
+    public void delete(DeleteAccount deleteAccount) {
+        Optional<User> userOptional = userRepository.findUserByUserName(deleteAccount.getUserName());
 
+        if (userOptional.isEmpty()) {
+            throw new CustomExceptions.UserNotFoundException("User not found.");
+        }
+
+        User user = userOptional.get();
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(), deleteAccount.getPassword())
             );
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password.");
+            throw new CustomExceptions.InvalidPassword("Invalid password");
         }
-
         user.setStatus(Status.DELETED);
         userRepository.save(user);
-
-        return ResponseEntity.ok("User account deleted successfully.");
     }
 
-    public ResponseEntity<String> verify(Verify verify) {
+    /**
+     * @param verify
+     * @return
+     */
+
+    public String verify(Verify verify) {
         Optional<User> user = findUserByEmail(verify.getEmail());
-        if (user.get().getPin().equals(verify.getPin())) {
-            user.get().setVerifyMail(true);
-            update(user.get());
-            return ResponseEntity.ok("Mail Verified successfully ");
-        } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid pin");
+        if (!user.get().getPin().equals(verify.getPin())) {
+            throw new CustomExceptions.InvalidPinExceptions("Invalid PIN.");
+        }
+        User existingUser = user.get();
+        existingUser.setVerifyMail(true);
+        update(existingUser);
+
+        return "Mail Verified successfully";
     }
+
 
     public String hashPassword(String newPassword) {
         return passwordEncoder.encode(newPassword);
     }
 
 
-    public ResponseEntity<String> changePassword(String email, String oldPassword, String newPassword, String newPasswordRepeat) {
+    public String changePassword(String email, String oldPassword, String newPassword, String newPasswordRepeat) {
 
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-
         User user = optionalUser.get();
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, oldPassword));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Old password is incorrect.");
+            throw new CustomExceptions.InvalidOldPasswordException("Old password is incorrect.");
         }
 
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password cannot be the same as the current password.");
+            throw new CustomExceptions.InvalidNewPasswordException("New password cannot be the same as the current password.");
         }
 
         if (!newPassword.equals(newPasswordRepeat)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New passwords do not match.");
+            throw new CustomExceptions.PasswordMismatchException("New passwords do not match.");
         }
 
         user.setPassword(hashPassword(newPassword));
         userRepository.save(user);
 
-        return ResponseEntity.ok("Password updated successfully.");
+        return "Password updated successfully.";
     }
 
 
@@ -146,51 +155,48 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-    public ResponseEntity<String> forgotPassword(ForgotPassword forgotPassword) {
+    public String forgotPassword(ForgotPassword forgotPassword) {
 
         Optional<User> optionalUser = findUserByEmail(forgotPassword.getEmail());
-
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-
         User existingUser = optionalUser.get();
 
         if (!existingUser.getPin().equals(forgotPassword.getPin())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid PIN.");
+            throw new CustomExceptions.InvalidPinExceptions("Invalid PIN.");
         }
 
         if (passwordEncoder.matches(forgotPassword.getNewPassword(), existingUser.getPassword())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password cannot be the same as the current password.");
+            throw new CustomExceptions.InvalidNewPasswordException("New password cannot be the same as the current password.");
         }
-
         existingUser.setPassword(hashPassword(forgotPassword.getNewPassword()));
         save(existingUser);
 
-        return ResponseEntity.ok("Password updated successfully.");
+        return "Password updated successfully.";
     }
 
-    public ResponseEntity<String> updatePhoneNumber(PhoneNumberDto phoneNumberDto) {
+    public String updatePhoneNumber(PhoneNumberDto phoneNumberDto) {
+
         Optional<User> user = userRepository.findUserByUserName(phoneNumberDto.getUserName());
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+
+        boolean isValid = PhoneNumberValidator.isValidPhoneNumber(phoneNumberDto.getPhoneNumber(), phoneNumberDto.getCountry());
+
+        if (!isValid) {
+            throw new CustomExceptions.InvalidPhoneNumberException("Invalid phone number. Must be a valid number for " + phoneNumberDto.getCountry() + ".");
         }
         user.get().setPhoneNumber(phoneNumberDto.getPhoneNumber());
         userRepository.save(user.get());
-        return ResponseEntity.ok("Phone number updated successfully");
-//        return ResponseEntity.badRequest().body("Invalid phone number. Must be a valid Armenian, USA or Russian phone number.");
+
+        return ("Phone number updated successfully");
     }
 
-    public ResponseEntity<String> updateEducation(EducationDto educationDto) {
+
+    public String updateEducation(EducationDto educationDto) {
         Optional<User> user = userRepository.findUserByUserName(educationDto.getUserName());
         user.get().setEducation(educationDto.getEducation());
         userRepository.save(user.get());
-        return ResponseEntity.ok("Education updated successfully");
+        return ("Education updated successfully");
     }
 
 //    public List<UserBasicInfo> getActiveUserBasicInfo() {
 //        return userRepository.getBasicInfo();
 //    }
-
-
 }

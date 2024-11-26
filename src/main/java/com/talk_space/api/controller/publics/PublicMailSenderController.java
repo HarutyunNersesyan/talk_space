@@ -2,7 +2,7 @@ package com.talk_space.api.controller.publics;
 
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.ForgotPassword;
-import com.talk_space.service.EmailSenderService;
+import com.talk_space.service.MailSenderService;
 import com.talk_space.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/public/email")
 @RequiredArgsConstructor
-public class PublicEmailSenderController {
+public class PublicMailSenderController {
     private final UserService userService;
-    private final EmailSenderService emailSenderService;
+    private final MailSenderService emailSenderService;
     private final ForgotPassword forgotPassword;
 
     @PutMapping("/pin")

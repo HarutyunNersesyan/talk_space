@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 
-@Component
 public class SocialMediaValidator {
 
     private static final String FACEBOOK_REGEX = "^(https?://)?(www\\.)?(facebook|fb)\\.com/([A-Za-z0-9\\.]+)(/)?(\\?.*)?$";

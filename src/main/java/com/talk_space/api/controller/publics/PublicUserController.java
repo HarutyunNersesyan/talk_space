@@ -1,5 +1,6 @@
 package com.talk_space.api.controller.publics;
 
+import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.*;
 import com.talk_space.service.*;
@@ -55,25 +56,63 @@ public class PublicUserController {
     }
 
     @PutMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePassword changePassword) {
-        return userService.changePassword(changePassword.getEmail(), changePassword.getOldPassword(),
-                changePassword.getNewPassword(), changePassword.getNewPasswordRepeat());
+    public ResponseEntity<String> changePassword(@RequestBody ChangePassword changePassword) {
+        try {
+            String responseMessage = userService.changePassword(
+                    changePassword.getEmail(),
+                    changePassword.getOldPassword(),
+                    changePassword.getNewPassword(),
+                    changePassword.getNewPasswordRepeat()
+            );
+            return ResponseEntity.ok(responseMessage);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (CustomExceptions.InvalidOldPasswordException | CustomExceptions.InvalidNewPasswordException |
+                 CustomExceptions.PasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @PutMapping("/forgotPassword")
-    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPassword forgotPassword) {
-        return userService.forgotPassword(forgotPassword);
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPassword forgotPassword) {
+        try {
+            String responseMessage = userService.forgotPassword(forgotPassword);
+            return ResponseEntity.ok(responseMessage);
+        } catch (CustomExceptions.InvalidPinExceptions | CustomExceptions.InvalidNewPasswordException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
+
 
     @PutMapping("/verify")
     public ResponseEntity<String> verify(@RequestBody Verify verify) {
-        return userService.verify(verify);
+        try {
+            String result = userService.verify(verify);
+            return ResponseEntity.ok(result);
+        } catch (CustomExceptions.InvalidPinExceptions e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
+
 
     @DeleteMapping("/delete/account")
     public ResponseEntity<String> delete(@RequestBody DeleteAccount deleteAccount) {
-        userService.delete(deleteAccount);
-        return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
+        try {
+            userService.delete(deleteAccount);
+            return ResponseEntity.ok("Account deleted successfully.");
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (CustomExceptions.InvalidPassword e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 
@@ -103,23 +142,48 @@ public class PublicUserController {
 
     @PostMapping("/update/hobby")
     public ResponseEntity<String> updateHobby(@RequestBody HobbyDto hobbyDto) {
-        return hobbyService.addHobby(hobbyDto);
+        try {
+            String result = hobbyService.addHobby(hobbyDto);
+            return ResponseEntity.ok(result);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @PostMapping("/update/socialNetworks")
     public ResponseEntity<String> updateSocialNetworks(@RequestBody SocialNetworksDto sn) {
-        return socialNetworksService.addSocialNetworks(sn);
-
+        try {
+            String result = socialNetworksService.addSocialNetworks(sn);
+            return ResponseEntity.ok(result);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (CustomExceptions.InvalidSocialNetworkException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
+
 
     @PutMapping("/update/phoneNumber")
     public ResponseEntity<String> updatePhoneNumber(@RequestBody PhoneNumberDto phoneNumberDto) {
-        return userService.updatePhoneNumber(phoneNumberDto);
+        try {
+            String responseMessage = userService.updatePhoneNumber(phoneNumberDto);
+            return ResponseEntity.ok(responseMessage);
+        } catch (CustomExceptions.InvalidPhoneNumberException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
 
     @PutMapping("/update/education")
     public ResponseEntity<String> updateEducation(@RequestBody EducationDto education) {
-        return userService.updateEducation(education);
+        return ResponseEntity.ok(userService.updateEducation(education));
     }
 
 //    @GetMapping("socialNetworks/{userName}")

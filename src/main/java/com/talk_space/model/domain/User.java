@@ -69,10 +69,6 @@ public class User {
             message = "Invalid phone number. Must be a valid Armenian, USA or Russian phone number."
     )
     @Column(name = "phone_number", length = 12, unique = true)
-    @Pattern(
-            regexp = "^(\\+374\\d{8})$|^(\\+7\\d{10})$|^(\\+1\\d{10})$|^(\\+995\\d{9})$",
-            message = "Invalid phone number. Please use the correct format for Armenia (+374), Russia (+7), USA (+1), or Georgia (+995)."
-    )
     private String phoneNumber;
 
     @CreatedDate

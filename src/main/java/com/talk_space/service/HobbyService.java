@@ -1,6 +1,7 @@
 package com.talk_space.service;
 
 
+import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.Hobby;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.HobbyDto;
@@ -57,9 +58,9 @@ public class HobbyService {
         return hobbies;
     }
 
-    public ResponseEntity<String> addHobby(HobbyDto hobbyDto) {
+    public String addHobby(HobbyDto hobbyDto) {
         if (hobbyDto.getHobbies().size() > 5) {
-            return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
+            throw new IllegalArgumentException("The number of hobbies cannot exceed 5");
         }
 
         Optional<User> optionalUser = userRepository.findUserByUserName(hobbyDto.getUserName());
@@ -67,7 +68,7 @@ public class HobbyService {
         List<Hobby> hobbies = new ArrayList<>();
 
         if (optionalUser.get().getHobbies().size() + hobbyDto.getHobbies().size() > 5) {
-            return ResponseEntity.badRequest().body("The number of hobbies cannot exceed 5");
+            throw new IllegalArgumentException("The number of hobbies cannot exceed 5");
         }
 
         for (int i = 0; i < hobbyDto.getHobbies().size(); i++) {
@@ -76,6 +77,8 @@ public class HobbyService {
         user.getHobbies().addAll(hobbies);
         userRepository.save(user);
 
-        return ResponseEntity.ok("Hobby added successfully.");
+        return ("Hobby added successfully.");
     }
+
+
 }
