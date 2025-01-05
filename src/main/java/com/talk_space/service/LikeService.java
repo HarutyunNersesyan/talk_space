@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,14 +36,28 @@ public class LikeService {
 
     public Like saveLike(Like like) {
         like.setLikeDate(LocalDate.now());
-        Optional<User> liker = userRepository.findUserByUserName(like.getLiker().getUserName());
-        Optional<User> liked = userRepository.findUserByUserName(like.getLiked().getUserName());
-        like.setLiker(liker.get());
-        like.setLiked(liked.get());
-            if (likeRepository.findLikeByLikerUserIdAndLikedUserId(like.getLiked().getUserId(), like.getLiker().getUserId()) != null){
-                chatRepository.save(new Chat(like.getLiker(), liked.get().getUserName()));
-                chatRepository.save(new Chat(like.getLiked(), liker.get().getUserName()));
-            }
+
+        User liker = userRepository.findUserByUserName(like.getLiker().getUserName())
+                .orElse(null);
+        User liked = userRepository.findUserByUserName(like.getLiked().getUserName())
+                .orElse(null);
+
+        if (liker == null || liked == null) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        like.setLiker(liker);
+        like.setLiked(liked);
+
+        if (likeRepository.existsByLikerUserIdAndLikedUserId(liked.getUserId(), liker.getUserId())) {
+            chatRepository.saveAll(List.of(
+                    new Chat(liker, liked.getUserName()),
+                    new Chat(liked, liker.getUserName())
+            ));
+        }
+
         return likeRepository.save(like);
     }
+
+
 }

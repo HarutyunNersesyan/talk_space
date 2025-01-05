@@ -101,9 +101,9 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "user_hobbies",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "hobby_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "hobby_id"})
+            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
+            inverseJoinColumns = @JoinColumn(name = "hobby_name", referencedColumnName = "name"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_name", "hobby_name"})
     )
     private List<Hobby> hobbies;
 
@@ -129,6 +129,9 @@ public class User {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Column(name = "is_blocked")
+    private Boolean isBlocked;
 
 
     public Zodiac getZodiacSign(LocalDate birthDate) {
@@ -164,5 +167,6 @@ public class User {
         this.birthDate = validateBirthDate(signUp.getBirthDate());
         this.email = signUp.getEmail();
         this.password = signUp.getPassword();
+        this.gender = signUp.getGender();
     }
 }

@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
+
+
 //    @Transactional
 //    @Query("SELECT new com.talk_space.model.dto.UserBasicInfo(u.userName, u.birthDate, u.location, u.images, u.hobbies) " +
 //            "FROM User u WHERE u.status = 'ACTIVE'")

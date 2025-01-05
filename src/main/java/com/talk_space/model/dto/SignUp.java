@@ -1,7 +1,10 @@
 package com.talk_space.model.dto;
 
 
+import com.talk_space.model.enums.Gender;
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -42,6 +45,10 @@ public class SignUp {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+])[a-zA-Z0-9!@#$%^&*()_+]{8,20}$"
             , message = "The password must contain uppercase and lowercase letters, mathematical symbols and numbers.")
     private String password;
+
+    @NotNull(message = "Gender cannot be empty")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
 
 }

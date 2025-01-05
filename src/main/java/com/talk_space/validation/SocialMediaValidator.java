@@ -19,7 +19,6 @@ public class SocialMediaValidator {
     private static final String YOUTUBE_REGEX = "^(https?://)?(www\\.)?(youtube\\.com/(channel|c|user)/([A-Za-z0-9_-]+)|youtu\\.be/([A-Za-z0-9_-]+))(/)?$";
 
 
-    // Pattern Map for Validation
     private static final Map<String, Pattern> PATTERN_MAP = Map.of(
             "FACEBOOK", Pattern.compile(FACEBOOK_REGEX),
             "INSTAGRAM", Pattern.compile(INSTAGRAM_REGEX),

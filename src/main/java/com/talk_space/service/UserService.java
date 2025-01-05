@@ -10,8 +10,6 @@ import com.talk_space.repository.UserRepository;
 import com.talk_space.validation.PhoneNumberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -51,13 +49,14 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public User save(User user) {
+    public User signUp(User user) {
         user.setCreatedDate(LocalDate.now());
         user.setRole(Role.USER);
         user.setPassword(hashPassword(user.getPassword()));
         user.setZodiacSign(user.getZodiacSign(user.getBirthDate()));
         user.setVerifyMail(false);
         user.setStatus(Status.ACTIVE);
+        user.setIsBlocked(false);
         return userRepository.save(user);
     }
 
@@ -83,9 +82,11 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             throw new CustomExceptions.InvalidPassword("Invalid password");
         }
+
         user.setStatus(Status.DELETED);
         userRepository.save(user);
     }
+
 
     /**
      * @param verify
@@ -168,7 +169,7 @@ public class UserService implements UserDetailsService {
             throw new CustomExceptions.InvalidNewPasswordException("New password cannot be the same as the current password.");
         }
         existingUser.setPassword(hashPassword(forgotPassword.getNewPassword()));
-        save(existingUser);
+        update(existingUser);
 
         return "Password updated successfully.";
     }

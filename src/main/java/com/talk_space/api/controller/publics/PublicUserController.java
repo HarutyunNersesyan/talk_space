@@ -45,7 +45,7 @@ public class PublicUserController {
     @PostMapping("/signUp")
     public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
         User createdUser = new User(signUp);
-        userService.save(createdUser);
+        userService.signUp(createdUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -111,9 +111,10 @@ public class PublicUserController {
         } catch (CustomExceptions.InvalidPassword e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
+
 
 
     @PostMapping("/like")
@@ -128,10 +129,20 @@ public class PublicUserController {
         return chatService.getAllUserChats(user.get());
     }
 
-    @PostMapping("/update/image")
-    public ResponseEntity<String> updateImage(@RequestBody ImageDto image) {
-        return imageService.addImage(image);
+    @PutMapping("/update/image")
+    public ResponseEntity<String> updateImage(@RequestBody ImageDto imageDto) {
+        try {
+            imageService.addImage(imageDto);
+            return ResponseEntity.ok("Images updated successfully");
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (CustomExceptions.ImageLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
     }
+
 
 
     @DeleteMapping("/image/delete/{id}")
@@ -140,7 +151,7 @@ public class PublicUserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/update/hobby")
+    @PutMapping ("/update/hobby")
     public ResponseEntity<String> updateHobby(@RequestBody HobbyDto hobbyDto) {
         try {
             String result = hobbyService.addHobby(hobbyDto);
@@ -154,7 +165,7 @@ public class PublicUserController {
         }
     }
 
-    @PostMapping("/update/socialNetworks")
+    @PutMapping("/update/socialNetworks")
     public ResponseEntity<String> updateSocialNetworks(@RequestBody SocialNetworksDto sn) {
         try {
             String result = socialNetworksService.addSocialNetworks(sn);
@@ -185,6 +196,9 @@ public class PublicUserController {
     public ResponseEntity<String> updateEducation(@RequestBody EducationDto education) {
         return ResponseEntity.ok(userService.updateEducation(education));
     }
+
+
+
 
 //    @GetMapping("socialNetworks/{userName}")
 //    public ResponseEntity<List<SocialNetworks>> getAllSocialNetworks(@PathVariable String userName) {

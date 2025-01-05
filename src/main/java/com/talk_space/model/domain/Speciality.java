@@ -16,6 +16,6 @@ public class Speciality {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_name", referencedColumnName = "user_name",nullable = false)
     private User user;
 }

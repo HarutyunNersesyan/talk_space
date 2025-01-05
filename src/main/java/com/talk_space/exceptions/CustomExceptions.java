@@ -26,29 +26,39 @@ public class CustomExceptions extends RuntimeException {
         }
     }
 
-    public static class InvalidPhoneNumberException extends RuntimeException{
-        public InvalidPhoneNumberException(String message){
+    public static class InvalidPhoneNumberException extends RuntimeException {
+        public InvalidPhoneNumberException(String message) {
             super(message);
         }
 
     }
 
-        public static class PasswordMismatchException extends RuntimeException {
-            public PasswordMismatchException(String message) {
+    public static class PasswordMismatchException extends RuntimeException {
+        public PasswordMismatchException(String message) {
+            super(message);
+        }
+    }
+
+    public static class InvalidPinExceptions extends RuntimeException {
+        public InvalidPinExceptions(String message) {
+            super(message);
+        }
+    }
+
+    public static class UserNotActiveException extends RuntimeException {
+        public UserNotActiveException(String message) {
+            super(message);
+        }
+    }
+
+        public static class InvalidSocialNetworkException extends RuntimeException {
+            public InvalidSocialNetworkException(String message) {
                 super(message);
             }
         }
 
-        public static class InvalidPinExceptions extends RuntimeException {
-            public InvalidPinExceptions(String message) {
-                super(message);
-            }
-        }
-
-
-
-    public static class InvalidSocialNetworkException extends RuntimeException {
-        public InvalidSocialNetworkException(String message) {
+    public static class ImageLimitExceededException extends Throwable {
+        public ImageLimitExceededException(String message) {
             super(message);
         }
     }

@@ -19,7 +19,6 @@ public class PrivateAdminController {
     private final HobbyService hobbyService;
 
 
-
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id)
@@ -33,8 +32,6 @@ public class PrivateAdminController {
     }
 
 
-
-
     @PostMapping("/hobby/save")
     public ResponseEntity<Hobby> saveHobby(@RequestBody Hobby hobby) {
         Hobby savedHobby = hobbyService.save(hobby);
@@ -42,8 +39,8 @@ public class PrivateAdminController {
     }
 
     @PostMapping("/hobby/saveAll")
-    public ResponseEntity<List<Hobby>> saveHobbies(@RequestBody List<Hobby> hobbies){
-       List<Hobby> hobbyList =   hobbyService.saveHobbies(hobbies);
+    public ResponseEntity<List<Hobby>> saveHobbies(@RequestBody List<Hobby> hobbies) {
+        List<Hobby> hobbyList = hobbyService.saveHobbies(hobbies);
         return new ResponseEntity<>(hobbyList, HttpStatus.CREATED);
     }
 
@@ -76,8 +73,6 @@ public class PrivateAdminController {
         hobbyService.deleteHobbyById(id);
         return ResponseEntity.ok().body("Hobby by id " + id + " removed successfully");
     }
-
-
 
 
 }
