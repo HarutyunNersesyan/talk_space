@@ -61,10 +61,11 @@ public class MailSenderService {
     public void schedulePinReset(String mail) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(() -> {
-            userService.findUserByEmail(mail).ifPresent(user -> {
-                user.setPin(null);
-                userService.update(user);
-            });
+            userService.findUserByEmail(mail)
+                    .ifPresent(user -> {
+                        user.setPin(null);
+                        userService.update(user);
+                    });
         }, 2, TimeUnit.MINUTES);
     }
 }

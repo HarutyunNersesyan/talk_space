@@ -25,7 +25,6 @@ public class SocialNetworksService {
 
 
     public String addSocialNetworks(SocialNetworksDto sn) throws CustomExceptions.InvalidSocialNetworkException {
-        // Find user by username
         Optional<User> userOptional = userRepository.findUserByUserName(sn.getUserName());
         if (userOptional.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found with username: " + sn.getUserName());
@@ -48,13 +47,14 @@ public class SocialNetworksService {
         }
 
         // Update user's social networks and save
-        user.getSocialNetwork().clear(); // Clear existing social networks if needed
-        user.getSocialNetwork().addAll(validSocialNetworks);
+        user.getSocialNetwork()
+                .clear(); // Clear existing social networks if needed
+        user.getSocialNetwork()
+                .addAll(validSocialNetworks);
         userRepository.save(user);
 
         return "Social networks added successfully.";
     }
-
 
 
 }

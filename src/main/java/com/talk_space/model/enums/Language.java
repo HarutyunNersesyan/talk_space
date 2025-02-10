@@ -1,7 +1,6 @@
 package com.talk_space.model.enums;
 
 public enum Language {
-
     ARMENIAN("arm"),
     ENGLISH("en"),
     SPANISH("es"),

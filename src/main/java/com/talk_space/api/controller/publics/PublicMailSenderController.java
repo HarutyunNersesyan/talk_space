@@ -24,9 +24,11 @@ public class PublicMailSenderController {
             String responseMessage = mailSenderService.handlePinRequest(mail, true);
             return ResponseEntity.ok(responseMessage);
         } catch (CustomExceptions.UserNotFoundException | CustomExceptions.UserNotActiveException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred.");
         }
     }
 
@@ -37,9 +39,11 @@ public class PublicMailSenderController {
             String responseMessage = mailSenderService.handlePinRequest(mail, false);
             return ResponseEntity.ok(responseMessage);
         } catch (CustomExceptions.UserNotFoundException | CustomExceptions.UserNotActiveException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred.");
         }
     }
 

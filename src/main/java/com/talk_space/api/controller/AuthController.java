@@ -36,7 +36,7 @@ public class AuthController {
         UserDetails userDetails = userService.loadUserByUsername(userDto.getEmail());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDto.getPassword()));
         String token = jwtTokenUtils.generateToken(userDetails);
-        return new TokenResponse(200,token);
+        return new TokenResponse(200, token);
     }
 
     @GetMapping("/profile/logout")

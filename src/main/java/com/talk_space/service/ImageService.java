@@ -18,11 +18,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-
     private final ImageRepository imageRepository;
-
     private final UserRepository userRepository;
-
 
         public void addImage(ImageDto imageDto) throws CustomExceptions.ImageLimitExceededException {
             Optional<User> userOptional = userRepository.findUserByUserName(imageDto.getUserName());
@@ -43,9 +40,6 @@ public class ImageService {
             imageRepository.saveAll(imageList);
             userRepository.save(user);
         }
-
-
-
 
     public void deleteImage(Long id) {
         imageRepository.deleteById(id);

@@ -6,6 +6,7 @@ import com.talk_space.model.dto.*;
 import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,17 +31,13 @@ public class PublicUserController {
 
     private final SocialNetworksService socialNetworksService;
 
+    private final SpecialityService specialityService;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id)));
+        return ResponseEntity.ok(userService.getUserById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id)));
     }
-
-//    @GetMapping("/find")
-//    public List<UserBasicInfo> getActiveUserBasicInfo() {
-//        return userService.getActiveUserBasicInfo();
-//    }
 
     @PostMapping("/signUp")
     public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
@@ -58,13 +55,10 @@ public class PublicUserController {
     @PutMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody ChangePassword changePassword) {
         try {
-            String responseMessage = userService.changePassword(
-                    changePassword.getEmail(),
-                    changePassword.getOldPassword(),
-                    changePassword.getNewPassword(),
-                    changePassword.getNewPasswordRepeat()
-            );
+            String responseMessage = userService.changePassword(changePassword.getEmail(), changePassword.getOldPassword(), changePassword.getNewPassword(), changePassword.getNewPasswordRepeat());
             return ResponseEntity.ok(responseMessage);
+        } catch (CustomExceptions.NotVerifiedMailException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (CustomExceptions.InvalidOldPasswordException | CustomExceptions.InvalidNewPasswordException |
@@ -80,6 +74,8 @@ public class PublicUserController {
         try {
             String responseMessage = userService.forgotPassword(forgotPassword);
             return ResponseEntity.ok(responseMessage);
+        } catch (CustomExceptions.NotVerifiedMailException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (CustomExceptions.InvalidPinExceptions | CustomExceptions.InvalidNewPasswordException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
@@ -116,7 +112,6 @@ public class PublicUserController {
     }
 
 
-
     @PostMapping("/like")
     public ResponseEntity<Like> createLike(@RequestBody Like like) {
         Like savedLike = likeService.saveLike(like);
@@ -143,18 +138,16 @@ public class PublicUserController {
         }
     }
 
-
-
     @DeleteMapping("/image/delete/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         imageService.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping ("/update/hobby")
+    @PutMapping("/update/hobby")
     public ResponseEntity<String> updateHobby(@RequestBody HobbyDto hobbyDto) {
         try {
-            String result = hobbyService.addHobby(hobbyDto);
+            String result = hobbyService.addHobbyForUser(hobbyDto);
             return ResponseEntity.ok(result);
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -164,6 +157,22 @@ public class PublicUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+
+    @PutMapping("/update/speciality")
+    public ResponseEntity<String> updateSpeciality(@RequestBody SpecialityDto specialityDto) {
+        try {
+            String result = specialityService.addSpecialityForUser(specialityDto);
+            return ResponseEntity.ok(result);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 
     @PutMapping("/update/socialNetworks")
     public ResponseEntity<String> updateSocialNetworks(@RequestBody SocialNetworksDto sn) {
@@ -180,24 +189,17 @@ public class PublicUserController {
     }
 
 
-    @PutMapping("/update/phoneNumber")
-    public ResponseEntity<String> updatePhoneNumber(@RequestBody PhoneNumberDto phoneNumberDto) {
-        try {
-            String responseMessage = userService.updatePhoneNumber(phoneNumberDto);
-            return ResponseEntity.ok(responseMessage);
-        } catch (CustomExceptions.InvalidPhoneNumberException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
-        }
-    }
-
     @PutMapping("/update/education")
     public ResponseEntity<String> updateEducation(@RequestBody EducationDto education) {
         return ResponseEntity.ok(userService.updateEducation(education));
     }
 
-
+    @GetMapping("/search/{offset}/{pageSize}")
+    public APIResponse<Page<User>> findUsers(@RequestBody User user, @RequestParam(defaultValue = "0", required = false) int offset,
+                                             @RequestParam(defaultValue = "2", required = false) int pageSize) {
+        Page<User> users = userService.findUsers(user, offset, pageSize);
+        return new APIResponse<>(users.getSize(), users);
+    }
 
 
 //    @GetMapping("socialNetworks/{userName}")

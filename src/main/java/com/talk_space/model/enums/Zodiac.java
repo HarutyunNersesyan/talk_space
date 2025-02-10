@@ -37,11 +37,20 @@ public enum Zodiac {
     }
 
     public static Zodiac fromMonthAndDay(int month, int day) {
-        for (Zodiac zodiac : Zodiac.values()) {
-            if (zodiac.getMonth() == month && zodiac.getDay() <= day) {
-                return zodiac;
+        for (int i = 0; i < Zodiac.values().length; i++) {
+            Zodiac current = Zodiac.values()[i];
+            Zodiac next = Zodiac.values()[(i + 1) % Zodiac.values().length]; // Get next sign (wrap around at end)
+
+            int currentMonth = current.getMonth();
+            int currentDay = current.getDay();
+            int nextMonth = next.getMonth();
+            int nextDay = next.getDay();
+
+            if ((month == currentMonth && day >= currentDay) || (month == nextMonth && day < nextDay)) {
+                return current;
             }
         }
-        return null;
+        return null; // Should never reach here
     }
+
 }

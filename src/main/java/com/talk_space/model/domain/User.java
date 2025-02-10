@@ -1,6 +1,7 @@
 package com.talk_space.model.domain;
 
 
+import com.talk_space.model.dto.fillers.FillUsers;
 import com.talk_space.model.dto.SignUp;
 import com.talk_space.model.enums.*;
 import jakarta.persistence.*;
@@ -52,24 +53,18 @@ public class User {
 
     @NotNull(message = "Gender cannot be empty")
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private Gender gender;
 
     @Column(name = "email", nullable = false, unique = true)
     @Email(message = "Email should be valid and can`t be empty")
     private String email;
 
+    @NotNull(message = "Password should be valid and can`t be empty")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+])[a-zA-Z0-9!@#$%^&*()_+]{8,20}$"
             , message = "The password must contain uppercase and lowercase letters, mathematical symbols and numbers.")
     @Column(name = "password", nullable = false)
     private String password;
-
-    @Pattern(
-            regexp = "^(\\+374[1-9]\\d{1,2}\\d{5}|\\+1\\d{10}|\\+7\\d{10})$",
-            message = "Invalid phone number. Must be a valid Armenian, USA or Russian phone number."
-    )
-    @Column(name = "phone_number", length = 12, unique = true)
-    private String phoneNumber;
 
     @CreatedDate
     @Column(name = "created")
@@ -81,9 +76,6 @@ public class User {
 
     @Column(name = "verify_mail")
     private Boolean verifyMail;
-
-    @Column(name = "location")
-    private String location;
 
 
     @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
@@ -107,7 +99,13 @@ public class User {
     )
     private List<Hobby> hobbies;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "user_specialities",
+            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
+            inverseJoinColumns = @JoinColumn(name = "speciality_name", referencedColumnName = "name"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_name", "speciality_name"})
+    )
     private List<Speciality> specialities;
 
     @Column(name = "education")
@@ -130,24 +128,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "is_blocked")
-    private Boolean isBlocked;
 
-
-    public Zodiac getZodiacSign(LocalDate birthDate) {
-        int year = birthDate.getYear();
-
-        for (Zodiac zodiac : Zodiac.values()) {
-            LocalDate startDate = LocalDate.of(year, zodiac.getMonth(), zodiac.getDay());
-            LocalDate endDate = (zodiac.ordinal() < Zodiac.values().length - 1)
-                    ? LocalDate.of(year, Zodiac.values()[zodiac.ordinal() + 1].getMonth(), Zodiac.values()[zodiac.ordinal() + 1].getDay()).minusDays(1)
-                    : LocalDate.of(year + 1, Zodiac.ARIES.getMonth(), Zodiac.ARIES.getDay()).minusDays(1);
-            if (!startDate.isAfter(birthDate) && !endDate.isBefore(birthDate)) {
-                return zodiac;
-            }
-        }
-        return null;
-    }
+    private String blockedMessage;
 
 
     public static LocalDate validateBirthDate(LocalDate birthDate) {
@@ -169,4 +151,20 @@ public class User {
         this.password = signUp.getPassword();
         this.gender = signUp.getGender();
     }
+
+    public User(FillUsers fillUsers) {
+        this.firstName = fillUsers.getFirstName();
+        this.lastName = fillUsers.getLastName();
+        this.userName = fillUsers.getUserName();
+        this.birthDate = validateBirthDate(fillUsers.getBirthDate());
+        this.email = fillUsers.getEmail();
+        this.password = fillUsers.getPassword();
+        this.gender = fillUsers.getGender();
+        this.role = Role.USER;
+        this.status = Status.ACTIVE;
+        this.verifyMail = true;
+        this.zodiacSign = Zodiac.fromMonthAndDay(fillUsers.getBirthDate().getMonthValue(), fillUsers.getBirthDate().getDayOfMonth());
+        this.createdDate = LocalDate.now();
+    }
+
 }

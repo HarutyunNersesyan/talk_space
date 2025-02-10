@@ -62,5 +62,18 @@ public class CustomExceptions extends RuntimeException {
             super(message);
         }
     }
+
+    public static class NotVerifiedMailException extends RuntimeException{
+        public NotVerifiedMailException(String message){
+            super(message);
+        }
+    }
+
+    public static class UserBlockException extends RuntimeException{
+        public UserBlockException(String message){
+            super(message);
+        }
+    }
+
 }
 

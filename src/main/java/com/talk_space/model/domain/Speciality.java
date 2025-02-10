@@ -8,14 +8,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Speciality {
+
+    @Column(name = "speciality_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_name", referencedColumnName = "user_name",nullable = false)
-    private User user;
+    @Column(name = "parent_id")
+    private Long parentId;
 }

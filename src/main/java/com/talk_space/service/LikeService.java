@@ -29,7 +29,8 @@ public class LikeService {
 
     @Scheduled(fixedRate = 3600000)
     public void deleteOldLikes() {
-        LocalDate cutoffDate = LocalDate.now().minusDays(1);
+        LocalDate cutoffDate = LocalDate.now()
+                .minusDays(1);
         List<Like> oldLikes = likeRepository.findByLikeDateBefore(cutoffDate);
         likeRepository.deleteAll(oldLikes);
     }
@@ -37,9 +38,11 @@ public class LikeService {
     public Like saveLike(Like like) {
         like.setLikeDate(LocalDate.now());
 
-        User liker = userRepository.findUserByUserName(like.getLiker().getUserName())
+        User liker = userRepository.findUserByUserName(like.getLiker()
+                        .getUserName())
                 .orElse(null);
-        User liked = userRepository.findUserByUserName(like.getLiked().getUserName())
+        User liked = userRepository.findUserByUserName(like.getLiked()
+                        .getUserName())
                 .orElse(null);
 
         if (liker == null || liked == null) {
