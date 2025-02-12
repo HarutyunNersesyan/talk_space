@@ -7,6 +7,7 @@ import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -140,11 +142,6 @@ public class PublicUserController {
 //        }
 //    }
 
-    @DeleteMapping("/image/delete/{id}")
-    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
-        imageService.deleteImage(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 
     @PutMapping("/update/hobby")
     public ResponseEntity<String> updateHobby(@RequestBody HobbyDto hobbyDto) {
@@ -203,21 +200,29 @@ public class PublicUserController {
         return new APIResponse<>(users.getSize(), users);
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestBody ImageDto imageDto) {
-        try {
-            imageService.saveImages(imageDto);  // Pass ImageDto to service
-            return ResponseEntity.ok("Images uploaded successfully");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading images");
-        }
+    @PostMapping("/images/upload")
+    public ResponseEntity<String> uploadImages(@RequestBody ImageDto imageDto) {
+        imageService.updateImages(imageDto);
+        return ResponseEntity.ok("Images uploaded successfully");
     }
 
-    // Get images for a user by userName
-    @GetMapping("/user/{userName}")
-    public ResponseEntity<List<byte[]>> getUserImages(@PathVariable String userName) {
-        return ResponseEntity.ok(imageService.getImagesByUserName(userName));
+    @GetMapping("/images/{userName}")
+    public ResponseEntity<List<String>> getUserImages(@PathVariable String userName) {
+        List<String> images = imageService.getUserImages(userName);
+        return ResponseEntity.ok(images);
     }
+
+//    @GetMapping("/{userName}")
+//    public ResponseEntity<ImageDto> getUserImages(@PathVariable String userName) {
+//        ImageDto imageDto = imageService.getUserImages(userName);
+//        return ResponseEntity.ok(imageDto);
+//    }
+
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<String> deleteImage(@PathVariable Long id) {
+//        imageService.deleteImage(id);
+//        return ResponseEntity.ok("Image deleted successfully");
+//    }
 
 
 //    @GetMapping("socialNetworks/{userName}")

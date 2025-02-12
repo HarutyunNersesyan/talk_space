@@ -7,13 +7,15 @@ import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.ImageDto;
 import com.talk_space.repository.ImageRepository;
 import com.talk_space.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,50 +25,97 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
 
-//        public void addImage(ImageDto imageDto) throws CustomExceptions.ImageLimitExceededException {
-//            Optional<User> userOptional = userRepository.findUserByUserName(imageDto.getUserName());
-//
-//            if (userOptional.isEmpty()) {
-//                throw new CustomExceptions.UserNotFoundException("User not found");
+
+
+//        public static void main(String[] args) throws IOException {
+//            File testFile = new File("C:/Users/HARUT_037/Desktop/talk_space/images/test.txt");
+//            try (FileOutputStream fos = new FileOutputStream(testFile)) {
+//                fos.write("test".getBytes());
 //            }
-//
-//            User user = userOptional.get();
-//            List<Image> imageList = imageDto.getImages();
-//
-//            if (user.getImages().size() + imageList.size() > 5) {
-//                throw new CustomExceptions.ImageLimitExceededException("The number of images cannot exceed 5");
-//            }
-//
-//            imageList.forEach(image -> image.setUser(user));
-//            user.getImages().addAll(imageList);
-//            imageRepository.saveAll(imageList);
-//            userRepository.save(user);
+//            System.out.println("File created successfully at " + testFile.getAbsolutePath());
 //        }
 
-    public void saveImages(ImageDto imageDto) throws IOException {
 
-        User user = userRepository.findUserByUserName(imageDto.getUserName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        for (MultipartFile file : imageDto.getImages()) {
-            Image image = new Image();
-            image.setUser(user);
-            image.setData(file.getBytes());
-            imageRepository.save(image);
+    private static final String IMAGE_DIR = "C:/Users/HARUT_037/Desktop/talk_space/images/";
+
+    @Transactional
+    public void updateImages(ImageDto imageDto) {
+        Optional<User> userOptional = userRepository.findUserByUserName(imageDto.getUserName());
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
         }
+
+        User user = userOptional.get();
+
+        List<Image> existingImages = imageRepository.findByUser(user);
+        if (existingImages.size() >= 3) {
+            throw new RuntimeException("User already has 3 images. Cannot upload more.");
+        }
+
+        File directory = new File(IMAGE_DIR);
+        if (!directory.exists() && !directory.mkdirs()) {
+            throw new RuntimeException("Failed to create directory: " + IMAGE_DIR);
+        }
+
+        List<Image> newImages = imageDto.getImages().stream().map(imageData -> {
+            try {
+                System.out.println("Processing image: " + imageData.getFileName());
+
+                if (!isValidFileType(imageData.getFileType())) {
+                    throw new IllegalArgumentException("Invalid file type: " + imageData.getFileType() +
+                            ". Only JPEG and PNG are allowed.");
+                }
+
+                if (existingImages.size() >= 3) {
+                    throw new RuntimeException("User already has 3 images. Cannot upload more.");
+                }
+
+                byte[] imageBytes = Base64.getDecoder().decode(imageData.getData());
+                String uniqueFileName = System.currentTimeMillis() +
+                        (imageData.getFileType().equals("image/png") ? ".png" : ".jpeg");
+
+                String filePath = IMAGE_DIR + uniqueFileName;
+
+                File imageFile = new File(filePath);
+                try (FileOutputStream fos = new FileOutputStream(imageFile)) {
+                    fos.write(imageBytes);
+                }
+
+                Image image = new Image();
+                image.setFileName(uniqueFileName);
+                image.setFileType(imageData.getFileType());
+                image.setFilePath(filePath);
+                image.setUser(user);
+
+                System.out.println("Successfully saved image: " + filePath);
+                existingImages.add(image); // Update count for next iterations
+                return image;
+
+            } catch (IOException | IllegalArgumentException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to save image: " + imageData.getFileName(), e);
+            }
+        }).toList();
+
+        imageRepository.saveAll(newImages);
     }
 
-    // Retrieve images for a given user
-    public List<byte[]> getImagesByUserName(String userName) {
-        User user = userRepository.findUserByUserName(userName)
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return imageRepository.findByUser(user).stream()
-                .map(Image::getData)
+
+    private boolean isValidFileType(String fileType) {
+        return "image/jpeg".equalsIgnoreCase(fileType) || "image/png".equalsIgnoreCase(fileType);
+    }
+
+    public List<String> getUserImages(String userName) {
+        Optional<User> userOptional = userRepository.findUserByUserName(userName);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return imageRepository.findByUser(userOptional.get()).stream()
+                .map(Image::getFilePath)
                 .toList();
     }
 
-    public void deleteImage(Long id) {
-        imageRepository.deleteById(id);
-    }
 }
+

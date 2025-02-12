@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Component
-public class ImageDto {
-   private  String userName;
+    public class ImageData {
+    private String fileName;
+    private String fileType;
+    private String data;
 
-  private List<ImageData> images;
 }

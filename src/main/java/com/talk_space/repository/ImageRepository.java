@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ImageRepository  extends JpaRepository<Image, Long> {
+public interface ImageRepository extends JpaRepository<Image, Long> {
+    List<Image> findByUserUserName(String userName);
 
     List<Image> findByUser(User user);
 }
