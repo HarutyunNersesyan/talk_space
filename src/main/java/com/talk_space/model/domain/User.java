@@ -84,10 +84,10 @@ public class User {
     @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL)
     private Set<Like> liked;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Chat> chats;
+    @OneToMany(mappedBy = "senderUserName", cascade = CascadeType.ALL)
+    private List<ChatMessage> sentMessages;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
     @ManyToMany

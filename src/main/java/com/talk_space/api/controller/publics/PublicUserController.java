@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,25 +120,25 @@ public class PublicUserController {
         return new ResponseEntity<>(savedLike, HttpStatus.CREATED);
     }
 
-    @GetMapping("/chats/{id}")
-    public List<Chat> getAllUserChats(@PathVariable Long id) {
-        Optional<User> user = userService.getUserById(id);
-        return chatService.getAllUserChats(user.get());
-    }
+//    @GetMapping("/chats/{id}")
+//    public List<Chat> getAllUserChats(@PathVariable Long id) {
+//        Optional<User> user = userService.getUserById(id);
+//        return chatService.getAllUserChats(user.get());
+//    }
 
-    @PutMapping("/update/image")
-    public ResponseEntity<String> updateImage(@RequestBody ImageDto imageDto) {
-        try {
-            imageService.addImage(imageDto);
-            return ResponseEntity.ok("Images updated successfully");
-        } catch (CustomExceptions.UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (CustomExceptions.ImageLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
-        }
-    }
+//    @PutMapping("/update/image")
+//    public ResponseEntity<String> updateImage(@RequestBody ImageDto imageDto) {
+//        try {
+//            imageService.addImage(imageDto);
+//            return ResponseEntity.ok("Images updated successfully");
+//        } catch (CustomExceptions.UserNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        } catch (CustomExceptions.ImageLimitExceededException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+//        }
+//    }
 
     @DeleteMapping("/image/delete/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
@@ -199,6 +201,22 @@ public class PublicUserController {
                                              @RequestParam(defaultValue = "2", required = false) int pageSize) {
         Page<User> users = userService.findUsers(user, offset, pageSize);
         return new APIResponse<>(users.getSize(), users);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestBody ImageDto imageDto) {
+        try {
+            imageService.saveImages(imageDto);  // Pass ImageDto to service
+            return ResponseEntity.ok("Images uploaded successfully");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading images");
+        }
+    }
+
+    // Get images for a user by userName
+    @GetMapping("/user/{userName}")
+    public ResponseEntity<List<byte[]>> getUserImages(@PathVariable String userName) {
+        return ResponseEntity.ok(imageService.getImagesByUserName(userName));
     }
 
 

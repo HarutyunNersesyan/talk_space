@@ -1,10 +1,10 @@
 package com.talk_space.service;
 
 
-import com.talk_space.model.domain.Chat;
+import com.talk_space.model.domain.ChatMessage;
 import com.talk_space.model.domain.Like;
 import com.talk_space.model.domain.User;
-import com.talk_space.repository.ChatRepository;
+import com.talk_space.repository.ChatMessageRepository;
 import com.talk_space.repository.LikeRepository;
 import com.talk_space.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +22,7 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
 
-    private final ChatRepository chatRepository;
+    private final ChatMessageRepository chatRepository;
 
     private final UserRepository userRepository;
 
@@ -54,11 +54,10 @@ public class LikeService {
 
         if (likeRepository.existsByLikerUserIdAndLikedUserId(liked.getUserId(), liker.getUserId())) {
             chatRepository.saveAll(List.of(
-                    new Chat(liker, liked.getUserName()),
-                    new Chat(liked, liker.getUserName())
+                    new ChatMessage(liker, liked.getUserName(),"You have a mutual liking", LocalDateTime.now()),
+            new ChatMessage(liked, liker.getUserName(),"You have a mutual liking", LocalDateTime.now())
             ));
         }
-
         return likeRepository.save(like);
     }
 

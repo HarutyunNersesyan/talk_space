@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<script>
+    var socket = new SockJS("http://localhost:8080/ws");
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log("Connected: " + frame);
+
+        var userName = "user123"; // Пример имени пользователя
+        stompClient.subscribe("/user/" + userName + "/queue/messages", function (message) {
+            console.log("Received:", JSON.parse(message.body));
+        });
+    });
+
+    function sendMessage(senderUserName, receiverUserName, content) {
+        stompClient.send("/app/chat", {}, JSON.stringify({ senderUserName: { userName: senderUserName }, receiverUserName, content }));
+    }
+
+    setTimeout(() => sendMessage("user123", "user456", "Привет, пользователь 2!"), 3000);
+</script>
+</body>
+</html>
+
