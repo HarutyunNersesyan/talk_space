@@ -19,7 +19,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Component
 public class SignUp {
 
 

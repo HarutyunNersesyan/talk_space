@@ -3,20 +3,16 @@ package com.talk_space.api.controller.publics;
 import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.*;
+import com.talk_space.model.dto.getters.SocialNetworksGetterDto;
 import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -212,24 +208,26 @@ public class PublicUserController {
         return ResponseEntity.ok(images);
     }
 
-//    @GetMapping("/{userName}")
-//    public ResponseEntity<ImageDto> getUserImages(@PathVariable String userName) {
-//        ImageDto imageDto = imageService.getUserImages(userName);
-//        return ResponseEntity.ok(imageDto);
-//    }
+    @DeleteMapping("/images/delete")
+    public ResponseEntity<String> deleteImage(@RequestBody DeleteImageRequest request) {
+        try {
+            imageService.deleteImage(request.getUserName(), request.getFileName());
+            return ResponseEntity.ok("Image deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity<String> deleteImage(@PathVariable Long id) {
-//        imageService.deleteImage(id);
-//        return ResponseEntity.ok("Image deleted successfully");
-//    }
+    @GetMapping("/chat/{senderUserName}/{receiverUserName}")
+    public List<ChatMessage> getChatHistory(@PathVariable String senderUserName, @PathVariable String receiverUserName) {
+        return chatService.getChatHistory(senderUserName, receiverUserName);
+    }
 
-
-//    @GetMapping("socialNetworks/{userName}")
-//    public ResponseEntity<List<SocialNetworks>> getAllSocialNetworks(@PathVariable String userName) {
-//        List<SocialNetworks> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
-//        return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
-//    }
+    @GetMapping("/socialNetworks/{userName}")
+    public ResponseEntity<List<SocialNetworksGetterDto>> getAllSocialNetworks(@PathVariable String userName) {
+        List<SocialNetworksGetterDto> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
+              return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
+    }
 }
 
 

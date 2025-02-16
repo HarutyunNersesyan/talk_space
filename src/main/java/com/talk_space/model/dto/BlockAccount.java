@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Component
 public class BlockAccount {
 
     private String userName;

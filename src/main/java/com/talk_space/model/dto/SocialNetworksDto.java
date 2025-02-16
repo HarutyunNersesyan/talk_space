@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Component
 public class SocialNetworksDto {
 
     private String userName;

@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "social_networks")
+@Table(name = "social_networks",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_name", "platform"}))
 public class SocialNetworks {
 
     @Id
@@ -19,6 +20,7 @@ public class SocialNetworks {
     private String url;
 
     @ManyToOne
-    @JoinColumn(name = "user_name", referencedColumnName = "user_name",nullable = false)
+    @JoinColumn(name = "user_name", referencedColumnName = "user_name", nullable = false)
     private User user;
 }
+

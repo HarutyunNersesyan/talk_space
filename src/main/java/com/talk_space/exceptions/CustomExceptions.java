@@ -26,12 +26,6 @@ public class CustomExceptions extends RuntimeException {
         }
     }
 
-    public static class InvalidPhoneNumberException extends RuntimeException {
-        public InvalidPhoneNumberException(String message) {
-            super(message);
-        }
-
-    }
 
     public static class PasswordMismatchException extends RuntimeException {
         public PasswordMismatchException(String message) {

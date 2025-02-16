@@ -1,20 +1,14 @@
 package com.talk_space.model.dto;
 
-
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-@Component
-public class PhoneNumberDto {
-
+public class DeleteImageRequest {
     private String userName;
-
-    private String country;
-    private String phoneNumber;
+    private String fileName;
 }

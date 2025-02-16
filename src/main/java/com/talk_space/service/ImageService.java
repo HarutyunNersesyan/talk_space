@@ -1,7 +1,6 @@
 package com.talk_space.service;
 
 
-import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.Image;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.ImageDto;
@@ -10,9 +9,7 @@ import com.talk_space.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -24,18 +21,6 @@ import java.util.Optional;
 public class ImageService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
-
-
-
-//        public static void main(String[] args) throws IOException {
-//            File testFile = new File("C:/Users/HARUT_037/Desktop/talk_space/images/test.txt");
-//            try (FileOutputStream fos = new FileOutputStream(testFile)) {
-//                fos.write("test".getBytes());
-//            }
-//            System.out.println("File created successfully at " + testFile.getAbsolutePath());
-//        }
-
-
 
     private static final String IMAGE_DIR = "C:/Users/HARUT_037/Desktop/talk_space/images/";
 
@@ -89,7 +74,7 @@ public class ImageService {
                 image.setUser(user);
 
                 System.out.println("Successfully saved image: " + filePath);
-                existingImages.add(image); // Update count for next iterations
+                existingImages.add(image);
                 return image;
 
             } catch (IOException | IllegalArgumentException e) {
@@ -100,7 +85,6 @@ public class ImageService {
 
         imageRepository.saveAll(newImages);
     }
-
 
 
     private boolean isValidFileType(String fileType) {
@@ -117,5 +101,34 @@ public class ImageService {
                 .toList();
     }
 
+    @Transactional
+    public void deleteImage(String userName, String fileName) {
+        Optional<User> userOptional = userRepository.findUserByUserName(userName);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        User user = userOptional.get();
+        Optional<Image> imageOptional = imageRepository.findByUserAndFileName(user, fileName);
+
+        if (imageOptional.isEmpty()) {
+            throw new IllegalArgumentException("Image not found for user");
+        }
+
+        Image image = imageOptional.get();
+        File imageFile = new File(image.getFilePath());
+
+        if (imageFile.exists()) {
+            if (imageFile.delete()) {
+                System.out.println("Successfully deleted image file: " + image.getFilePath());
+            } else {
+                throw new RuntimeException("Failed to delete image file: " + image.getFilePath());
+            }
+        } else {
+            System.out.println("Image file not found in local storage: " + image.getFilePath());
+        }
+
+        imageRepository.delete(image);
+        System.out.println("Successfully deleted image record from database: " + fileName);
+    }
 }
 

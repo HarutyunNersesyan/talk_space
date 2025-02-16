@@ -115,7 +115,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SocialNetworks> socialNetwork;
 
-
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -128,7 +127,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-
+    @Column(name = "blocked_message")
     private String blockedMessage;
 
 
