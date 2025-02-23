@@ -69,5 +69,11 @@ public class CustomExceptions extends RuntimeException {
         }
     }
 
+    public static class AlreadyVerifiedEmail extends RuntimeException{
+        public AlreadyVerifiedEmail(String message){
+            super(message);
+        }
+    }
+
 }
 

@@ -2,6 +2,9 @@ package com.talk_space.api.security;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
+
+import com.talk_space.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,11 +17,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter{
+public class JwtRequestFilter extends OncePerRequestFilter {
+
 
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
+
+    @Autowired
+    private UserService userService;
 
 
     @Override
@@ -29,18 +37,21 @@ public class JwtRequestFilter extends OncePerRequestFilter{
         String username = null;
         String jwt = null;
 
-        if(authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
             try {
                 username = jwtTokenUtils.getName(jwt);
-            }catch(ExpiredJwtException e) {
+
+            } catch (ExpiredJwtException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is Expired");
-            }catch(SignatureException e) {
+            } catch (SignatureException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT Token signature affected");
             }
         }
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (!userService.findUserByEmail(username).get().getVerifyMail()) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "User email not verified");
+            }
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,

@@ -63,12 +63,12 @@ public class HobbyService {
 
         Optional<User> optionalUser = userRepository.findUserByUserName(hobbyDto.getUserName());
         User user = optionalUser.get();
+        user.getHobbies().clear();
         List<Hobby> hobbies = new ArrayList<>();
 
-        if (optionalUser.get().getHobbies().size() + hobbyDto.getHobbies().size() > 5) {
-            throw new IllegalArgumentException("The number of hobbies cannot exceed 5");
-        }
-
+//        if (optionalUser.get().getHobbies().size() + hobbyDto.getHobbies().size() > 5) {
+//            throw new IllegalArgumentException("The number of hobbies cannot exceed 5");
+//        }
         for (int i = 0; i < hobbyDto.getHobbies().size(); i++) {
             hobbies.add(hobbyRepository.findHobbyByName((hobbyDto.getHobbies().get(i)).getName()).get());
         }

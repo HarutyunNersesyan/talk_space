@@ -81,6 +81,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     JOIN hobby h ON uh.hobby_name = h.name
     LEFT JOIN hobby h2 ON h2.name = uh.hobby_name
     WHERE u.status = 'ACTIVE'
+    AND u.user_name <> :userName
     AND (
         h.name IN (SELECT uh2.hobby_name FROM user_hobbies uh2 WHERE uh2.user_name = :userName)
         OR h.parent_id IN (SELECT h3.parent_id FROM hobby h3 
@@ -90,37 +91,51 @@ public interface UserRepository extends JpaRepository<User, Long> {
 """,
             nativeQuery = true
     )
-    Page<User> findUsers(@Param("userName") String userName, Pageable pageable);
+    Page<User> findUsersByHobbies(@Param("userName") String userName, Pageable pageable);
+
+
+    @Query(value = """
+    SELECT DISTINCT u.*
+    FROM user_entity u
+    JOIN user_specialities us ON u.user_name = us.user_name
+    JOIN speciality s ON us.speciality_name = s.name
+    LEFT JOIN speciality s2 ON s2.name = us.speciality_name
+    WHERE u.status = 'ACTIVE'
+    AND u.user_name <> :userName
+    AND (
+        s.name IN (SELECT us2.speciality_name FROM user_specialities us2 WHERE us2.user_name = :userName)
+        OR s.parent_id IN (SELECT s3.parent_id FROM speciality s3 
+                           JOIN user_specialities us3 ON us3.speciality_name = s3.name
+                           WHERE us3.user_name = :userName AND s3.parent_id IS NOT NULL)
+    )
+    ORDER BY u.user_name
+""",
+            countQuery = """
+    SELECT COUNT(DISTINCT u.user_name)
+    FROM user_entity u
+    JOIN user_specialities us ON u.user_name = us.user_name
+    JOIN speciality s ON us.speciality_name = s.name
+    LEFT JOIN speciality s2 ON s2.name = us.speciality_name
+    WHERE u.status = 'ACTIVE'
+    AND u.user_name <> :userName
+    AND (
+        s.name IN (SELECT us2.speciality_name FROM user_specialities us2 WHERE us2.user_name = :userName)
+        OR s.parent_id IN (SELECT s3.parent_id FROM speciality s3 
+                           JOIN user_specialities us3 ON us3.speciality_name = s3.name
+                           WHERE us3.user_name = :userName AND s3.parent_id IS NOT NULL)
+    )
+""",
+            nativeQuery = true
+    )
+    Page<User> findUsersBySpecialities(@Param("userName") String userName, Pageable pageable);
 
 
 
 
-//    @Query(value = """
-//    SELECT DISTINCT u.* FROM user_entity u
-//    JOIN user_hobbies uh ON u.user_name = uh.user_name
-//    JOIN hobby h ON uh.hobby_name = h.name
-//    WHERE (
-//        h.name IN (
-//            SELECT hobby_name FROM user_hobbies WHERE user_name = :userName
-//        )
-//        OR h.parent_id IN (
-//            SELECT h2.parent_id FROM hobby h2
-//            WHERE h2.name IN (SELECT hobby_name FROM user_hobbies WHERE user_name = :userName)
-//            AND h2.parent_id IS NOT NULL
-//        )
-//    )
-//
-//    AND u.user_name <> :userName
-//
-//""", nativeQuery = true)
-//    List<User> findUsers(
-//
-//    );
 
 
 
-//    @Transactional
-//    @Query("SELECT new com.talk_space.model.dto.UserBasicInfo(u.userName, u.birthDate, u.location, u.images, u.hobbies) " +
-//            "FROM User u WHERE u.status = 'ACTIVE'")
-//    List<UserBasicInfo> getBasicInfo();
+
+
+
 }

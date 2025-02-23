@@ -66,6 +66,6 @@ public class MailSenderService {
                         user.setPin(null);
                         userService.update(user);
                     });
-        }, 2, TimeUnit.MINUTES);
+        }, 30, TimeUnit.MINUTES);
     }
 }

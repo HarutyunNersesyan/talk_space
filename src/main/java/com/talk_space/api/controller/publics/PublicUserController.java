@@ -11,8 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
+import java.util.List;
 
 
 @RestController
@@ -21,6 +21,9 @@ import java.util.List;
 public class PublicUserController {
 
     private final UserService userService;
+
+    private final MailSenderService mailSenderService;
+
     private final LikeService likeService;
 
     private final ChatService chatService;
@@ -43,6 +46,7 @@ public class PublicUserController {
     public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
         User createdUser = new User(signUp);
         userService.signUp(createdUser);
+//        mailSenderService.handlePinRequest(signUp.getEmail(), false);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -89,7 +93,10 @@ public class PublicUserController {
         try {
             String result = userService.verify(verify);
             return ResponseEntity.ok(result);
-        } catch (CustomExceptions.InvalidPinExceptions e) {
+        }catch (CustomExceptions.AlreadyVerifiedEmail e){
+            return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(e.getMessage());
+        }
+        catch (CustomExceptions.InvalidPinExceptions e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -117,26 +124,6 @@ public class PublicUserController {
         Like savedLike = likeService.saveLike(like);
         return new ResponseEntity<>(savedLike, HttpStatus.CREATED);
     }
-
-//    @GetMapping("/chats/{id}")
-//    public List<Chat> getAllUserChats(@PathVariable Long id) {
-//        Optional<User> user = userService.getUserById(id);
-//        return chatService.getAllUserChats(user.get());
-//    }
-
-//    @PutMapping("/update/image")
-//    public ResponseEntity<String> updateImage(@RequestBody ImageDto imageDto) {
-//        try {
-//            imageService.addImage(imageDto);
-//            return ResponseEntity.ok("Images updated successfully");
-//        } catch (CustomExceptions.UserNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        } catch (CustomExceptions.ImageLimitExceededException e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
-//        }
-//    }
 
 
     @PutMapping("/update/hobby")
@@ -189,12 +176,21 @@ public class PublicUserController {
         return ResponseEntity.ok(userService.updateEducation(education));
     }
 
-    @GetMapping("/search/{offset}/{pageSize}")
-    public APIResponse<Page<User>> findUsers(@RequestBody User user, @RequestParam(defaultValue = "0", required = false) int offset,
-                                             @RequestParam(defaultValue = "2", required = false) int pageSize) {
-        Page<User> users = userService.findUsers(user, offset, pageSize);
+    @GetMapping("/searchByHobbies/{offset}/{pageSize}")
+    public APIResponse<Page<User>> findUsersByHobbies(@RequestBody User user, @RequestParam(defaultValue = "0", required = false) int offset,
+                                                      @RequestParam(defaultValue = "2", required = false) int pageSize) {
+        Page<User> users = userService.findUsersByHobbies(user, offset, pageSize);
         return new APIResponse<>(users.getSize(), users);
     }
+
+
+    @GetMapping("/searchBySpecialities/{offset}/{pageSize}")
+    public APIResponse<Page<User>> findUsersBySpecialities(@RequestBody User user, @RequestParam(defaultValue = "0", required = false) int offset,
+                                                           @RequestParam(defaultValue = "2", required = false) int pageSize) {
+        Page<User> users = userService.findUsersBySpecialities(user, offset, pageSize);
+        return new APIResponse<>(users.getSize(), users);
+    }
+
 
     @PostMapping("/images/upload")
     public ResponseEntity<String> uploadImages(@RequestBody ImageDto imageDto) {
@@ -226,7 +222,7 @@ public class PublicUserController {
     @GetMapping("/socialNetworks/{userName}")
     public ResponseEntity<List<SocialNetworksGetterDto>> getAllSocialNetworks(@PathVariable String userName) {
         List<SocialNetworksGetterDto> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
-              return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
+        return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
     }
 }
 
