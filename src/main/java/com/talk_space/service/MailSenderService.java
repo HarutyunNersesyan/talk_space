@@ -37,10 +37,10 @@ public class MailSenderService {
         mailSender.send(simpleMailMessage);
     }
 
-    public String handlePinRequest(String mail, boolean checkVerifyMail) {
+    public String handlePinRequest(String email, boolean checkVerifyMail) {
 
-        User user = userService.findUserByEmail(mail)
-                .orElseThrow(() -> new CustomExceptions.UserNotFoundException("User not found with email: " + mail));
+        User user = userService.findUserByEmail(email)
+                .orElseThrow(() -> new CustomExceptions.UserNotFoundException("User not found with email: " + email));
 
         if (checkVerifyMail && !user.getVerifyMail()) {
             throw new CustomExceptions.UserNotActiveException("User is not active. Please verify your email.");
@@ -50,12 +50,14 @@ public class MailSenderService {
         user.setPin(pin);
         userService.update(user);
 
-        sendEmail(mail, "Verify code", pin);
+        sendEmail(email, "Verify code", pin);
 
-        schedulePinReset(mail);
+        schedulePinReset(email);
 
         return "A verification code has been sent to your email.";
     }
+
+
 
 
     public void schedulePinReset(String mail) {

@@ -1,29 +1,26 @@
 package com.talk_space.api.controller.publics;
 
+
 import com.talk_space.model.domain.ChatMessage;
-import com.talk_space.service.ChatService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
+import com.talk_space.service.ChatMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
-@RequiredArgsConstructor
 public class ChatController {
+    @Autowired
+    private ChatMessageService chatMessageService;
 
-    private final SimpMessagingTemplate messagingTemplate;
-    private final ChatService chatService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat")
-    public void sendMessage(@Payload ChatMessage chatMessage) {
-        ChatMessage savedMessage = chatService.saveMessage(
-                chatMessage.getSenderUserName().getUserName(),
-                chatMessage.getReceiverUserName(),
-                chatMessage.getContent()
-        );
-
+    public void sendMessage(@Payload ChatMessage message) {
+        chatMessageService.saveMessage(message);
         messagingTemplate.convertAndSendToUser(
-                savedMessage.getReceiverUserName(), "/queue/messages", savedMessage);
+                message.getReceiverUserName(), "/queue/messages", message
+        );
     }
 }

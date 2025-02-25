@@ -38,13 +38,16 @@ public class UserService implements UserDetailsService {
 
     private final ImageService imageService;
 
+    private final MailSenderService mailSenderService;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService) {
+    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService, @Lazy MailSenderService mailSenderService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
+        this.mailSenderService = mailSenderService;
     }
 
 
@@ -175,25 +178,17 @@ public class UserService implements UserDetailsService {
     }
 
     public String forgotPassword(ForgotPassword forgotPassword) {
-
         Optional<User> optionalUser = findUserByEmail(forgotPassword.getEmail());
         User existingUser = optionalUser.get();
 
         if (!existingUser.getVerifyMail()) {
             throw new CustomExceptions.NotVerifiedMailException("Mail must be verified");
         }
-
-        if (!existingUser.getPin().equals(forgotPassword.getPin())) {
-            throw new CustomExceptions.InvalidPinExceptions("Invalid PIN.");
-        }
-
-        if (passwordEncoder.matches(forgotPassword.getNewPassword(), existingUser.getPassword())) {
-            throw new CustomExceptions.InvalidNewPasswordException("New password cannot be the same as the current password.");
-        }
-        existingUser.setPassword(hashPassword(forgotPassword.getNewPassword()));
+        String newPassword = forgotPassword.generatePassword();
+        existingUser.setPassword(hashPassword(newPassword));
         update(existingUser);
-
-        return "Password updated successfully.";
+        mailSenderService.sendEmail(forgotPassword.getEmail(),"New password",newPassword);
+        return "New password has been send to email";
     }
 
 

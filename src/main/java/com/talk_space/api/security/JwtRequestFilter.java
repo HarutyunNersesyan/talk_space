@@ -3,6 +3,7 @@ package com.talk_space.api.security;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import com.talk_space.model.enums.Status;
 import com.talk_space.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (!userService.findUserByEmail(username).get().getVerifyMail()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "User email not verified");
             }
+//            if (userService.findUserByEmail(username).get().getStatus().toString().equals(Status.BLOCKED.toString())){
+//                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account has been blocked");
+//            }
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,

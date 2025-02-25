@@ -26,7 +26,7 @@ public class PublicUserController {
 
     private final LikeService likeService;
 
-    private final ChatService chatService;
+    private final ChatMessageService chatService;
 
     private final ImageService imageService;
 
@@ -46,7 +46,7 @@ public class PublicUserController {
     public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
         User createdUser = new User(signUp);
         userService.signUp(createdUser);
-//        mailSenderService.handlePinRequest(signUp.getEmail(), false);
+        mailSenderService.handlePinRequest(signUp.getEmail(), false);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -214,10 +214,10 @@ public class PublicUserController {
         }
     }
 
-    @GetMapping("/chat/{senderUserName}/{receiverUserName}")
-    public List<ChatMessage> getChatHistory(@PathVariable String senderUserName, @PathVariable String receiverUserName) {
-        return chatService.getChatHistory(senderUserName, receiverUserName);
-    }
+//    @GetMapping("/chat/{senderUserName}/{receiverUserName}")
+//    public List<ChatMessage> getChatHistory(@PathVariable String senderUserName, @PathVariable String receiverUserName) {
+//        return chatService.getChatHistory(senderUserName, receiverUserName);
+//    }
 
     @GetMapping("/socialNetworks/{userName}")
     public ResponseEntity<List<SocialNetworksGetterDto>> getAllSocialNetworks(@PathVariable String userName) {
