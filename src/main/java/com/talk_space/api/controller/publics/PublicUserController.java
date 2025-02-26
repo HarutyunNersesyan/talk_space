@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Stack;
 
 
 @RestController
@@ -36,6 +37,10 @@ public class PublicUserController {
 
     private final SpecialityService specialityService;
 
+    private Stack<SearchUser> searchUsersWithSpeciality = new Stack<>();
+
+    private Stack<SearchUser> searchUsersWithHobbies = new Stack<>();
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
@@ -46,7 +51,7 @@ public class PublicUserController {
     public ResponseEntity<User> signUp(@Valid @RequestBody SignUp signUp) {
         User createdUser = new User(signUp);
         userService.signUp(createdUser);
-        mailSenderService.handlePinRequest(signUp.getEmail(), false);
+//        mailSenderService.handlePinRequest(signUp.getEmail(), false);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -93,10 +98,9 @@ public class PublicUserController {
         try {
             String result = userService.verify(verify);
             return ResponseEntity.ok(result);
-        }catch (CustomExceptions.AlreadyVerifiedEmail e){
+        } catch (CustomExceptions.AlreadyVerifiedEmail e) {
             return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(e.getMessage());
-        }
-        catch (CustomExceptions.InvalidPinExceptions e) {
+        } catch (CustomExceptions.InvalidPinExceptions e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -177,18 +181,26 @@ public class PublicUserController {
     }
 
     @GetMapping("/searchByHobbies/{offset}/{pageSize}")
-    public APIResponse<Page<User>> findUsersByHobbies(@RequestBody User user, @RequestParam(defaultValue = "0", required = false) int offset,
-                                                      @RequestParam(defaultValue = "2", required = false) int pageSize) {
-        Page<User> users = userService.findUsersByHobbies(user, offset, pageSize);
-        return new APIResponse<>(users.getSize(), users);
+    public ResponseEntity<SearchUser> findUsersByHobbies(@RequestBody User user, @PathVariable int offset,
+                                                         @PathVariable int pageSize) {
+
+        if (!searchUsersWithHobbies.isEmpty()) {
+            return ResponseEntity.ok(searchUsersWithHobbies.pop());
+        }
+        searchUsersWithHobbies = userService.findUsersBySpecialities(user, offset, pageSize);
+        return ResponseEntity.ok(searchUsersWithHobbies.pop());
     }
 
 
     @GetMapping("/searchBySpecialities/{offset}/{pageSize}")
-    public APIResponse<Page<User>> findUsersBySpecialities(@RequestBody User user, @RequestParam(defaultValue = "0", required = false) int offset,
-                                                           @RequestParam(defaultValue = "2", required = false) int pageSize) {
-        Page<User> users = userService.findUsersBySpecialities(user, offset, pageSize);
-        return new APIResponse<>(users.getSize(), users);
+    public ResponseEntity<SearchUser> findUsersBySpecialities(@RequestBody User user, @PathVariable int offset,
+                                                              @PathVariable int pageSize) {
+
+        if (!searchUsersWithSpeciality.isEmpty()) {
+            return ResponseEntity.ok(searchUsersWithSpeciality.pop());
+        }
+        searchUsersWithSpeciality = userService.findUsersBySpecialities(user, offset, pageSize);
+        return ResponseEntity.ok(searchUsersWithSpeciality.pop());
     }
 
 
@@ -214,10 +226,6 @@ public class PublicUserController {
         }
     }
 
-//    @GetMapping("/chat/{senderUserName}/{receiverUserName}")
-//    public List<ChatMessage> getChatHistory(@PathVariable String senderUserName, @PathVariable String receiverUserName) {
-//        return chatService.getChatHistory(senderUserName, receiverUserName);
-//    }
 
     @GetMapping("/socialNetworks/{userName}")
     public ResponseEntity<List<SocialNetworksGetterDto>> getAllSocialNetworks(@PathVariable String userName) {

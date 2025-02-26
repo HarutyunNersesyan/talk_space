@@ -10,7 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 public class Image {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

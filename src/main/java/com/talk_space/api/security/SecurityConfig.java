@@ -33,14 +33,14 @@ public class SecurityConfig {
                 .cors().disable()
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/public/user/signUp").permitAll()
-                        .requestMatchers("/api/public/user/verify").permitAll()
-                        .requestMatchers("/api/public/user/forgotPassword").permitAll()
-                        .requestMatchers("account/auth").permitAll()
-                       .requestMatchers("/api/public/**").authenticated()
+                        .requestMatchers("/api/public/**").permitAll()
+//                        .requestMatchers("/api/public/user/signUp").permitAll()
+//                        .requestMatchers("/api/public/user/verify").permitAll()
+//                        .requestMatchers("/api/public/user/forgotPassword").permitAll()
+//                        .requestMatchers("account/auth").permitAll()
+//                       .requestMatchers("/api/public/**").authenticated()
 //                        .requestMatchers("/api/private/**").hasAnyAuthority("ADMIN")
-//                        .requestMatchers("/api/private/**").permitAll()
+                        .requestMatchers("/api/private/**").permitAll()
 
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

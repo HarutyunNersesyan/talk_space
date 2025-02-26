@@ -1,6 +1,7 @@
 package com.talk_space.model.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.talk_space.model.dto.fillers.FillUsers;
 import com.talk_space.model.dto.SignUp;
 import com.talk_space.model.enums.*;
@@ -87,7 +88,7 @@ public class User {
     @OneToMany(mappedBy = "senderUserName", cascade = CascadeType.ALL)
     private List<ChatMessage> sentMessages;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Image> images;
 
     @ManyToMany

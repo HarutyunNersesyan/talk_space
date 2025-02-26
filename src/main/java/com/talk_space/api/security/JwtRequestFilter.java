@@ -50,9 +50,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (!userService.findUserByEmail(username).get().getVerifyMail()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "User email not verified");
-            }
+//            if (!userService.findUserByEmail(username).get().getVerifyMail()) {
+//                response.sendError(HttpServletResponse.SC_FORBIDDEN, "User email not verified");
+//            }
             if (userService.findUserByEmail(username).get().getStatus().equals(Status.BLOCKED)){
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account has been blocked");
             }

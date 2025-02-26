@@ -4,10 +4,14 @@ package com.talk_space.service;
 import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.*;
+import com.talk_space.model.dto.fillers.FillUsers;
+import com.talk_space.model.enums.Gender;
 import com.talk_space.model.enums.Role;
 import com.talk_space.model.enums.Status;
 import com.talk_space.model.enums.Zodiac;
 import com.talk_space.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -39,6 +43,8 @@ public class UserService implements UserDetailsService {
     private final ImageService imageService;
 
     private final MailSenderService mailSenderService;
+
+
 
 
     @Autowired
@@ -165,7 +171,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("Customer not found with id: " + email));
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("User not found with id: " + email));
 
         String role = user.getRole().name();
 
@@ -210,7 +216,7 @@ public class UserService implements UserDetailsService {
         return blockAccount.getBlockMessage();
 
     }
-    public Page<User> findUsersByHobbies(User user, int offset, int pageSize) {
+    public Stack<SearchUser> findUsersByHobbies(User user, int offset, int pageSize) {
         if (user == null || user.getUserName() == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -218,11 +224,21 @@ public class UserService implements UserDetailsService {
         if (optionalUser.isEmpty() || optionalUser.get().getHobbies() == null || optionalUser.get().getHobbies().isEmpty()) {
             throw new IllegalArgumentException("User hobbies cannot be empty");
         }
+        Stack<SearchUser> searchUser = new Stack<>();
         Pageable pageable = PageRequest.of(offset, pageSize);
-        return userRepository.findUsersByHobbies(user.getUserName(), pageable);
+        Page<User> users = userRepository.findUsersBySpecialities(user.getUserName(), pageable);
+        List<User> userList = new ArrayList<>(users.getContent());
+        for (int i = 0; i < userList.size(); i++) {
+            searchUser.push(new SearchUser(userList.get(i)));
+        }
+
+        return searchUser;
     }
 
-    public Page<User> findUsersBySpecialities(User user, int offset, int pageSize) {
+    @Transactional
+    public Stack<SearchUser> findUsersBySpecialities(User user, int offset, int pageSize) {
+
+
         if (user == null || user.getUserName() == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -231,9 +247,18 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("User`s specialities cannot be empty");
 
         }
+        Stack<SearchUser> searchUser = new Stack<>();
         Pageable pageable = PageRequest.of(offset, pageSize);
-        return userRepository.findUsersBySpecialities(user.getUserName(), pageable);
+        Page<User> users = userRepository.findUsersBySpecialities(user.getUserName(), pageable);
+        List<User> userList = new ArrayList<>(users.getContent());
+        for (int i = 0; i < userList.size(); i++) {
+            searchUser.push(new SearchUser(userList.get(i)));
+        }
+
+        return searchUser;
     }
+
+
 
 //    @PostConstruct
 //    public void fillDB() {

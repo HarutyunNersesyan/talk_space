@@ -21,7 +21,7 @@ public class SpringDocConfig {
     @Bean
     public OpenAPI baseOpenAPI() {
         return new OpenAPI().info(new Info()
-                .title("Tour Project")
+                .title("TalkSpace Project")
                 .version("1.0.0")
                 .description("Controller"));
     }
