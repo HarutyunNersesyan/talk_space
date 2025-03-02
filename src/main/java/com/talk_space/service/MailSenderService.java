@@ -10,7 +10,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +24,7 @@ public class MailSenderService {
 
     private final ForgotPassword forgotPassword;
 
-    @Value("$(spring.email.username)")
+    @Value("$(TalkSpace)")
     private String fromMail;
 
     public void sendEmail(String mail, String subject, String message) {

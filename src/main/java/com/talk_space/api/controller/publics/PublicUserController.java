@@ -7,12 +7,13 @@ import com.talk_space.model.dto.getters.SocialNetworksGetterDto;
 import com.talk_space.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 
 
@@ -23,7 +24,6 @@ public class PublicUserController {
 
     private final UserService userService;
 
-    private final MailSenderService mailSenderService;
 
     private final LikeService likeService;
 
@@ -124,14 +124,24 @@ public class PublicUserController {
 
 
     @PostMapping("/like")
-    public ResponseEntity<Like> createLike(@RequestBody Like like) {
-        Like savedLike = likeService.saveLike(like);
-        return new ResponseEntity<>(savedLike, HttpStatus.CREATED);
+    public ResponseEntity<?> like(@RequestBody Like like) {
+        try {
+            Like savedLike = likeService.saveLike(like);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedLike);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found: " + e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Like already exists.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred: " + e.getMessage());
+        }
     }
 
 
+
     @PutMapping("/update/hobby")
-    public ResponseEntity<String> updateHobby(@RequestBody HobbyDto hobbyDto) {
+    public ResponseEntity<String> updateHobbies(@RequestBody HobbyDto hobbyDto) {
         try {
             String result = hobbyService.addHobbyForUser(hobbyDto);
             return ResponseEntity.ok(result);
@@ -146,7 +156,7 @@ public class PublicUserController {
 
 
     @PutMapping("/update/speciality")
-    public ResponseEntity<String> updateSpeciality(@RequestBody SpecialityDto specialityDto) {
+    public ResponseEntity<String> updateSpecialities(@RequestBody SpecialityDto specialityDto) {
         try {
             String result = specialityService.addSpecialityForUser(specialityDto);
             return ResponseEntity.ok(result);
@@ -181,28 +191,35 @@ public class PublicUserController {
     }
 
     @GetMapping("/searchByHobbies/{offset}/{pageSize}")
-    public ResponseEntity<SearchUser> findUsersByHobbies(@RequestBody User user, @PathVariable int offset,
-                                                         @PathVariable int pageSize) {
-
-        if (!searchUsersWithHobbies.isEmpty()) {
+    public ResponseEntity<?> findUsersByHobbies(@RequestBody User user, @PathVariable int offset,
+                                                @PathVariable int pageSize) {
+        try {
+            if (!searchUsersWithHobbies.isEmpty()) {
+                return ResponseEntity.ok(searchUsersWithHobbies.pop());
+            }
+            searchUsersWithHobbies = userService.findUsersByHobbies(user, offset, pageSize);
             return ResponseEntity.ok(searchUsersWithHobbies.pop());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
         }
-        searchUsersWithHobbies = userService.findUsersBySpecialities(user, offset, pageSize);
-        return ResponseEntity.ok(searchUsersWithHobbies.pop());
     }
 
 
     @GetMapping("/searchBySpecialities/{offset}/{pageSize}")
-    public ResponseEntity<SearchUser> findUsersBySpecialities(@RequestBody User user, @PathVariable int offset,
-                                                              @PathVariable int pageSize) {
-
-        if (!searchUsersWithSpeciality.isEmpty()) {
+    public ResponseEntity<?> findUsersBySpecialities(@RequestBody User user, @PathVariable int offset,
+                                                     @PathVariable int pageSize) {
+        try {
+            if (!searchUsersWithSpeciality.isEmpty()) {
+                return ResponseEntity.ok(searchUsersWithSpeciality.pop());
+            }
+            searchUsersWithSpeciality = userService.findUsersBySpecialities(user, offset, pageSize, searchUsersWithSpeciality);
             return ResponseEntity.ok(searchUsersWithSpeciality.pop());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
         }
-        searchUsersWithSpeciality = userService.findUsersBySpecialities(user, offset, pageSize);
-        return ResponseEntity.ok(searchUsersWithSpeciality.pop());
     }
-
 
     @PostMapping("/images/upload")
     public ResponseEntity<String> uploadImages(@RequestBody ImageDto imageDto) {
@@ -225,7 +242,6 @@ public class PublicUserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
 
     @GetMapping("/socialNetworks/{userName}")
     public ResponseEntity<List<SocialNetworksGetterDto>> getAllSocialNetworks(@PathVariable String userName) {

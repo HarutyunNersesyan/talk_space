@@ -52,7 +52,8 @@ public class LikeService {
         like.setLiker(liker);
         like.setLiked(liked);
 
-        if (likeRepository.existsByLikerUserIdAndLikedUserId(liked.getUserId(), liker.getUserId())) {
+        if (likeRepository.existsByLikerUserIdAndLikedUserId(liked.getUserId(), liker.getUserId()) &&
+               !likeRepository.existsByLikerUserIdAndLikedUserId(liker.getUserId(), liked.getUserId())) {
             chatRepository.saveAll(List.of(
                     new ChatMessage(liker, liked.getUserName(),"You have a mutual liking", LocalDateTime.now()),
             new ChatMessage(liked, liker.getUserName(),"You have a mutual liking", LocalDateTime.now())

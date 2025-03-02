@@ -57,6 +57,7 @@ public class PrivateAdminController {
         List<Hobby> hobbyList = hobbyService.saveHobbies(hobbies);
         return new ResponseEntity<>(hobbyList, HttpStatus.CREATED);
     }
+
     @GetMapping("/hobby/")
     public List<Hobby> getAllHobbies() {
         return hobbyService.getAll();
@@ -96,20 +97,20 @@ public class PrivateAdminController {
     }
 
     @PostMapping("/speciality/save")
-    public ResponseEntity<Speciality> saveSpeciality(@RequestBody Speciality speciality){
+    public ResponseEntity<Speciality> saveSpeciality(@RequestBody Speciality speciality) {
         Speciality savedSpeciality = specialityService.save(speciality);
-        return new ResponseEntity<>(savedSpeciality,HttpStatus.CREATED);
+        return new ResponseEntity<>(savedSpeciality, HttpStatus.CREATED);
     }
 
     @PostMapping("/speciality/saveAll")
-    public ResponseEntity<List<Speciality>> saveSpecialities(@RequestBody List<Speciality> specialities){
+    public ResponseEntity<List<Speciality>> saveSpecialities(@RequestBody List<Speciality> specialities) {
         List<Speciality> specialityList = specialityService.saveSpecialities(specialities);
-        return new ResponseEntity<>(specialityList,HttpStatus.CREATED);
+        return new ResponseEntity<>(specialityList, HttpStatus.CREATED);
     }
 
 
     @GetMapping("/speciality")
-    public List<Speciality> getAllSpecialities(){
+    public List<Speciality> getAllSpecialities() {
         return specialityService.getAll();
     }
 
@@ -148,6 +149,16 @@ public class PrivateAdminController {
             String result = userService.blockUser(blockAccount);
             return ResponseEntity.ok().body("User has been successfully blocked. " +
                     "\n" + "Cause: " + result);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/unBlock")
+    public ResponseEntity<String> unblockUser(@RequestParam String username) {
+        try {
+            String result = userService.unblockUser(username);
+            return ResponseEntity.ok().body(result);
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
