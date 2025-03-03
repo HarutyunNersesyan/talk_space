@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 @RestController
@@ -37,7 +38,6 @@ public class PublicUserController {
 
     private final SpecialityService specialityService;
 
-    private Stack<SearchUser> searchUsersWithSpeciality = new Stack<>();
 
     private Stack<SearchUser> searchUsersWithHobbies = new Stack<>();
 
@@ -189,37 +189,48 @@ public class PublicUserController {
     public ResponseEntity<String> updateEducation(@RequestBody EducationDto education) {
         return ResponseEntity.ok(userService.updateEducation(education));
     }
+//    @GetMapping("/searchByHobbies/{offset}/{pageSize}")
+//    public ResponseEntity<?> findUsersByHobbies(@RequestBody User user, @PathVariable int offset,
+//                                                @PathVariable int pageSize) {
+//        try {
+//            if (!searchUsersWithHobbies.isEmpty()) {
+//                return ResponseEntity.ok(searchUsersWithHobbies.pop());
+//            }
+//            searchUsersWithHobbies = userService.findUsersByHobbies(user, offset, pageSize);
+//            return ResponseEntity.ok(searchUsersWithHobbies.pop());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(e.getMessage());
+//        }
+//    }
 
-    @GetMapping("/searchByHobbies/{offset}/{pageSize}")
-    public ResponseEntity<?> findUsersByHobbies(@RequestBody User user, @PathVariable int offset,
-                                                @PathVariable int pageSize) {
+
+    @GetMapping("/searchByHobbies")
+    public ResponseEntity<?> findUsersByHobbies(@RequestBody User user) {
         try {
-            if (!searchUsersWithHobbies.isEmpty()) {
-                return ResponseEntity.ok(searchUsersWithHobbies.pop());
-            }
-            searchUsersWithHobbies = userService.findUsersByHobbies(user, offset, pageSize);
-            return ResponseEntity.ok(searchUsersWithHobbies.pop());
+            SearchUser searchUser = userService.findUsersByHobbies(user);
+            return ResponseEntity.ok(searchUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
         }
     }
 
-
-    @GetMapping("/searchBySpecialities/{offset}/{pageSize}")
-    public ResponseEntity<?> findUsersBySpecialities(@RequestBody User user, @PathVariable int offset,
-                                                     @PathVariable int pageSize) {
+    @GetMapping("/searchBySpecialities")
+    public ResponseEntity<?> findUsersBySpecialities(@RequestBody User user) {
         try {
-            if (!searchUsersWithSpeciality.isEmpty()) {
-                return ResponseEntity.ok(searchUsersWithSpeciality.pop());
-            }
-            searchUsersWithSpeciality = userService.findUsersBySpecialities(user, offset, pageSize, searchUsersWithSpeciality);
-            return ResponseEntity.ok(searchUsersWithSpeciality.pop());
+            SearchUser searchUser = userService.findUsersBySpecialities(user);
+            return ResponseEntity.ok(searchUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
         }
     }
+
 
     @PostMapping("/images/upload")
     public ResponseEntity<String> uploadImages(@RequestBody ImageDto imageDto) {
