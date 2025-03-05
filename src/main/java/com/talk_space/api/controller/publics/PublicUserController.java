@@ -39,9 +39,6 @@ public class PublicUserController {
     private final SpecialityService specialityService;
 
 
-    private Stack<SearchUser> searchUsersWithHobbies = new Stack<>();
-
-
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id)));
@@ -139,7 +136,6 @@ public class PublicUserController {
     }
 
 
-
     @PutMapping("/update/hobby")
     public ResponseEntity<String> updateHobbies(@RequestBody HobbyDto hobbyDto) {
         try {
@@ -189,20 +185,6 @@ public class PublicUserController {
     public ResponseEntity<String> updateEducation(@RequestBody EducationDto education) {
         return ResponseEntity.ok(userService.updateEducation(education));
     }
-//    @GetMapping("/searchByHobbies/{offset}/{pageSize}")
-//    public ResponseEntity<?> findUsersByHobbies(@RequestBody User user, @PathVariable int offset,
-//                                                @PathVariable int pageSize) {
-//        try {
-//            if (!searchUsersWithHobbies.isEmpty()) {
-//                return ResponseEntity.ok(searchUsersWithHobbies.pop());
-//            }
-//            searchUsersWithHobbies = userService.findUsersByHobbies(user, offset, pageSize);
-//            return ResponseEntity.ok(searchUsersWithHobbies.pop());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(e.getMessage());
-//        }
-//    }
 
 
     @GetMapping("/searchByHobbies")
@@ -210,6 +192,8 @@ public class PublicUserController {
         try {
             SearchUser searchUser = userService.findUsersByHobbies(user);
             return ResponseEntity.ok(searchUser);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -223,6 +207,8 @@ public class PublicUserController {
         try {
             SearchUser searchUser = userService.findUsersBySpecialities(user);
             return ResponseEntity.ok(searchUser);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    List<Image> findByUserUserName(String userName);
 
     List<Image> findByUser(User user);
 

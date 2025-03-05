@@ -1,6 +1,7 @@
 package com.talk_space.service;
 
 
+import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.Hobby;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.HobbyDto;
@@ -62,17 +63,15 @@ public class HobbyService {
         }
 
         Optional<User> optionalUser = userRepository.findUserByUserName(hobbyDto.getUserName());
+        if (optionalUser.isEmpty()){
+            throw new CustomExceptions.UserNotFoundException("User not found.");
+        }
         User user = optionalUser.get();
         user.getHobbies().clear();
-        List<Hobby> hobbies = new ArrayList<>();
 
-//        if (optionalUser.get().getHobbies().size() + hobbyDto.getHobbies().size() > 5) {
-//            throw new IllegalArgumentException("The number of hobbies cannot exceed 5");
-//        }
         for (int i = 0; i < hobbyDto.getHobbies().size(); i++) {
-            hobbies.add(hobbyRepository.findHobbyByName((hobbyDto.getHobbies().get(i)).getName()).get());
-        }
-        user.getHobbies().addAll(hobbies);
+            user.getHobbies().add(hobbyRepository.findHobbyByName((hobbyDto.getHobbies().get(i)).getName()).get());
+        };
         userRepository.save(user);
 
         return ("Hobby added successfully.");

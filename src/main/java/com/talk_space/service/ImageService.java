@@ -114,6 +114,8 @@ public class ImageService {
             throw new IllegalArgumentException("Image not found for user");
         }
 
+        user.getImages().removeIf(image -> image.getFileName().equals(fileName));
+
         Image image = imageOptional.get();
         File imageFile = new File(image.getFilePath());
 
@@ -126,7 +128,6 @@ public class ImageService {
         } else {
             System.out.println("Image file not found in local storage: " + image.getFilePath());
         }
-
         imageRepository.delete(image);
         System.out.println("Successfully deleted image record from database: " + fileName);
     }

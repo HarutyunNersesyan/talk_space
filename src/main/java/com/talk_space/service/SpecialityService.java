@@ -1,6 +1,7 @@
 package com.talk_space.service;
 
 
+import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.Hobby;
 import com.talk_space.model.domain.Speciality;
 import com.talk_space.model.domain.User;
@@ -62,17 +63,16 @@ public class SpecialityService {
         }
 
         Optional<User> optionalUser = userRepository.findUserByUserName(specialityDto.getUserName());
-        User user = optionalUser.get();
-        List<Speciality> specialities = new ArrayList<>();
-
-        if (optionalUser.get().getSpecialities().size() + specialityDto.getSpecialities().size() > 5) {
-            throw new IllegalArgumentException("The number of specialities cannot exceed 5");
+        if (optionalUser.isEmpty()){
+            throw new CustomExceptions.UserNotFoundException("User not found.");
         }
+        User user = optionalUser.get();
+        user.getSpecialities().clear();
+
 
         for (int i = 0; i < specialityDto.getSpecialities().size(); i++) {
-            specialities.add(specialityRepository.findSpecialityByName((specialityDto.getSpecialities().get(i)).getName()).get());
-        }
-        user.getSpecialities().addAll(specialities);
+            user.getSpecialities().add(specialityRepository.findSpecialityByName((specialityDto.getSpecialities().get(i)).getName()).get());
+        };
         userRepository.save(user);
 
         return ("Specialities added successfully.");
