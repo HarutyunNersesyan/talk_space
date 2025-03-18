@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -30,23 +32,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors().disable()
-                .csrf().disable()
+                .cors().and() // Enable CORS
+                .csrf().disable() // Disable CSRF
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/public/**").permitAll()
-//                        .requestMatchers("/api/public/user/signUp").permitAll()
-//                        .requestMatchers("/api/public/user/verify").permitAll()
-//                        .requestMatchers("/api/public/user/forgotPassword").permitAll()
-//                        .requestMatchers("account/auth").permitAll()
-//                       .requestMatchers("/api/public/**").authenticated()
-//                        .requestMatchers("/api/private/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api/public/user/signUp").permitAll() // Allow sign-up
+                        .requestMatchers("/api/public/user/verify").permitAll() // Allow email verification
+                        .requestMatchers("/api/public/user/forgotPassword").permitAll() // Allow forgot password
+                        .requestMatchers("/api/public/user/hobby").permitAll() // Allow access to hobbies
+                        .requestMatchers("/api/public/**").authenticated() // Secure other public endpoints
+//                        .requestMatchers("/api/private/**").hasAnyAuthority("ADMIN") // Secure private endpoints
                         .requestMatchers("/api/private/**").permitAll()
-
-                        .anyRequest().permitAll())
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll()) // Allow all other requests
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
         return http.build();
     }
-
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
@@ -67,5 +66,18 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // Allow all endpoints
+                        .allowedOrigins("http://localhost:3000") // Allow frontend origin
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow all necessary methods
+                        .allowedHeaders("*") // Allow all headers
+                        .allowCredentials(true) // Allow credentials (e.g., cookies)
+                        .maxAge(3600); // Cache preflight response for 1 hour
+            }
+        };
+    }
 }
-

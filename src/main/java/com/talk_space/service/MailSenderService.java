@@ -4,6 +4,7 @@ package com.talk_space.service;
 import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.ForgotPassword;
+import com.talk_space.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,6 +24,8 @@ public class MailSenderService {
     private final UserService userService;
 
     private final ForgotPassword forgotPassword;
+
+    private final UserRepository userRepository;
 
     @Value("$(TalkSpace)")
     private String fromMail;
@@ -64,8 +67,12 @@ public class MailSenderService {
         scheduler.schedule(() -> {
             userService.findUserByEmail(mail)
                     .ifPresent(user -> {
-                        user.setPin(null);
-                        userService.update(user);
+                        if (!user.getVerifyMail()) {
+                            userRepository.delete(user);
+                        } else {
+                            user.setPin(null);
+                            userService.update(user);
+                        }
                     });
         }, 30, TimeUnit.MINUTES);
     }

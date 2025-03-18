@@ -24,6 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
+
+
     @Query(value = """
                 SELECT u.* 
                 FROM user_entity u

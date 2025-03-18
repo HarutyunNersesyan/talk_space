@@ -30,7 +30,7 @@ public class JwtTokenUtils {
         claims.put("roles", rolesList);
 
         Date issuedDate = new Date();
-        Date expiredDate = new Date(issuedDate.getTime() + 30000000);
+        Date expiredDate = new Date(issuedDate.getTime() + 259200000);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
@@ -54,7 +54,6 @@ public class JwtTokenUtils {
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-
     }
 
 }

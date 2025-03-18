@@ -45,11 +45,11 @@ public class CustomExceptions extends RuntimeException {
         }
     }
 
-        public static class InvalidSocialNetworkException extends RuntimeException {
-            public InvalidSocialNetworkException(String message) {
-                super(message);
-            }
+    public static class InvalidSocialNetworkException extends RuntimeException {
+        public InvalidSocialNetworkException(String message) {
+            super(message);
         }
+    }
 
     public static class ImageLimitExceededException extends Throwable {
         public ImageLimitExceededException(String message) {
@@ -57,23 +57,29 @@ public class CustomExceptions extends RuntimeException {
         }
     }
 
-    public static class NotVerifiedMailException extends RuntimeException{
-        public NotVerifiedMailException(String message){
+    public static class NotVerifiedMailException extends RuntimeException {
+        public NotVerifiedMailException(String message) {
             super(message);
         }
     }
 
-    public static class UserBlockException extends RuntimeException{
-        public UserBlockException(String message){
+    public static class UserBlockException extends RuntimeException {
+        public UserBlockException(String message) {
             super(message);
         }
     }
 
-    public static class AlreadyVerifiedEmail extends RuntimeException{
-        public AlreadyVerifiedEmail(String message){
+    public static class AlreadyVerifiedEmail extends RuntimeException {
+        public AlreadyVerifiedEmail(String message) {
             super(message);
         }
     }
 
+    public static class InvalidEducationValueException extends RuntimeException {
+        public InvalidEducationValueException(String message) {
+            super(message);
+        }
+
+    }
 }
 

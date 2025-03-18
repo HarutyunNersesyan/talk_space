@@ -1,4 +1,4 @@
-package com.talk_space.model.dto.fillers;
+package com.talk_space.model.dto.getters.fillers;
 
 import com.talk_space.model.enums.Gender;
 import jakarta.persistence.EnumType;

@@ -1,17 +1,21 @@
 package com.talk_space.model.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.talk_space.model.dto.fillers.FillUsers;
+import com.talk_space.model.dto.getters.fillers.FillUsers;
 import com.talk_space.model.dto.SignUp;
 import com.talk_space.model.enums.*;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -58,13 +62,17 @@ public class User {
     private Gender gender;
 
     @Column(name = "email", nullable = false, unique = true)
-    @Email(message = "Email should be valid and can`t be empty")
+    @Email(message = "Email should be valid")
+    @Pattern(
+            regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
+            message = "Email should be a valid Gmail address (example@gmail.com)"
+    )
     private String email;
 
+
+
     @NotNull(message = "Password should be valid and can`t be empty")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+])[a-zA-Z0-9!@#$%^&*()_+]{8,20}$"
-            , message = "The password must contain uppercase and lowercase letters, mathematical symbols and numbers.")
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @CreatedDate
@@ -114,7 +122,7 @@ public class User {
     private Education education;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<SocialNetworks> socialNetwork;
+    private List<SocialNetworks> socialNetworks;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)

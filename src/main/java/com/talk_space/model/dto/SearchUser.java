@@ -91,9 +91,9 @@ public class SearchUser {
 
         this.education = user.getEducation();
 
-        if (!user.getSocialNetwork().isEmpty()) {
-            for (int i = 0; i < user.getSocialNetwork().size(); i++) {
-                this.socialNetworks.add( user.getSocialNetwork().get(i).getUrl());
+        if (!user.getSocialNetworks().isEmpty()) {
+            for (int i = 0; i < user.getSocialNetworks().size(); i++) {
+                this.socialNetworks.add( user.getSocialNetworks().get(i).getUrl());
             }
         }
     }

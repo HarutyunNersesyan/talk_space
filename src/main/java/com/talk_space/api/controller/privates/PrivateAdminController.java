@@ -58,7 +58,7 @@ public class PrivateAdminController {
         return new ResponseEntity<>(hobbyList, HttpStatus.CREATED);
     }
 
-    @GetMapping("/hobby/")
+    @GetMapping("/hobby")
     public List<Hobby> getAllHobbies() {
         return hobbyService.getAll();
     }

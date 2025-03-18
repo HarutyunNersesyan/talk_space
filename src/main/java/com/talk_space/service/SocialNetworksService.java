@@ -4,6 +4,7 @@ package com.talk_space.service;
 import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.SocialNetworks;
 import com.talk_space.model.domain.User;
+import com.talk_space.model.dto.SocialNetworkDto;
 import com.talk_space.model.dto.SocialNetworksDto;
 import com.talk_space.model.dto.getters.SocialNetworksGetterDto;
 import com.talk_space.repository.SocialNetworksRepository;
@@ -24,35 +25,38 @@ public class SocialNetworksService {
 
     private final SocialNetworksRepository socialNetworksRepository;
 
-    public String addSocialNetworks(SocialNetworksDto sn) throws CustomExceptions.InvalidSocialNetworkException {
-        Optional<User> userOptional = userRepository.findUserByUserName(sn.getUserName());
-        if (userOptional.isEmpty()) {
-            throw new CustomExceptions.UserNotFoundException("User not found with username: " + sn.getUserName());
-        }
+    public String updateSocialNetworks(SocialNetworksDto socialNetworksDto) {
 
+        Optional<User> userOptional = userRepository.findUserByUserName(socialNetworksDto.getUserName());
         User user = userOptional.get();
-        List<SocialNetworks> validSocialNetworks = new ArrayList<>();
-        for (SocialNetworks socialNetwork : sn.getSocialNetworks()) {
-            if (socialNetwork != null && SocialMediaValidator.mediaValidation(socialNetwork.getPlatform(), socialNetwork.getUrl())) {
-                socialNetwork.setUser(user);
-                validSocialNetworks.add(socialNetwork);
+        if (userOptional.isEmpty()) {
+            throw new CustomExceptions.UserNotFoundException("User not found.");
+        }
+
+
+        List<SocialNetworks> socialNetworks = socialNetworksRepository.getSocialNetworksByUserUserName(user.getUserName());
+        socialNetworksRepository.deleteAll(socialNetworks);
+
+        user.getSocialNetworks().clear();
+
+        for (SocialNetworkDto socialNetworkDto : socialNetworksDto.getSocialNetworks()) {
+            if (socialNetworkDto == null || !SocialMediaValidator.mediaValidation(socialNetworkDto.getPlatform(), socialNetworkDto.getUrl())) {
+                throw new CustomExceptions.InvalidSocialNetworkException("Invalid platform or URL.");
             }
+            SocialNetworks socialNetwork = new SocialNetworks();
+            socialNetwork.setPlatform(socialNetworkDto.getPlatform());
+            socialNetwork.setUrl(socialNetworkDto.getUrl());
+            socialNetwork.setUser(user);
+            user.getSocialNetworks().add(socialNetwork);
         }
 
-        if (validSocialNetworks.isEmpty()) {
-            throw new CustomExceptions.InvalidSocialNetworkException("No valid social networks to add.");
-        }
-
-        user.getSocialNetwork()
-                .clear();
-        user.getSocialNetwork()
-                .addAll(validSocialNetworks);
         userRepository.save(user);
-
-        return "Social networks added successfully.";
+        return "Social networks updated successfully.";
     }
-    public List<SocialNetworksGetterDto> getAllSocialNetworks(String userName){
-           return SocialNetworksGetterDto.socialNetworks(socialNetworksRepository.getSocialNetworksByUserUserName(userName));
+
+
+    public List<SocialNetworksGetterDto> getAllSocialNetworks(String userName) {
+        return SocialNetworksGetterDto.socialNetworks(socialNetworksRepository.getSocialNetworksByUserUserName(userName));
 
     }
 

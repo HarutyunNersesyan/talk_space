@@ -41,8 +41,7 @@ public class AuthController {
 
     @GetMapping("/profile/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
-        // Clear the token from client side (usually in frontend)
-        SecurityContextHolder.clearContext(); // Clear authentication from security context
+        SecurityContextHolder.clearContext();
         return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
     }
 

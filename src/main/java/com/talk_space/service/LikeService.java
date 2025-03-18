@@ -36,6 +36,7 @@ public class LikeService {
     }
 
     public Like saveLike(Like like) {
+
         like.setLikeDate(LocalDate.now());
 
         User liker = userRepository.findUserByUserName(like.getLiker()

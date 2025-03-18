@@ -25,7 +25,7 @@ public class ForgotPassword {
         return String.valueOf(random.nextInt(100000, 999999));
     }
 
-    public  String generatePassword() {
+    public String generatePassword() {
         final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
         final String DIGITS = "0123456789";

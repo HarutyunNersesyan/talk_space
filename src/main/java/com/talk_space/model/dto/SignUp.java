@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,11 +39,14 @@ public class SignUp {
     @PastOrPresent(message = "Birth date must be a past date")
     private LocalDate birthDate;
 
-    @Email(message = "Email should be valid and can`t be empty")
+
+    @Email(message = "Email should be valid")
+    @Pattern(
+            regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
+            message = "Email should be a valid Gmail address (example@gmail.com)"
+    )
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+])[a-zA-Z0-9!@#$%^&*()_+]{8,20}$"
-            , message = "The password must contain uppercase and lowercase letters, mathematical symbols and numbers.")
     private String password;
 
     @NotNull(message = "Gender cannot be empty")
@@ -51,3 +55,4 @@ public class SignUp {
 
 
 }
+

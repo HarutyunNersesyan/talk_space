@@ -15,4 +15,6 @@ import java.util.Optional;
 public interface SocialNetworksRepository extends JpaRepository<SocialNetworks, Long> {
 
         List<SocialNetworks> getSocialNetworksByUserUserName(String userName);
+
+
 }
