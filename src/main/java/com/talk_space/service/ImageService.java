@@ -9,6 +9,8 @@ import com.talk_space.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,111 +27,90 @@ public class ImageService {
     private static final String IMAGE_DIR = "C:/Users/HARUT_037/Desktop/talk_space/images/";
 
     @Transactional
-    public void updateImages(ImageDto imageDto) {
-        Optional<User> userOptional = userRepository.findUserByUserName(imageDto.getUserName());
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        User user = userOptional.get();
+    public String uploadProfilePicture(MultipartFile file, String userName) {
+        User user = userRepository.findUserByUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         List<Image> existingImages = imageRepository.findByUser(user);
         if (existingImages.size() >= 3) {
             throw new RuntimeException("User already has 3 images. Cannot upload more.");
         }
 
+        ensureDirectoryExists();
+
+        if (!isValidFileType(file.getContentType())) {
+            throw new IllegalArgumentException("Invalid file type: " + file.getContentType() +
+                    ". Only JPEG and PNG are allowed.");
+        }
+
+        String fileName = generateUniqueFileName(file.getContentType());
+        String filePath = IMAGE_DIR + fileName;
+        storeFile(file, filePath);
+
+        Image image = new Image();
+        image.setFileName(fileName);
+        image.setFileType(file.getContentType());
+        image.setFilePath(filePath);
+        image.setUser(user);
+
+        imageRepository.save(image);
+        return filePath;
+    }
+
+    private void ensureDirectoryExists() {
         File directory = new File(IMAGE_DIR);
         if (!directory.exists() && !directory.mkdirs()) {
             throw new RuntimeException("Failed to create directory: " + IMAGE_DIR);
         }
-
-        List<Image> newImages = imageDto.getImages().stream().map(imageData -> {
-            try {
-                System.out.println("Processing image: " + imageData.getFileName());
-
-                if (!isValidFileType(imageData.getFileType())) {
-                    throw new IllegalArgumentException("Invalid file type: " + imageData.getFileType() +
-                            ". Only JPEG and PNG are allowed.");
-                }
-
-                if (existingImages.size() >= 3) {
-                    throw new RuntimeException("User already has 3 images. Cannot upload more.");
-                }
-
-                byte[] imageBytes = Base64.getDecoder().decode(imageData.getData());
-                String uniqueFileName = System.currentTimeMillis() +
-                        (imageData.getFileType().equals("image/png") ? ".png" : ".jpeg");
-
-                String filePath = IMAGE_DIR + uniqueFileName;
-
-                File imageFile = new File(filePath);
-                try (FileOutputStream fos = new FileOutputStream(imageFile)) {
-                    fos.write(imageBytes);
-                }
-
-                Image image = new Image();
-                image.setFileName(uniqueFileName);
-                image.setFileType(imageData.getFileType());
-                image.setFilePath(filePath);
-                image.setUser(user);
-
-                System.out.println("Successfully saved image: " + filePath);
-                existingImages.add(image);
-                return image;
-
-            } catch (IOException | IllegalArgumentException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to save image: " + imageData.getFileName(), e);
-            }
-        }).toList();
-
-        imageRepository.saveAll(newImages);
     }
 
+    private String generateUniqueFileName(String fileType) {
+        return System.currentTimeMillis() + (fileType.equals("image/png") ? ".png" : ".jpeg");
+    }
+
+    private void storeFile(MultipartFile file, String filePath) {
+        try {
+            File imageFile = new File(filePath);
+            try (FileOutputStream fos = new FileOutputStream(imageFile)) {
+                fos.write(file.getBytes());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save image file", e);
+        }
+    }
 
     private boolean isValidFileType(String fileType) {
         return "image/jpeg".equalsIgnoreCase(fileType) || "image/png".equalsIgnoreCase(fileType);
     }
 
     public List<String> getUserImages(String userName) {
-        Optional<User> userOptional = userRepository.findUserByUserName(userName);
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-        return imageRepository.findByUser(userOptional.get()).stream()
+        User user = userRepository.findUserByUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return imageRepository.findByUser(user).stream()
                 .map(Image::getFilePath)
                 .toList();
     }
 
     @Transactional
     public void deleteImage(String userName, String fileName) {
-        Optional<User> userOptional = userRepository.findUserByUserName(userName);
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-        User user = userOptional.get();
-        Optional<Image> imageOptional = imageRepository.findByUserAndFileName(user, fileName);
+        User user = userRepository.findUserByUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if (imageOptional.isEmpty()) {
-            throw new IllegalArgumentException("Image not found for user");
-        }
+        Image image = imageRepository.findByUserAndFileName(user, fileName)
+                .orElseThrow(() -> new IllegalArgumentException("Image not found for user"));
 
-        user.getImages().removeIf(image -> image.getFileName().equals(fileName));
+        deleteImageFile(image.getFilePath());
 
-        Image image = imageOptional.get();
-        File imageFile = new File(image.getFilePath());
-
-        if (imageFile.exists()) {
-            if (imageFile.delete()) {
-                System.out.println("Successfully deleted image file: " + image.getFilePath());
-            } else {
-                throw new RuntimeException("Failed to delete image file: " + image.getFilePath());
-            }
-        } else {
-            System.out.println("Image file not found in local storage: " + image.getFilePath());
-        }
         imageRepository.delete(image);
-        System.out.println("Successfully deleted image record from database: " + fileName);
+    }
+
+    private void deleteImageFile(String filePath) {
+        File imageFile = new File(filePath);
+        if (imageFile.exists() && !imageFile.delete()) {
+            throw new RuntimeException("Failed to delete image file: " + filePath);
+        }
     }
 }
+
 

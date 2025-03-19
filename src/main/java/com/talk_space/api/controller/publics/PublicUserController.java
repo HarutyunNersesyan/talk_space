@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -259,24 +260,40 @@ public class PublicUserController {
 
 
     @PostMapping("/images/upload")
-    public ResponseEntity<String> uploadImages(@RequestBody ImageDto imageDto) {
-        imageService.updateImages(imageDto);
-        return ResponseEntity.ok("Images uploaded successfully");
+    public ResponseEntity<String> uploadProfilePicture(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userName") String userName) {
+        try {
+            String filePath = imageService.uploadProfilePicture(file, userName);
+            return ResponseEntity.ok("Profile picture uploaded successfully: " + filePath);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile picture: " + e.getMessage());
+        }
     }
 
-    @GetMapping("/images/{userName}")
+    @GetMapping("/iamges/{userName}")
     public ResponseEntity<List<String>> getUserImages(@PathVariable String userName) {
-        List<String> images = imageService.getUserImages(userName);
-        return ResponseEntity.ok(images);
+        try {
+            List<String> images = imageService.getUserImages(userName);
+            return ResponseEntity.ok(images);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @DeleteMapping("/images/delete")
-    public ResponseEntity<String> deleteImage(@RequestBody DeleteImageRequest request) {
+    public ResponseEntity<String> deleteImage(
+            @RequestParam("userName") String userName,
+            @RequestParam("fileName") String fileName) {
         try {
-            imageService.deleteImage(request.getUserName(), request.getFileName());
-            return ResponseEntity.ok("Image deleted successfully.");
+            imageService.deleteImage(userName, fileName);
+            return ResponseEntity.ok("Image deleted successfully: " + fileName);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete image: " + e.getMessage());
         }
     }
 
