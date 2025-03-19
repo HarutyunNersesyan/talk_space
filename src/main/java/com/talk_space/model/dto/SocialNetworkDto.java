@@ -11,7 +11,4 @@ import lombok.NoArgsConstructor;
 public class SocialNetworkDto {
     private String platform;
     private String url;
-
-    // Getters and setters
-
 }

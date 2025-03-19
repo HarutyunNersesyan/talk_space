@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -45,7 +46,6 @@ public class PublicUserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + email);
         }
     }
-
 
 
     @PutMapping("/update/hobby")
@@ -191,9 +191,6 @@ public class PublicUserController {
     }
 
 
-
-
-
     @PutMapping("/update/speciality")
     public ResponseEntity<String> updateSpecialities(@RequestBody SpecialityDto specialityDto) {
         try {
@@ -311,7 +308,20 @@ public class PublicUserController {
                 .orElseThrow(() -> new RuntimeException("Speciality not found with hobby name: " + specialityName)));
     }
 
+    @GetMapping("/get/specialities/{userName}")
+    public ResponseEntity<List<Speciality>> getSpecialitesByUserName(@PathVariable String userName) {
+        return userService.getUserByUserName(userName)
+                .map(user -> ResponseEntity.ok(user.getSpecialities()))
+                .orElseThrow(() -> new RuntimeException("User not found with user name: " + userName));
+    }
 
+
+    @GetMapping("/get/hobbies/{userName}")
+    public ResponseEntity<List<Hobby>> getHobbiesByUserName(@PathVariable String userName) {
+        return userService.getUserByUserName(userName)
+                .map(user -> ResponseEntity.ok(user.getHobbies()))
+                .orElseThrow(() -> new RuntimeException("User not found with user name: " + userName));
+    }
 }
 
 
