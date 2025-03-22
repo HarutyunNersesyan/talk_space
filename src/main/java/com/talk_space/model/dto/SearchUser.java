@@ -1,16 +1,11 @@
 package com.talk_space.model.dto;
 
 import com.talk_space.model.domain.*;
-import com.talk_space.model.dto.getters.ImageGetterDto;
-import com.talk_space.model.dto.getters.SocialNetworksGetterDto;
-import com.talk_space.model.enums.Education;
 import com.talk_space.model.enums.Gender;
 import com.talk_space.model.enums.Zodiac;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -34,13 +29,14 @@ public class SearchUser {
 
     private Zodiac zodiac;
 
-    private List<ImageGetterDto> images = new ArrayList<>();
+    private String image;
+
+    private String about;
 
     private List<String> hobbies = new ArrayList<>();
 
     private List<String> specialities = new ArrayList<>();
 
-    private Education education;
 
     private List<String> socialNetworks = new ArrayList<>();
 
@@ -70,13 +66,10 @@ public class SearchUser {
         this.age = LocalDate.now().getYear() - user.getBirthDate().getYear();
         this.gender = user.getGender();
         this.zodiac = user.getZodiacSign();
-
-
-        for (int i = 0; i < user.getImages().size(); i++) {
-            this.images.add(new ImageGetterDto(user.getImages().get(i).getFileType(),
-                    user.getImages().get(i).getFilePath()));
+        this.about = user.getAboutMe();
+        if (user.getImage() != null) {
+            this.image = user.getImage().getFilePath();
         }
-
         if (!user.getHobbies().isEmpty()) {
             for (int i = 0; i < user.getHobbies().size(); i++) {
                 this.hobbies.add(user.getHobbies().get(i).getName());
@@ -89,11 +82,9 @@ public class SearchUser {
             }
         }
 
-        this.education = user.getEducation();
-
         if (!user.getSocialNetworks().isEmpty()) {
             for (int i = 0; i < user.getSocialNetworks().size(); i++) {
-                this.socialNetworks.add( user.getSocialNetworks().get(i).getUrl());
+                this.socialNetworks.add(user.getSocialNetworks().get(i).getUrl());
             }
         }
     }

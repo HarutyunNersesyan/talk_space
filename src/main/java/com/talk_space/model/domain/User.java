@@ -70,7 +70,6 @@ public class User {
     private String email;
 
 
-
     @NotNull(message = "Password should be valid and can`t be empty")
     @Column(name = "password")
     private String password;
@@ -96,8 +95,8 @@ public class User {
     @OneToMany(mappedBy = "senderUserName", cascade = CascadeType.ALL)
     private List<ChatMessage> sentMessages;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Image> images;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Image image;
 
     @ManyToMany
     @JoinTable(
@@ -117,9 +116,6 @@ public class User {
     )
     private List<Speciality> specialities;
 
-    @Column(name = "education")
-    @Enumerated(EnumType.STRING)
-    private Education education;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SocialNetworks> socialNetworks;
@@ -138,6 +134,9 @@ public class User {
 
     @Column(name = "blocked_message")
     private String blockedMessage;
+
+    @Column(name = "about_me", length = 50)
+    private String aboutMe;
 
 
     public static LocalDate validateBirthDate(LocalDate birthDate) {

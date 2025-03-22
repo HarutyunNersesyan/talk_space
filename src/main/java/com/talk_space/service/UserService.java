@@ -56,6 +56,10 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
@@ -91,6 +95,20 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User updateUserByEmail(String email, @Valid EditUser editUser) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User with email " + email + " not found");
+        }
+        User user = optionalUser.get();
+        LocalDate validatedBirthDate = User.validateBirthDate(editUser.getBirthDate());
+        user.setFirstName(editUser.getFirstName());
+        user.setLastName(editUser.getLastName());
+        user.setBirthDate(validatedBirthDate);
+        user.setAboutMe(editUser.getAboutMe());
+        return userRepository.save(user);
+    }
+
     /**
      * @param deleteAccount
      */
@@ -107,15 +125,30 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             throw new CustomExceptions.InvalidPassword("Invalid password");
         }
-        if (!user.getImages().isEmpty()) {
-            for (int i = 0; i < user.getImages().size(); i++) {
-                imageService.deleteImage(user.getUserName(), user.getImages().get(i).getFileName());
-            }
+        if (user.getImage() != null) {
+            imageService.deleteUserImage(user.getUserName());
         }
+
         existingUsersForHobbies.get(deleteAccount.getUserName()).clear();
         existingUsersForSpecialities.get(deleteAccount.getUserName()).clear();
 
         userRepository.delete(user);
+    }
+
+    public String updateAboutMe(AboutMe aboutMe) {
+        Optional<User> userOptional = userRepository.findUserByUserName(aboutMe.getUserName());
+
+        if (userOptional.isEmpty()) {
+            throw new CustomExceptions.UserNotFoundException("User not found.");
+        }
+        User user = userOptional.get();
+
+        user.setAboutMe(aboutMe.getAboutMe());
+
+        userRepository.save(user);
+
+        return "Updated successfully";
+
     }
 
 
@@ -203,32 +236,6 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public String updateEducation(EducationDto educationDto) {
-        // Find the user by userName
-        Optional<User> userOptional = userRepository.findUserByUserName(educationDto.getUserName());
-
-        // Check if the user exists
-        if (userOptional.isEmpty()) {
-            throw new CustomExceptions.UserNotFoundException("User not found with username: " + educationDto.getUserName());
-        }
-
-        // Get the user from the Optional
-        User user = userOptional.get();
-
-        // Convert the education string to the Education enum
-        try {
-            Education education = Education.valueOf(educationDto.getEducation().toString().toUpperCase());
-            user.setEducation(education);
-        } catch (IllegalArgumentException e) {
-            throw new CustomExceptions.InvalidEducationValueException("Invalid education value: " + educationDto.getEducation());
-        }
-
-        // Save the updated user
-        userRepository.save(user);
-
-        return "Education updated successfully";
-    }
-
     public String blockUser(BlockAccount blockAccount) {
         Optional<User> user = userRepository.findUserByUserName(blockAccount.getUserName());
         if (user.isEmpty()) {
@@ -252,17 +259,17 @@ public class UserService implements UserDetailsService {
 
 
     @Transactional
-    public SearchUser findUsersByHobbies(User user) {
-        if (user.getUserName() == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-        Optional<User> optionalUser = userRepository.findUserByUserName(user.getUserName());
+    public SearchUser findUsersByHobbies(String email) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(email);
         if (optionalUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found.");
         }
-        if (optionalUser.get().getHobbies() == null || optionalUser.get().getHobbies().isEmpty()) {
+        User user = optionalUser.get();
+
+        if (user.getHobbies() == null || user.getHobbies().isEmpty()) {
             throw new IllegalArgumentException("User hobbies cannot be empty");
         }
+
 
         Set<String> users = existingUsersForHobbies.get(user.getUserName());
 
@@ -277,14 +284,12 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public SearchUser findUsersBySpecialities(User user) {
-        if (user == null || user.getUserName() == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-        Optional<User> optionalUser = userRepository.findUserByUserName(user.getUserName());
+    public SearchUser findUsersBySpecialities(String email) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(email);
         if (optionalUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found.");
         }
+        User user = optionalUser.get();
         if (optionalUser.get().getSpecialities() == null || optionalUser.get().getSpecialities().isEmpty()) {
             throw new IllegalArgumentException("User specialities cannot be empty");
         }
@@ -302,9 +307,11 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public Optional<User> getUserByUserName(String userName){
-       return userRepository.findUserByUserName(userName);
+    public Optional<User> getUserByUserName(String userName) {
+        return userRepository.findUserByUserName(userName);
     }
+
+
     @PostConstruct
     public void fillDB() {
         List<User> users = new ArrayList<>();

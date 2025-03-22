@@ -1,7 +1,9 @@
 package com.talk_space.model.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "image")
@@ -23,8 +25,8 @@ public class Image {
     @Column(nullable = false, unique = true)
     private String filePath;
 
-    @ManyToOne
-    @JoinColumn(name = "user_name", referencedColumnName = "user_name", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_name", referencedColumnName = "user_name", nullable = false, unique = true)
     private User user;
-}
 
+}

@@ -48,6 +48,14 @@ public class PublicUserController {
         }
     }
 
+    @GetMapping("/get/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        Optional<User> userOptional = userService.findUserByEmail(email);
+        return userOptional
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
     @PutMapping("/update/hobby")
     public ResponseEntity<String> updateHobbies(@RequestBody HobbyDto hobbyDto) {
@@ -104,8 +112,16 @@ public class PublicUserController {
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
+    @PutMapping("/editUser")
+    public ResponseEntity<User> updateUserByEmail(@RequestParam String email,
+                                                  @RequestBody @Valid EditUser editUser) {
+        User updatedUser = userService.updateUserByEmail(email, editUser);
+        return ResponseEntity.ok(updatedUser);
+    }
+
     @PutMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePassword changePassword, BindingResult result) {
+    public ResponseEntity<?> changePassword(@RequestParam String email,
+                                            @Valid @RequestBody ChangePassword changePassword, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors()
                     .stream()
@@ -117,7 +133,7 @@ public class PublicUserController {
             throw new IllegalArgumentException("Invalid password: password must be contain least one uppercase, one lowercase, one digit, and one special character");
         }
         try {
-            String responseMessage = userService.changePassword(changePassword.getEmail(), changePassword.getOldPassword(), changePassword.getNewPassword(), changePassword.getNewPasswordRepeat());
+            String responseMessage = userService.changePassword(email, changePassword.getOldPassword(), changePassword.getNewPassword(), changePassword.getNewPasswordRepeat());
             return ResponseEntity.ok(responseMessage);
         } catch (CustomExceptions.NotVerifiedMailException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
@@ -222,16 +238,30 @@ public class PublicUserController {
     }
 
 
-    @PutMapping("/update/education")
-    public ResponseEntity<String> updateEducation(@RequestBody EducationDto education) {
-        return ResponseEntity.ok(userService.updateEducation(education));
+    @PutMapping("/update/aboutMe")
+    public ResponseEntity<String> updateAboutMe(@RequestBody AboutMe aboutMe) {
+        try {
+            String result = userService.updateAboutMe(aboutMe);
+            return ResponseEntity.ok(result);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
-
-    @GetMapping("/searchByHobbies")
-    public ResponseEntity<?> findUsersByHobbies(@RequestBody User user) {
+    @GetMapping("/aboutMe/{userName}")
+    public ResponseEntity<String> getAboutMe(@PathVariable String userName) {
         try {
-            SearchUser searchUser = userService.findUsersByHobbies(user);
+            String result = userService.getUserByUserName(userName).get().getAboutMe();
+            return ResponseEntity.ok(result);
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/searchByHobbies/{email}")
+    public ResponseEntity<?> findUsersByHobbies(@PathVariable String email) {
+        try {
+            SearchUser searchUser = userService.findUsersByHobbies(email);
             return ResponseEntity.ok(searchUser);
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -243,10 +273,10 @@ public class PublicUserController {
         }
     }
 
-    @GetMapping("/searchBySpecialities")
-    public ResponseEntity<?> findUsersBySpecialities(@RequestBody User user) {
+    @GetMapping("/searchBySpecialities/{email}")
+    public ResponseEntity<?> findUsersBySpecialities(@PathVariable String email) {
         try {
-            SearchUser searchUser = userService.findUsersBySpecialities(user);
+            SearchUser searchUser = userService.findUsersBySpecialities(email);
             return ResponseEntity.ok(searchUser);
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -259,7 +289,7 @@ public class PublicUserController {
     }
 
 
-    @PostMapping("/images/upload")
+    @PostMapping("image/upload")
     public ResponseEntity<String> uploadProfilePicture(
             @RequestParam("file") MultipartFile file,
             @RequestParam("userName") String userName) {
@@ -273,27 +303,27 @@ public class PublicUserController {
         }
     }
 
-    @GetMapping("/iamges/{userName}")
-    public ResponseEntity<List<String>> getUserImages(@PathVariable String userName) {
+    @GetMapping("/image/{userName}")
+    public ResponseEntity<String> getUserImage(@PathVariable String userName) {
         try {
-            List<String> images = imageService.getUserImages(userName);
-            return ResponseEntity.ok(images);
+            String imagePath = imageService.getUserImage(userName);
+            return ResponseEntity.ok(imagePath);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user image: " + e.getMessage());
         }
     }
 
-    @DeleteMapping("/images/delete")
-    public ResponseEntity<String> deleteImage(
-            @RequestParam("userName") String userName,
-            @RequestParam("fileName") String fileName) {
+    @DeleteMapping("/image/delete/{userName}")
+    public ResponseEntity<String> deleteUserImage(@PathVariable String userName) {
         try {
-            imageService.deleteImage(userName, fileName);
-            return ResponseEntity.ok("Image deleted successfully: " + fileName);
+            imageService.deleteUserImage(userName);
+            return ResponseEntity.ok("User image deleted successfully.");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete image: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user image: " + e.getMessage());
         }
     }
 
@@ -326,7 +356,7 @@ public class PublicUserController {
     }
 
     @GetMapping("/get/specialities/{userName}")
-    public ResponseEntity<List<Speciality>> getSpecialitesByUserName(@PathVariable String userName) {
+    public ResponseEntity<List<Speciality>> getSpecialitiesByUserName(@PathVariable String userName) {
         return userService.getUserByUserName(userName)
                 .map(user -> ResponseEntity.ok(user.getSpecialities()))
                 .orElseThrow(() -> new RuntimeException("User not found with user name: " + userName));

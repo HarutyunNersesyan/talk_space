@@ -1,9 +1,7 @@
 package com.talk_space.service;
 
-
 import com.talk_space.model.domain.Image;
 import com.talk_space.model.domain.User;
-import com.talk_space.model.dto.ImageDto;
 import com.talk_space.repository.ImageRepository;
 import com.talk_space.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -14,9 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,19 +29,20 @@ public class ImageService {
         User user = userRepository.findUserByUserName(userName)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        List<Image> existingImages = imageRepository.findByUser(user);
-        if (existingImages.size() >= 3) {
-            throw new RuntimeException("User already has 3 images. Cannot upload more.");
+        Optional<Image> existingImage = imageRepository.findByUserUserName(userName);
+        if (existingImage.isPresent()) {
+
+            deleteImageFile(existingImage.get().getFilePath());
+            imageRepository.deleteById(existingImage.get().getId());
+            imageRepository.flush();
         }
-
         ensureDirectoryExists();
-
         if (!isValidFileType(file.getContentType())) {
             throw new IllegalArgumentException("Invalid file type: " + file.getContentType() +
                     ". Only JPEG and PNG are allowed.");
         }
 
-        String fileName = generateUniqueFileName(file.getContentType());
+        String fileName = generateUniqueFileName(Objects.requireNonNull(file.getContentType()));
         String filePath = IMAGE_DIR + fileName;
         storeFile(file, filePath);
 
@@ -52,10 +51,11 @@ public class ImageService {
         image.setFileType(file.getContentType());
         image.setFilePath(filePath);
         image.setUser(user);
-
         imageRepository.save(image);
+
         return filePath;
     }
+
 
     private void ensureDirectoryExists() {
         File directory = new File(IMAGE_DIR);
@@ -65,7 +65,8 @@ public class ImageService {
     }
 
     private String generateUniqueFileName(String fileType) {
-        return System.currentTimeMillis() + (fileType.equals("image/png") ? ".png" : ".jpeg");
+        return System.currentTimeMillis() + "_" + UUID.randomUUID() +
+                (fileType.equals("image/png") ? ".png" : ".jpeg");
     }
 
     private void storeFile(MultipartFile file, String filePath) {
@@ -83,34 +84,32 @@ public class ImageService {
         return "image/jpeg".equalsIgnoreCase(fileType) || "image/png".equalsIgnoreCase(fileType);
     }
 
-    public List<String> getUserImages(String userName) {
-        User user = userRepository.findUserByUserName(userName)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        return imageRepository.findByUser(user).stream()
-                .map(Image::getFilePath)
-                .toList();
+    public String getUserImage(String userName) {
+        Image image = imageRepository.findByUserUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("No image found for user"));
+        return image.getFilePath();
     }
 
     @Transactional
-    public void deleteImage(String userName, String fileName) {
-        User user = userRepository.findUserByUserName(userName)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        Image image = imageRepository.findByUserAndFileName(user, fileName)
-                .orElseThrow(() -> new IllegalArgumentException("Image not found for user"));
+    public void deleteUserImage(String userName) {
+        Image image = imageRepository.findByUserUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("No image found for user"));
 
         deleteImageFile(image.getFilePath());
-
         imageRepository.delete(image);
     }
 
-    private void deleteImageFile(String filePath) {
+    public void deleteImageFile(String filePath) {
         File imageFile = new File(filePath);
-        if (imageFile.exists() && !imageFile.delete()) {
-            throw new RuntimeException("Failed to delete image file: " + filePath);
+        if (imageFile.exists()) {
+            if (imageFile.delete()) {
+                System.out.println("Deleted file: " + filePath);
+            } else {
+                System.out.println("Failed to delete file: " + filePath);
+            }
+        } else {
+            System.out.println("File not found: " + filePath);
         }
     }
+
 }
-
-

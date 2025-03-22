@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-    public class ImageData {
-    private String fileName;
-    private String fileType;
-    private String data;
+public class AboutMe {
+
+    private String userName;
+
+    private String aboutMe;
 
 }

@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 @Data
 public class ChangePassword {
 
-    @Email(message = "Email should be valid")
-    private String email;
 
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+])[a-zA-Z0-9!@#$%^&*()_+]{8,20}$", message = "The password must contain uppercase and lowercase letters, mathematical symbols and numbers.")
     private String oldPassword;
