@@ -259,8 +259,8 @@ public class UserService implements UserDetailsService {
 
 
     @Transactional
-    public SearchUser findUsersByHobbies(String email) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+    public SearchUser findUsersByHobbies(String userName) {
+        Optional<User> optionalUser = userRepository.findUserByUserName(userName);
         if (optionalUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found.");
         }
@@ -284,8 +284,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public SearchUser findUsersBySpecialities(String email) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+    public SearchUser findUsersBySpecialities(String userName) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(userName);
         if (optionalUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found.");
         }

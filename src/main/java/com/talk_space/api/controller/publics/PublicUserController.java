@@ -258,10 +258,10 @@ public class PublicUserController {
         }
     }
 
-    @GetMapping("/searchByHobbies/{email}")
-    public ResponseEntity<?> findUsersByHobbies(@PathVariable String email) {
+    @GetMapping("/searchByHobbies/{userName}")
+    public ResponseEntity<?> findUsersByHobbies(@PathVariable String userName) {
         try {
-            SearchUser searchUser = userService.findUsersByHobbies(email);
+            SearchUser searchUser = userService.findUsersByHobbies(userName);
             return ResponseEntity.ok(searchUser);
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -273,10 +273,10 @@ public class PublicUserController {
         }
     }
 
-    @GetMapping("/searchBySpecialities/{email}")
-    public ResponseEntity<?> findUsersBySpecialities(@PathVariable String email) {
+    @GetMapping("/searchBySpecialities/{userName}")
+    public ResponseEntity<?> findUsersBySpecialities(@PathVariable String userName) {
         try {
-            SearchUser searchUser = userService.findUsersBySpecialities(email);
+            SearchUser searchUser = userService.findUsersBySpecialities(userName);
             return ResponseEntity.ok(searchUser);
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

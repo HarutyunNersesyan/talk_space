@@ -23,6 +23,7 @@ public class JwtTokenUtils {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+
         List<String> rolesList = userDetails.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -30,7 +31,10 @@ public class JwtTokenUtils {
         claims.put("roles", rolesList);
 
         Date issuedDate = new Date();
+
+
         Date expiredDate = new Date(issuedDate.getTime() + 259200000);
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
