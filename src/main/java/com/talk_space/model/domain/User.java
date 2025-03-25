@@ -92,7 +92,7 @@ public class User {
     @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL)
     private Set<Like> liked;
 
-    @OneToMany(mappedBy = "senderUserName", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<ChatMessage> sentMessages;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

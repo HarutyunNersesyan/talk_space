@@ -14,5 +14,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     List<Like> findByLikeDateBefore(LocalDate cutoffDate);
 
 
-    boolean existsByLikerUserIdAndLikedUserId(Long userId, Long userId1);
+
+    boolean existsByLikerUserNameAndLikedUserName(String likerUserName, String likedUserName);
 }
