@@ -33,14 +33,14 @@ public class ChatController {
         ChatMessage savedMessage = chatService.saveMessage(message);
         ChatMessageDto responseDto = chatService.convertToDto(savedMessage);
 
-        // Send to receiver
+
         messagingTemplate.convertAndSendToUser(
                 receiver.getUserName(),
                 "/queue/messages",
                 responseDto
         );
 
-        // Also send back to sender for sync
+
         messagingTemplate.convertAndSendToUser(
                 sender.getUserName(),
                 "/queue/messages",

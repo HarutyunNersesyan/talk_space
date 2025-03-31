@@ -1,6 +1,7 @@
 package com.talk_space.api.controller.publics;
 
 import com.talk_space.model.dto.ChatMessageDto;
+import com.talk_space.model.dto.UserChatDto;
 import com.talk_space.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +35,11 @@ public class ChatApiController {
             @PathVariable String sender,
             @PathVariable String receiver) {
         return ResponseEntity.ok(chatService.getUnreadCount(sender, receiver));
+    }
+
+    @GetMapping("/conversations/{userName}")
+    public ResponseEntity<List<UserChatDto>> getUserChats(
+            @PathVariable String userName) {
+        return ResponseEntity.ok(chatService.getUserChats(userName));
     }
 }

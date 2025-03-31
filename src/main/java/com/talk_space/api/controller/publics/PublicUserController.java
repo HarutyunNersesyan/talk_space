@@ -288,6 +288,13 @@ public class PublicUserController {
         }
     }
 
+    @GetMapping("/username/{userName}")
+    public ResponseEntity<User> getUserByUserName(@PathVariable String userName) {
+        Optional<User> userOptional = userService.getUserByUserName(userName);
+        return userOptional
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @PostMapping("image/upload")
     public ResponseEntity<String> uploadProfilePicture(

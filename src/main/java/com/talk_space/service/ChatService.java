@@ -1,14 +1,19 @@
 package com.talk_space.service;
 
 import com.talk_space.model.domain.ChatMessage;
+import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.ChatMessageDto;
+import com.talk_space.model.dto.UserChatDto;
 import com.talk_space.repository.ChatRepository;
 import com.talk_space.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,14 +46,79 @@ public class ChatService {
         return chatRepository.countUnreadMessages(sender, receiver);
     }
 
+    @Transactional(readOnly = true)
+    public List<UserChatDto> getUserChats(String userName) {
+        // Get all messages involving the user
+        List<ChatMessage> allMessages = chatRepository.findAllUserMessages(userName);
+
+        // Track latest message with each partner
+        Map<String, ChatMessage> latestMessages = new HashMap<>();
+
+        for (ChatMessage message : allMessages) {
+            String partner = message.getSender().getUserName().equals(userName)
+                    ? message.getReceiver().getUserName()
+                    : message.getSender().getUserName();
+
+            // Keep only the latest message per partner
+            if (!latestMessages.containsKey(partner) ||
+                    message.getTimestamp().isAfter(latestMessages.get(partner).getTimestamp())) {
+                latestMessages.put(partner, message);
+            }
+        }
+
+        // Convert to DTOs with unread counts
+        return latestMessages.entrySet().stream()
+                .map(entry -> {
+                    String partner = entry.getKey();
+                    ChatMessage lastMessage = entry.getValue();
+                    User partnerUser = lastMessage.getSender().getUserName().equals(partner)
+                            ? lastMessage.getSender()
+                            : lastMessage.getReceiver();
+
+                    long unreadCount = chatRepository.countUnreadMessages(partner, userName);
+
+                    return buildUserChatDto(partnerUser, lastMessage, unreadCount);
+                })
+                .sorted((a, b) -> b.getLastMessageTime().compareTo(a.getLastMessageTime()))
+                .collect(Collectors.toList());
+    }
+
+    private UserChatDto buildUserChatDto(User partnerUser, ChatMessage lastMessage, long unreadCount) {
+        UserChatDto dto = new UserChatDto();
+        dto.setPartnerUsername(partnerUser.getUserName());
+        dto.setPartnerName(partnerUser.getFirstName() + " " + partnerUser.getLastName());
+        dto.setLastMessage(lastMessage.getContent());
+        dto.setLastMessageTime(lastMessage.getTimestamp());
+        dto.setUnreadCount(unreadCount);
+
+        if (partnerUser.getImage() != null) {
+            dto.setPartnerImage(partnerUser.getImage().getFilePath());
+        }
+
+        return dto;
+    }
+
     public ChatMessageDto convertToDto(ChatMessage message) {
-        ChatMessageDto dto = modelMapper.map(message, ChatMessageDto.class);
+        ChatMessageDto dto = new ChatMessageDto();
+
+        // Manual mapping to avoid ModelMapper confusion
+        dto.setId(message.getId());
         dto.setSender(message.getSender().getUserName());
-        dto.setSenderName(message.getSender().getFirstName() + " " + message.getSender().getLastName());
+        dto.setSenderDisplayName(message.getSender().getFirstName() + " " + message.getSender().getLastName());
         dto.setReceiver(message.getReceiver().getUserName());
-        dto.setReceiverName(message.getReceiver().getFirstName() + " " + message.getReceiver().getLastName());
-        dto.setSenderImage(message.getSender().getImage().getFilePath());
-        dto.setReceiverImage(message.getReceiver().getImage().getFilePath());
+        dto.setReceiverDisplayName(message.getReceiver().getFirstName() + " " + message.getReceiver().getLastName());
+        dto.setContent(message.getContent());
+        dto.setTimestamp(message.getTimestamp());
+        dto.setRead(message.isRead());
+
+        // Handle images if they exist
+        if (message.getSender().getImage() != null) {
+            dto.setSenderImage(message.getSender().getImage().getFilePath());
+        }
+        if (message.getReceiver().getImage() != null) {
+            dto.setReceiverImage(message.getReceiver().getImage().getFilePath());
+        }
+
         return dto;
     }
 }

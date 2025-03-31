@@ -39,10 +39,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/user/verify").permitAll() // Allow email verification
                         .requestMatchers("/api/public/user/forgotPassword").permitAll() // Allow forgot password
                         .requestMatchers("/api/public/user/hobby").permitAll() // Allow access to hobbies
-                        .requestMatchers("/api/public/**").authenticated() // Secure other public endpoints
+                        .requestMatchers("/api/public/**").authenticated()
 //                        .requestMatchers("/api/private/**").hasAnyAuthority("ADMIN") // Secure private endpoints
                         .requestMatchers("/api/private/**").permitAll()
-                        .anyRequest().permitAll()) // Allow all other requests
+                        .anyRequest().permitAll())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
         return http.build();
     }

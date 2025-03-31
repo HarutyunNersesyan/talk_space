@@ -1,6 +1,7 @@
 package com.talk_space.repository;
 
 
+import com.talk_space.model.domain.ChatMessage;
 import com.talk_space.model.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     Optional<User> findUserByUserName(String userName);
+
 
 
 
