@@ -87,7 +87,7 @@ public class ImageService {
     public String getUserImage(String userName) {
         Image image = imageRepository.findByUserUserName(userName)
                 .orElseThrow(() -> new IllegalArgumentException("No image found for user"));
-        return image.getFilePath();
+        return image.getFileName();
     }
 
     @Transactional

@@ -9,13 +9,18 @@ import com.talk_space.validation.PasswordValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -311,14 +316,23 @@ public class PublicUserController {
     }
 
     @GetMapping("/image/{userName}")
-    public ResponseEntity<String> getUserImage(@PathVariable String userName) {
+    public ResponseEntity<Resource> getUserImage(@PathVariable String userName) {
         try {
-            String imagePath = imageService.getUserImage(userName);
-            return ResponseEntity.ok(imagePath);
+            String fileName = imageService.getUserImage(userName);
+            Path filePath = Paths.get("C:/Users/HARUT_037/Desktop/talk_space/images/" + fileName);
+            Resource resource =  new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG) // or MediaType.IMAGE_PNG based on file type
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user image: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
