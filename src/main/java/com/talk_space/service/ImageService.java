@@ -94,7 +94,7 @@ public class ImageService {
     public void deleteUserImage(String userName) {
         Image image = imageRepository.findByUserUserName(userName)
                 .orElseThrow(() -> new IllegalArgumentException("No image found for user"));
-
+        image.getUser().setImage(null);
         deleteImageFile(image.getFilePath());
         imageRepository.delete(image);
     }
