@@ -319,18 +319,19 @@ public class PublicUserController {
     public ResponseEntity<Resource> getUserImage(@PathVariable String userName) {
         try {
             String fileName = imageService.getUserImage(userName);
-            Path filePath = Paths.get("C:/Users/HARUT_037/Desktop/talk_space/images/" + fileName);
-            Resource resource =  new UrlResource(filePath.toUri());
+            Path filePath = Paths.get("C:/Users/HARUT_037/Desktop/talk_space/images/" + fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {
+                String contentType = fileName.endsWith(".png") ?
+                        MediaType.IMAGE_PNG_VALUE : MediaType.IMAGE_JPEG_VALUE;
+
                 return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG) // or MediaType.IMAGE_PNG based on file type
+                        .contentType(MediaType.parseMediaType(contentType))
                         .body(resource);
             } else {
                 return ResponseEntity.notFound().build();
             }
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
