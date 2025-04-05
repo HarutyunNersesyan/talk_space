@@ -12,6 +12,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,24 +39,35 @@ public class ChatController {
         ChatMessage savedMessage = chatService.saveMessage(message);
         ChatMessageDto responseDto = chatService.convertToDto(savedMessage);
 
-        // Send to receiver
+        // Send to receiver's personal queue
         messagingTemplate.convertAndSendToUser(
                 messageDto.getReceiver(),
                 "/queue/messages",
                 responseDto
         );
 
-        // Send back to sender (for sync across devices)
+        // Send to sender's personal queue
         messagingTemplate.convertAndSendToUser(
                 messageDto.getSender(),
                 "/queue/messages",
                 responseDto
         );
+
+        // Send reload notification to recipient
+        Map<String, String> reloadNotification = new HashMap<>();
+        reloadNotification.put("type", "reload");
+        reloadNotification.put("sender", messageDto.getSender());
+        reloadNotification.put("receiver", messageDto.getReceiver());
+
+        messagingTemplate.convertAndSendToUser(
+                messageDto.getReceiver(),
+                "/queue/notifications",
+                reloadNotification
+        );
     }
 
     @MessageMapping("/typing")
     public void sendTypingNotification(@Payload TypingNotificationDto typingDto) {
-        // Forward typing notification to recipient
         messagingTemplate.convertAndSendToUser(
                 typingDto.getReceiver(),
                 "/queue/typing",

@@ -23,4 +23,5 @@ public class Hobby {
     @Column(name = "parent_id")
     private Long parentId;
 
+
 }
