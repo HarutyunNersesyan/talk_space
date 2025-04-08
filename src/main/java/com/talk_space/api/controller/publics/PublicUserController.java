@@ -83,7 +83,8 @@ public class PublicUserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUp signUp, BindingResult result) {
+    public ResponseEntity<?> signUp(@javax.validation.Valid @RequestBody SignUp signUp, BindingResult result) {
+
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors()
                     .stream()
@@ -91,13 +92,27 @@ public class PublicUserController {
                     .collect(Collectors.toList());
             return ResponseEntity.badRequest().body(errors);
         }
+
+        if (userService.findUserByUserName(signUp.getUserName()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("This username is already taken. Please use a different username.");
+        }
+
+        if (userService.findUserByEmail(signUp.getEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("This email address is already registered. Please use a different email.");
+        }
+
         if (!PasswordValidator.isValidPassword(signUp.getPassword())) {
-            throw new IllegalArgumentException("Invalid password: password must be contain least one uppercase, one lowercase, one digit, and one special character");
+            return ResponseEntity.badRequest()
+                    .body("Invalid password: password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
         }
 
         User createdUser = new User(signUp);
         userService.signUp(createdUser);
+
         mailSenderService.handlePinRequest(signUp.getEmail(), false);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 

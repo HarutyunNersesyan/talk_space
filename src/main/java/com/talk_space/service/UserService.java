@@ -175,6 +175,10 @@ public class UserService implements UserDetailsService {
         return passwordEncoder.encode(newPassword);
     }
 
+    public Optional<User> findUserByUserName(String userName){
+        return userRepository.findUserByUserName(userName);
+    }
+
 
     public String changePassword(String email, String oldPassword, String newPassword, String newPasswordRepeat) {
 
@@ -520,4 +524,6 @@ public class UserService implements UserDetailsService {
         existingUsersForHobbies.put("StepanM92", existingUsersForH);
         userRepository.saveAll(users);
     }
+
+
 }

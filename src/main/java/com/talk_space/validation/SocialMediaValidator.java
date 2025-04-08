@@ -39,10 +39,4 @@ public class SocialMediaValidator {
         Pattern pattern = PATTERN_MAP.get(platform.toUpperCase());
         return pattern.matcher(url).matches();
     }
-
-    public static void main(String[] args) {
-
-        System.out.println(SocialMediaValidator.mediaValidation("INSTAGRAM", "https://www.instagram.com/_g_e_v_s_?igsh=MXMxNDh4Mm1hdDUwMQ=="));
-    }
-
 }
