@@ -211,6 +211,19 @@ public class PublicUserController {
         }
     }
 
+    @DeleteMapping("/delete/verify/{email}")
+    public ResponseEntity<String> cancelVerify(@PathVariable String email) {
+        try {
+            userService.deleteVerify(email);
+            return ResponseEntity.ok("Account deleted successfully.");
+        } catch (CustomExceptions.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+    }
+    }
+
+
 
     @PostMapping("/like")
     public ResponseEntity<?> like(@RequestBody Like like) {

@@ -113,7 +113,7 @@ public class UserService implements UserDetailsService {
      * @param deleteAccount
      */
     public void delete(DeleteAccount deleteAccount) {
-        Optional<User> userOptional = userRepository.findUserByUserName(deleteAccount.getUserName());
+        Optional<User> userOptional = userRepository.findUserByEmail(deleteAccount.getEmail());
 
         if (userOptional.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found.");
@@ -129,10 +129,20 @@ public class UserService implements UserDetailsService {
             imageService.deleteUserImage(user.getUserName());
         }
 
-        existingUsersForHobbies.get(deleteAccount.getUserName()).clear();
-        existingUsersForSpecialities.get(deleteAccount.getUserName()).clear();
+        existingUsersForHobbies.get(deleteAccount.getEmail()).clear();
+        existingUsersForSpecialities.get(deleteAccount.getEmail()).clear();
 
         userRepository.delete(user);
+    }
+
+    public void deleteVerify(String email) {
+        Optional<User> userOptional = userRepository.findUserByEmail(email);
+
+        if (userOptional.isEmpty()) {
+            throw new CustomExceptions.UserNotFoundException("User not found.");
+        }
+
+        userRepository.delete(userOptional.get());
     }
 
     public String updateAboutMe(AboutMe aboutMe) {
@@ -175,7 +185,7 @@ public class UserService implements UserDetailsService {
         return passwordEncoder.encode(newPassword);
     }
 
-    public Optional<User> findUserByUserName(String userName){
+    public Optional<User> findUserByUserName(String userName) {
         return userRepository.findUserByUserName(userName);
     }
 

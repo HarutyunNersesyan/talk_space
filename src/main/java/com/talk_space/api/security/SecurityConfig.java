@@ -32,18 +32,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors().and() // Enable CORS
-                .csrf().disable() // Disable CSRF
+                .cors().and()
+                .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/public/user/signUp").permitAll() // Allow sign-up
-                        .requestMatchers("/api/public/user/verify").permitAll() // Allow email verification
-                        .requestMatchers("/api/public/user/forgotPassword").permitAll() // Allow forgot password
-                        .requestMatchers("/api/public/user/hobby").permitAll() // Allow access to hobbies
+                        .requestMatchers("/api/public/user/signUp").permitAll()
+                        .requestMatchers("/api/public/user/verify").permitAll()
+                        .requestMatchers("/api/public/user/forgotPassword").permitAll()
+                        .requestMatchers("/api/public/user/hobby").permitAll()
+                        .requestMatchers("/api/public/user/delete/verify/**").permitAll() // ✅ FIXED: allow any email
                         .requestMatchers("/api/public/**").authenticated()
-//                        .requestMatchers("/api/private/**").hasAnyAuthority("ADMIN") // Secure private endpoints
                         .requestMatchers("/api/private/**").permitAll()
-                        .anyRequest().permitAll())
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+                        .anyRequest().permitAll()
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -71,12 +73,12 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // Allow all endpoints
-                        .allowedOrigins("http://localhost:3000") // Allow frontend origin
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow all necessary methods
-                        .allowedHeaders("*") // Allow all headers
-                        .allowCredentials(true) // Allow credentials (e.g., cookies)
-                        .maxAge(3600); // Cache preflight response for 1 hour
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true)
+                        .maxAge(3600);
             }
         };
     }
