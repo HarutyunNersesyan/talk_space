@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/user/verify").permitAll()
                         .requestMatchers("/api/public/user/forgotPassword").permitAll()
                         .requestMatchers("/api/public/user/hobby").permitAll()
-                        .requestMatchers("/api/public/user/delete/verify/**").permitAll() // ✅ FIXED: allow any email
+                        .requestMatchers("/api/public/user/delete/verify/**").permitAll()
                         .requestMatchers("/api/public/**").authenticated()
                         .requestMatchers("/api/private/**").permitAll()
                         .anyRequest().permitAll()

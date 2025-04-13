@@ -53,6 +53,13 @@ public class PublicUserController {
         }
     }
 
+    @GetMapping("/profile/{email}")
+    public ResponseEntity<SearchUser> getProfile(@PathVariable String email){
+        Optional<User> userOptional = userService.findUserByEmail(email);
+        SearchUser searchUser = new SearchUser(userOptional.get());
+        return ResponseEntity.ok(searchUser);
+    }
+
     @GetMapping("/get/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> userOptional = userService.findUserByEmail(email);
