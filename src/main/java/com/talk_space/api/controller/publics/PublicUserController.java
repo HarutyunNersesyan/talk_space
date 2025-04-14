@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -54,7 +53,7 @@ public class PublicUserController {
     }
 
     @GetMapping("/profile/{email}")
-    public ResponseEntity<SearchUser> getProfile(@PathVariable String email){
+    public ResponseEntity<SearchUser> getProfile(@PathVariable String email) {
         Optional<User> userOptional = userService.findUserByEmail(email);
         SearchUser searchUser = new SearchUser(userOptional.get());
         return ResponseEntity.ok(searchUser);
@@ -225,11 +224,10 @@ public class PublicUserController {
             return ResponseEntity.ok("Account deleted successfully.");
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
-    }
-
 
 
     @PostMapping("/like")
