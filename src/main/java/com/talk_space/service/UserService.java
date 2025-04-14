@@ -102,6 +102,7 @@ public class UserService implements UserDetailsService {
         }
         User user = optionalUser.get();
         LocalDate validatedBirthDate = User.validateBirthDate(editUser.getBirthDate());
+        user.setZodiacSign(Zodiac.fromMonthAndDay(user.getBirthDate().getMonthValue(), user.getBirthDate().getDayOfMonth()));
         user.setFirstName(editUser.getFirstName());
         user.setLastName(editUser.getLastName());
         user.setBirthDate(validatedBirthDate);

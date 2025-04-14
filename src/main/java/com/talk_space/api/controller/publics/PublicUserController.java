@@ -139,7 +139,7 @@ public class PublicUserController {
     }
 
     @PutMapping("/editUser")
-    public ResponseEntity<User> updateUserByEmail(@RequestParam String email,
+    public ResponseEntity<User> editUser(@RequestParam String email,
                                                   @RequestBody @Valid EditUser editUser) {
         User updatedUser = userService.updateUserByEmail(email, editUser);
         return ResponseEntity.ok(updatedUser);
