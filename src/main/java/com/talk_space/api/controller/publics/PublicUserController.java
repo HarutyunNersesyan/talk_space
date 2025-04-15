@@ -59,6 +59,13 @@ public class PublicUserController {
         return ResponseEntity.ok(searchUser);
     }
 
+    @GetMapping("/edit/{email}")
+    public ResponseEntity<EditUser> getInfo(@PathVariable String email){
+        Optional<User> userOptional = userService.findUserByEmail(email);
+        EditUser editUser = new EditUser(userOptional.get());
+        return ResponseEntity.ok(editUser);
+    }
+
     @GetMapping("/get/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> userOptional = userService.findUserByEmail(email);

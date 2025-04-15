@@ -1,6 +1,7 @@
 package com.talk_space.model.dto;
 
 
+import com.talk_space.model.domain.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
@@ -28,6 +29,14 @@ public class EditUser {
         private LocalDate birthDate;
 
         private String aboutMe;
-    }
+
+
+        public EditUser(User user) {
+                this.firstName = user.getFirstName();
+                this.lastName = user.getLastName();
+                this.birthDate = user.getBirthDate();
+                this.aboutMe = user.getAboutMe();
+        }
+}
 
 

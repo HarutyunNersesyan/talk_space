@@ -300,7 +300,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public SearchUser findUsersBySpecialities(String userName) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(userName);
+        Optional<User> optionalUser = userRepository.findUserByUserName(userName);
         if (optionalUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found.");
         }
