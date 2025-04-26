@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -41,4 +42,5 @@ public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
             "m.sender.userName = :sender AND m.receiver.userName = :receiver AND m.isRead = false")
     long countUnreadMessages(@Param("sender") String sender,
                              @Param("receiver") String receiver);
+
 }
