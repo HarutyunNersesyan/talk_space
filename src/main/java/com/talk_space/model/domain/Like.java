@@ -34,9 +34,11 @@ public class Like {
     @Column(name = "like_date")
     private LocalDate likeDate;
 
+
     public Like(User liker, User liked) {
         this.liker = liker;
         this.liked = liked;
+        this.likeDate = LocalDate.now();
     }
 }
 

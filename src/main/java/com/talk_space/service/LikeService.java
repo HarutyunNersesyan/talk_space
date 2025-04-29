@@ -8,13 +8,10 @@ import com.talk_space.repository.ChatRepository;
 import com.talk_space.repository.LikeRepository;
 import com.talk_space.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,23 +24,23 @@ public class LikeService {
     private final UserRepository userRepository;
 
 
-    @Scheduled(fixedRate = 3600000)
-    public void deleteOldLikes() {
-        LocalDate cutoffDate = LocalDate.now()
-                .minusDays(1);
-        List<Like> oldLikes = likeRepository.findByLikeDateBefore(cutoffDate);
-        likeRepository.deleteAll(oldLikes);
+    public Boolean getLike(String liker, String liked) {
+        boolean reverseLikeExists = likeRepository.existsByLikerUserNameAndLikedUserName(
+                liker,
+                liked);
+        return reverseLikeExists;
+
     }
 
-    public Like saveLike(Like like) {
-        // Validate input
-        if (like == null || like.getLiker() == null || like.getLiked() == null) {
+    public Like saveLike(String likerDto, String likedDto) {
+
+        if (likerDto == null || likedDto == null) {
             throw new IllegalArgumentException("Like object and user references cannot be null");
         }
-
+        Optional<User> userLiker = userRepository.findUserByUserName(likerDto);
+        Optional<User> userLiked = userRepository.findUserByUserName(likedDto);
+        Like like = new Like(userLiker.get(), userLiked.get());
         // Set current date
-        like.setLikeDate(LocalDate.now());
-
         // Fetch complete user objects
         User liker = userRepository.findUserByUserName(like.getLiker().getUserName())
                 .orElseThrow(() -> new NoSuchElementException("Liker user not found"));

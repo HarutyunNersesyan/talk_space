@@ -60,7 +60,7 @@ public class PublicUserController {
     }
 
     @GetMapping("/edit/{email}")
-    public ResponseEntity<EditUser> getInfo(@PathVariable String email){
+    public ResponseEntity<EditUser> getInfo(@PathVariable String email) {
         Optional<User> userOptional = userService.findUserByEmail(email);
         EditUser editUser = new EditUser(userOptional.get());
         return ResponseEntity.ok(editUser);
@@ -147,7 +147,7 @@ public class PublicUserController {
 
     @PutMapping("/editUser")
     public ResponseEntity<User> editUser(@RequestParam String email,
-                                                  @RequestBody @Valid EditUser editUser) {
+                                         @RequestBody @Valid EditUser editUser) {
         User updatedUser = userService.updateUserByEmail(email, editUser);
         return ResponseEntity.ok(updatedUser);
     }
@@ -238,9 +238,10 @@ public class PublicUserController {
 
 
     @PostMapping("/like")
-    public ResponseEntity<?> like(@RequestBody Like like) {
+    public ResponseEntity<?> like( @RequestParam String liker,
+                                   @RequestParam String liked) {
         try {
-            Like savedLike = likeService.saveLike(like);
+            Like savedLike = likeService.saveLike(liker, liked);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedLike);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found: " + e.getMessage());
@@ -252,6 +253,13 @@ public class PublicUserController {
         }
     }
 
+    @GetMapping("/like/get")
+    public Boolean getLike(
+            @RequestParam String liker,
+            @RequestParam String liked
+    ) {
+        return likeService.getLike(liker, liked);
+    }
 
     @PutMapping("/update/speciality")
     public ResponseEntity<String> updateSpecialities(@RequestBody SpecialityDto specialityDto) {
