@@ -135,7 +135,7 @@ public class User {
     @Column(name = "blocked_message")
     private String blockedMessage;
 
-    @Column(name = "about_me", length = 50)
+    @Column(name = "about_me", length = 250)
     private String aboutMe;
 
 
