@@ -8,7 +8,9 @@ import com.talk_space.repository.ChatRepository;
 import com.talk_space.repository.LikeRepository;
 import com.talk_space.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -33,37 +35,30 @@ public class LikeService {
     }
 
     public Like saveLike(String likerDto, String likedDto) {
-
         if (likerDto == null || likedDto == null) {
             throw new IllegalArgumentException("Like object and user references cannot be null");
         }
-        Optional<User> userLiker = userRepository.findUserByUserName(likerDto);
-        Optional<User> userLiked = userRepository.findUserByUserName(likedDto);
-        Like like = new Like(userLiker.get(), userLiked.get());
-        // Set current date
-        // Fetch complete user objects
-        User liker = userRepository.findUserByUserName(like.getLiker().getUserName())
+
+        User liker = userRepository.findUserByUserName(likerDto)
                 .orElseThrow(() -> new NoSuchElementException("Liker user not found"));
-        User liked = userRepository.findUserByUserName(like.getLiked().getUserName())
+        User liked = userRepository.findUserByUserName(likedDto)
                 .orElseThrow(() -> new NoSuchElementException("Liked user not found"));
 
-        // Set the complete user objects
-        like.setLiker(liker);
-        like.setLiked(liked);
+        // Check if like already exists
+        if (likeRepository.existsByLikerUserNameAndLikedUserName(liker.getUserName(), liked.getUserName())) {
+            throw new DataIntegrityViolationException("Like already exists");
+        }
 
-        // Check for existing like in both directions
+        Like like = new Like(liker, liked);
+
+        // Check for existing like in reverse direction
         boolean reverseLikeExists = likeRepository.existsByLikerUserNameAndLikedUserName(
                 liked.getUserName(),
                 liker.getUserName()
         );
 
-        boolean sameLikeExists = likeRepository.existsByLikerUserNameAndLikedUserName(
-                liker.getUserName(),
-                liked.getUserName()
-        );
-
-        // If mutual like detected and not already processed
-        if (reverseLikeExists && !sameLikeExists) {
+        // If mutual like detected
+        if (reverseLikeExists) {
             // Create mutual like notification messages
             ChatMessage messageToLiker = new ChatMessage();
             messageToLiker.setSender(liked);

@@ -1,5 +1,6 @@
 package com.talk_space.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,19 @@ public class Image {
 
     @OneToOne
     @JoinColumn(name = "user_name", referencedColumnName = "user_name", nullable = false, unique = true)
+    @JsonBackReference
     private User user;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Image image = (Image) o;
+        return id != null && id.equals(image.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -238,18 +239,39 @@ public class PublicUserController {
 
 
     @PostMapping("/like")
-    public ResponseEntity<?> like( @RequestParam String liker,
-                                   @RequestParam String liked) {
+    public ResponseEntity<?> like(@RequestParam String liker,
+                                  @RequestParam String liked) {
         try {
             Like savedLike = likeService.saveLike(liker, liked);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedLike);
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    Map.of(
+                            "status", "success",
+                            "message", "Like saved successfully",
+                            "data", savedLike
+                    )
+            );
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Map.of(
+                            "status", "error",
+                            "message", "User not found: " + e.getMessage()
+                    )
+            );
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Like already exists.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    Map.of(
+                            "status", "error",
+                            "message", "Like already exists"
+                    )
+            );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred: " + e.getMessage());
+                    .body(
+                            Map.of(
+                                    "status", "error",
+                                    "message", "An unexpected error occurred: " + e.getMessage()
+                            )
+                    );
         }
     }
 

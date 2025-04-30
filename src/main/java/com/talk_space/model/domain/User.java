@@ -1,10 +1,9 @@
 package com.talk_space.model.domain;
 
-
+import com.fasterxml.jackson.annotation.*;
 import com.talk_space.model.dto.getters.fillers.FillUsers;
 import com.talk_space.model.dto.SignUp;
 import com.talk_space.model.enums.*;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
@@ -16,11 +15,9 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "user_entity")
@@ -28,6 +25,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId"
+)
 public class User {
 
     @Id
@@ -39,7 +40,6 @@ public class User {
     @Pattern(regexp = "[A-Z][a-z]+", message = "First name must start with a capital letter followed by lowercase letters")
     @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
-
 
     @NotNull(message = "Last name cannot be null")
     @Pattern(regexp = "[A-Z][a-z]+", message = "Last name must start with a capital letter followed by lowercase letters")
@@ -55,7 +55,6 @@ public class User {
     @PastOrPresent(message = "Birth date must be a past date")
     private LocalDate birthDate;
 
-
     @NotNull(message = "Gender cannot be empty")
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
@@ -69,9 +68,9 @@ public class User {
     )
     private String email;
 
-
     @NotNull(message = "Password should be valid and can`t be empty")
     @Column(name = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @CreatedDate
@@ -85,17 +84,20 @@ public class User {
     @Column(name = "verify_mail")
     private Boolean verifyMail;
 
-
     @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Like> liker;
 
     @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Like> liked;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ChatMessage> sentMessages;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Image image;
 
     @ManyToMany
@@ -116,8 +118,8 @@ public class User {
     )
     private List<Speciality> specialities;
 
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<SocialNetworks> socialNetworks;
 
     @Column(name = "role")
@@ -126,6 +128,7 @@ public class User {
 
     @Pattern(regexp = "^[1-9][0-9]{5}$")
     @Column(name = "pin")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pin;
 
     @Column(name = "status")
@@ -138,6 +141,18 @@ public class User {
     @Column(name = "about_me", length = 250)
     private String aboutMe;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId != null && userId.equals(user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 
     public static LocalDate validateBirthDate(LocalDate birthDate) {
         LocalDate maxAllowedBirthDate = LocalDate.now().minusYears(16);
@@ -147,7 +162,6 @@ public class User {
         }
         return birthDate;
     }
-
 
     public User(SignUp signUp) {
         this.firstName = signUp.getFirstName();
@@ -173,5 +187,4 @@ public class User {
         this.zodiacSign = Zodiac.fromMonthAndDay(fillUsers.getBirthDate().getMonthValue(), fillUsers.getBirthDate().getDayOfMonth());
         this.createdDate = LocalDate.now();
     }
-
 }
