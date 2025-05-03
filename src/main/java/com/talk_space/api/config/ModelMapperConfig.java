@@ -13,7 +13,6 @@ public class ModelMapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        // Configure ChatMessage to ChatMessageDto mapping
         modelMapper.typeMap(ChatMessage.class, ChatMessageDto.class)
                 .addMappings(mapper -> {
                     mapper.map(src -> src.getSender().getUserName(), ChatMessageDto::setSender);
