@@ -19,4 +19,10 @@ public class Speciality {
 
     @Column(name = "parent_id")
     private Long parentId;
+
+
+    public Speciality(String name, Long parentId) {
+        this.name = name;
+        this.parentId = parentId;
+    }
 }

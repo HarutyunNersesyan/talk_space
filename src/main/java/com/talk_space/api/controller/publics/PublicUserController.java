@@ -41,6 +41,8 @@ public class PublicUserController {
     private final SocialNetworksService socialNetworksService;
     private final SpecialityService specialityService;
 
+    private final ReviewService reviewService;
+
 
     @GetMapping("/get/userName/{email}")
     public ResponseEntity<String> getUserNameByEmail(@PathVariable String email) {
@@ -460,6 +462,11 @@ public class PublicUserController {
         return userService.getUserByUserName(userName)
                 .map(user -> ResponseEntity.ok(user.getHobbies()))
                 .orElseThrow(() -> new RuntimeException("User not found with user name: " + userName));
+    }
+
+    @PostMapping("/review/add")
+    public Review addReview(@RequestParam String userName, @RequestParam String message){
+       return reviewService.addReview(userName,message);
     }
 }
 

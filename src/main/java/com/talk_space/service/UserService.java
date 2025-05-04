@@ -273,6 +273,8 @@ public class UserService implements UserDetailsService {
     }
 
 
+
+
     @Transactional
     public SearchUser findUsersByHobbies(String userName) {
         Optional<User> optionalUser = userRepository.findUserByUserName(userName);

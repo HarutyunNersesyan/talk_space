@@ -24,4 +24,8 @@ public class Hobby {
     private Long parentId;
 
 
+    public Hobby(String name, Long parentId) {
+        this.name = name;
+        this.parentId = parentId;
+    }
 }

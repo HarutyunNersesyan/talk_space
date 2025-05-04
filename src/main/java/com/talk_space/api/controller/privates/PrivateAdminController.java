@@ -24,6 +24,7 @@ public class PrivateAdminController {
 
     private final SpecialityService specialityService;
 
+    private final ReviewService reviewService;
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
@@ -162,6 +163,10 @@ public class PrivateAdminController {
         } catch (CustomExceptions.UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+    @GetMapping("/review/")
+    public List<Review> getAllReviews(){
+        return reviewService.getAll();
     }
 }
 
