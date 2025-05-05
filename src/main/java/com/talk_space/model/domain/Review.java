@@ -23,15 +23,15 @@ public class Review {
     @Column(name = "message", nullable = false, length = 200)
     private String message;
 
-    @Column(name = "from", nullable = false)
-    private String from;
+    @Column(name = "sender_user_name", nullable = false)
+    private String senderUserName;
 
 
     @Column(name = "review_date")
     private LocalDate reviewDate;
-    public Review(String message, String from, LocalDate reviewDate) {
+    public Review(String message, String senderUserName, LocalDate reviewDate) {
         this.message = message;
-        this.from = from;
+        this.senderUserName = senderUserName;
         this.reviewDate = reviewDate;
 
     }

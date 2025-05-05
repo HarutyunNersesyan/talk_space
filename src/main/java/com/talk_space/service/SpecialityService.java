@@ -159,7 +159,6 @@ public class SpecialityService {
         specialties.add(new Speciality("Database Engineering", 1L));
         specialties.add(new Speciality("API Development", 1L));
         specialties.add(new Speciality("Technical Writing", 1L));
-        specialties.add(new Speciality("Product Management (Technical)", 1L));
 
         // Doctor subcategories
         specialties.add(new Speciality("General Practitioner (GP)", 2L));
@@ -191,6 +190,12 @@ public class SpecialityService {
         specialties.add(new Speciality("Otolaryngology (ENT)", 2L));
         specialties.add(new Speciality("Family Medicine", 2L));
         specialties.add(new Speciality("Preventive Medicine", 2L));
+        specialties.add(new Speciality("Medical Genetics", 2L));
+        specialties.add(new Speciality("Nuclear Medicine", 2L));
+        specialties.add(new Speciality("Palliative Care", 2L));
+        specialties.add(new Speciality("Occupational Medicine", 2L));
+        specialties.add(new Speciality("Sleep Medicine", 2L));
+        specialties.add(new Speciality("Rehabilitation Medicine", 2L));
 
         // Teacher subcategories
         specialties.add(new Speciality("Elementary School Teacher", 3L));
@@ -208,6 +213,11 @@ public class SpecialityService {
         specialties.add(new Speciality("Online Educator", 3L));
         specialties.add(new Speciality("Tutor", 3L));
         specialties.add(new Speciality("Educational Consultant", 3L));
+        specialties.add(new Speciality("Instructional Coordinator", 3L));
+        specialties.add(new Speciality("Curriculum Developer", 3L));
+        specialties.add(new Speciality("Teaching Assistant", 3L));
+        specialties.add(new Speciality("Adult Education Instructor", 3L));
+        specialties.add(new Speciality("Vocational Education Teacher", 3L));
 
         // Nurse subcategories
         specialties.add(new Speciality("Registered Nurse", 4L));
@@ -225,6 +235,11 @@ public class SpecialityService {
         specialties.add(new Speciality("Public Health Nurse", 4L));
         specialties.add(new Speciality("Nurse Educator", 4L));
         specialties.add(new Speciality("Occupational Health Nurse", 4L));
+        specialties.add(new Speciality("Neonatal Nurse", 4L));
+        specialties.add(new Speciality("Perioperative Nurse", 4L));
+        specialties.add(new Speciality("Dialysis Nurse", 4L));
+        specialties.add(new Speciality("Forensic Nurse", 4L));
+        specialties.add(new Speciality("Infection Control Nurse", 4L));
 
         // Artist subcategories
         specialties.add(new Speciality("Painter", 5L));
@@ -339,7 +354,6 @@ public class SpecialityService {
         specialties.add(new Speciality("Direct Sales Manager", 14L));
         specialties.add(new Speciality("Pharmaceutical Sales Manager", 14L));
         specialties.add(new Speciality("E-commerce Sales Manager", 14L));
-        specialties.add(new Speciality("Field Sales Manager", 14L));
 
         // Accountant subcategories
         specialties.add(new Speciality("Financial Accountant", 15L));
@@ -420,7 +434,7 @@ public class SpecialityService {
         specialties.add(new Speciality("Email Marketing Manager", 21L));
         specialties.add(new Speciality("Affiliate Marketing Manager", 21L));
         specialties.add(new Speciality("Brand Marketing Manager", 21L));
-        specialties.add(new Speciality("Marketing Analyst", 21L));
+
 
         // HR Specialist subcategories
         specialties.add(new Speciality("Recruitment Specialist", 22L));
@@ -432,7 +446,7 @@ public class SpecialityService {
         specialties.add(new Speciality("HR Generalist", 22L));
         specialties.add(new Speciality("HR Consultant", 22L));
         specialties.add(new Speciality("Diversity and Inclusion Specialist", 22L));
-        specialties.add(new Speciality("Workforce Planning Specialist", 22L));
+
 
         // Project Manager subcategories
         specialties.add(new Speciality("Construction Project Manager", 23L));
@@ -444,7 +458,7 @@ public class SpecialityService {
         specialties.add(new Speciality("Retail Project Manager", 23L));
         specialties.add(new Speciality("Engineering Project Manager", 23L));
         specialties.add(new Speciality("Government Project Manager", 23L));
-        specialties.add(new Speciality("Education Project Manager", 23L));
+
 
         // Dentist subcategories
         specialties.add(new Speciality("General Dentist", 24L));
@@ -468,7 +482,6 @@ public class SpecialityService {
         specialties.add(new Speciality("Sports Psychologist", 25L));
         specialties.add(new Speciality("Health Psychologist", 25L));
         specialties.add(new Speciality("Rehabilitation Psychologist", 25L));
-        specialties.add(new Speciality("Developmental Psychologist", 25L));
 
         // Veterinarian subcategories
         specialties.add(new Speciality("Small Animal Veterinarian", 26L));
@@ -492,7 +505,6 @@ public class SpecialityService {
         specialties.add(new Speciality("Forensic Social Worker", 27L));
         specialties.add(new Speciality("Community Social Worker", 27L));
         specialties.add(new Speciality("Hospice Social Worker", 27L));
-        specialties.add(new Speciality("Policy Social Worker", 27L));
 
         // Data Analyst subcategories
         specialties.add(new Speciality("Business Data Analyst", 28L));
@@ -552,7 +564,7 @@ public class SpecialityService {
         specialties.add(new Speciality("In-flight Safety Instructor", 32L));
         specialties.add(new Speciality("Purser", 32L));
         specialties.add(new Speciality("Customer Service Flight Attendant", 32L));
-        specialties.add(new Speciality("Private Jet Flight Attendant", 32L));
+
 
         // Tour Guide subcategories
         specialties.add(new Speciality("Historical Tour Guide", 33L));
@@ -643,7 +655,7 @@ public class SpecialityService {
         specialties.add(new Speciality("Social Media PR Manager", 40L));
         specialties.add(new Speciality("Investor Relations Coordinator", 40L));
         specialties.add(new Speciality("Content and Media Strategist", 40L));
-        specialties.add(new Speciality("Political Communications Specialist", 40L));
+
 
         // Customer Service Representative subcategories
         specialties.add(new Speciality("Call Center Representative", 41L));
@@ -656,6 +668,11 @@ public class SpecialityService {
         specialties.add(new Speciality("Customer Experience Manager", 41L));
         specialties.add(new Speciality("Live Chat Support Specialist", 41L));
         specialties.add(new Speciality("E-commerce Customer Support", 41L));
+        specialties.add(new Speciality("Customer Success Manager", 41L));
+        specialties.add(new Speciality("Front Desk Associate", 41L));
+        specialties.add(new Speciality("Service Desk Analyst", 41L));
+        specialties.add(new Speciality("Support Center Supervisor", 41L));
+        specialties.add(new Speciality("Account Support Specialist", 41L));
 
         // Digital Marketer subcategories
         specialties.add(new Speciality("Social Media Manager", 42L));

@@ -82,657 +82,787 @@ public class HobbyService {
     public void fillDb() {
         List<Hobby> hobbies = new ArrayList<>();
 
-        hobbies.add(new Hobby("Software Engineer", null));
-        hobbies.add(new Hobby("Doctor", null));
-        hobbies.add(new Hobby("Teacher", null));
-        hobbies.add(new Hobby("Nurse", null));
-        hobbies.add(new Hobby("Artist", null));
-        hobbies.add(new Hobby("Writer", null));
-        hobbies.add(new Hobby("Photographer", null));
-        hobbies.add(new Hobby("Musician", null));
-        hobbies.add(new Hobby("Chef", null));
-        hobbies.add(new Hobby("Architect", null));
-        hobbies.add(new Hobby("Lawyer", null));
-        hobbies.add(new Hobby("Engineer", null));
-        hobbies.add(new Hobby("Scientist", null));
-        hobbies.add(new Hobby("Sales Manager", null));
-        hobbies.add(new Hobby("Accountant", null));
-        hobbies.add(new Hobby("Electrician", null));
-        hobbies.add(new Hobby("Plumber", null));
-        hobbies.add(new Hobby("Civil Engineer", null));
-        hobbies.add(new Hobby("Web Developer", null));
-        hobbies.add(new Hobby("Graphic Designer", null));
-        hobbies.add(new Hobby("Marketing Manager", null));
-        hobbies.add(new Hobby("HR Specialist", null));
-        hobbies.add(new Hobby("Project Manager", null));
-        hobbies.add(new Hobby("Dentist", null));
-        hobbies.add(new Hobby("Psychologist", null));
-        hobbies.add(new Hobby("Veterinarian", null));
-        hobbies.add(new Hobby("Social Worker", null));
-        hobbies.add(new Hobby("Data Analyst", null));
-        hobbies.add(new Hobby("Entrepreneur", null));
-        hobbies.add(new Hobby("Real Estate Agent", null));
-        hobbies.add(new Hobby("Mechanic", null));
-        hobbies.add(new Hobby("Flight Attendant", null));
-        hobbies.add(new Hobby("Tour Guide", null));
-        hobbies.add(new Hobby("Journalist", null));
-        hobbies.add(new Hobby("Event Planner", null));
-        hobbies.add(new Hobby("Construction Worker", null));
-        hobbies.add(new Hobby("Librarian", null));
-        hobbies.add(new Hobby("Fashion Designer", null));
-        hobbies.add(new Hobby("Interior Designer", null));
-        hobbies.add(new Hobby("Public Relations Specialist", null));
-        hobbies.add(new Hobby("Customer Service Representative", null));
-        hobbies.add(new Hobby("Digital Marketer", null));
-        hobbies.add(new Hobby("SEO Specialist", null));
-        hobbies.add(new Hobby("Business Consultant", null));
-        hobbies.add(new Hobby("Content Creator", null));
-        hobbies.add(new Hobby("Translator", null));
-        hobbies.add(new Hobby("Fitness Trainer", null));
-        hobbies.add(new Hobby("Hairdresser", null));
-        hobbies.add(new Hobby("Barista", null));
-        hobbies.add(new Hobby("Baker", null));
-        hobbies.add(new Hobby("Security Guard", null));
-        hobbies.add(new Hobby("Pharmacist", null));
+        // Top-level categories (parentId = null)
+        hobbies.add(new Hobby("WRITING_AND_LITER", null));
+        hobbies.add(new Hobby("VISUAL_ARTS", null));
+        hobbies.add(new Hobby("CRAFTS", null));
+        hobbies.add(new Hobby("MUSIC", null));
+        hobbies.add(new Hobby("PERFORMING_ARTS", null));
+        hobbies.add(new Hobby("ADVENTURE_SPORTS", null));
+        hobbies.add(new Hobby("WATER_SPORTS", null));
+        hobbies.add(new Hobby("WINTER_SPORTS", null));
+        hobbies.add(new Hobby("LAND_SPORTS", null));
+        hobbies.add(new Hobby("TARGET_SPORTS", null));
+        hobbies.add(new Hobby("GAMES_AND_COLLECTING", null));
+        hobbies.add(new Hobby("NATURE_HOBBIES", null));
+        hobbies.add(new Hobby("MISCELLANEOUS", null));
+        hobbies.add(new Hobby("TECH_HOBBIES", null));
+        hobbies.add(new Hobby("DIY_PROJECTS", null));
+        hobbies.add(new Hobby("PHYSICAL_ACTIVITIES", null));
+        hobbies.add(new Hobby("SCIENCE_ACTIVITIES", null));
+        hobbies.add(new Hobby("LANGUAGE_HOBBIES", null));
+        hobbies.add(new Hobby("AERIAL_ARTS", null)); // New category 19
+        hobbies.add(new Hobby("MINDFULNESS", null)); // New category 20
+        hobbies.add(new Hobby("TRANSPORTATION", null)); // New category 21
+        hobbies.add(new Hobby("FASHION", null)); // New category 22
+        hobbies.add(new Hobby("HOME_ECONOMICS", null)); // New category 23
+        hobbies.add(new Hobby("SOCIAL_DANCES", null)); // New category 24
+        hobbies.add(new Hobby("HISTORY_REENACTMENT", null)); // New category 25
+        hobbies.add(new Hobby("ASTRONOMY_OBSERVATION", null)); // New category 26
+        hobbies.add(new Hobby("PUZZLES", null)); // New category 27
+        hobbies.add(new Hobby("EXTREME_SPORTS", null)); // New category 28
+        hobbies.add(new Hobby("COOKING_TECHNIQUES", null)); // New category 29
+        hobbies.add(new Hobby("ANIMAL_CARE", null)); // New category 30
+        hobbies.add(new Hobby("URBAN_EXPLORATION", null)); // New category 31
+        hobbies.add(new Hobby("GREEN_TECH", null)); // New category 32
+        hobbies.add(new Hobby("MARTIAL_ARTS", null)); // New category 33
+        hobbies.add(new Hobby("COLLECTIBLES", null)); // New category 34
+        hobbies.add(new Hobby("BOARD_SPORTS", null)); // New category 35
+        hobbies.add(new Hobby("WATER_ACTIVITIES", null)); // New category 36
+        hobbies.add(new Hobby("MIND_SPORTS", null)); // New category 37
+        hobbies.add(new Hobby("FIBER_ARTS", null)); // New category 38
+        hobbies.add(new Hobby("HOME_BREWING", null)); // New category 39
+        hobbies.add(new Hobby("GEOCACHING", null)); // New category 40
+        hobbies.add(new Hobby("COSPLAY", null)); // New category 41
+        hobbies.add(new Hobby("VINTAGE_CARS", null)); // New category 42
+        hobbies.add(new Hobby("AQUARIUMS", null)); // New category 43
+        hobbies.add(new Hobby("BONSAI", null)); // New category 44
+        hobbies.add(new Hobby("AMATEUR_RADIO", null)); // New category 45
+        hobbies.add(new Hobby("LOCK_PICKING", null)); // New category 46
+        hobbies.add(new Hobby("ESCAPOLOGY", null)); // New category 47
+        hobbies.add(new Hobby("STARGAZING", null)); // New category 48
 
-        // Parent hobbies (with null parentId)
-        hobbies.add(new Hobby("Frontend Development", 1L));
-        hobbies.add(new Hobby("Backend Development", 1L));
-        hobbies.add(new Hobby("Full-Stack Development", 1L));
-        hobbies.add(new Hobby("DevOps Engineering", 1L));
-        hobbies.add(new Hobby("Mobile Development", 1L));
-        hobbies.add(new Hobby("Data Engineering", 1L));
-        hobbies.add(new Hobby("Machine Learning & AI Engineering", 1L));
-        hobbies.add(new Hobby("Cloud Engineering", 1L));
-        hobbies.add(new Hobby("Embedded Systems Engineering", 1L));
-        hobbies.add(new Hobby("Game Development", 1L));
-        hobbies.add(new Hobby("Security Engineering", 1L));
-        hobbies.add(new Hobby("Blockchain Development", 1L));
-        hobbies.add(new Hobby("Quality Assurance (QA) & Test Automation", 1L));
-        hobbies.add(new Hobby("Systems Programming", 1L));
-        hobbies.add(new Hobby("AR/VR Development", 1L));
-        hobbies.add(new Hobby("Software Architecture", 1L));
-        hobbies.add(new Hobby("Database Engineering", 1L));
-        hobbies.add(new Hobby("API Development", 1L));
+// Writing and Literature subcategories (parentId = 1)
+        hobbies.add(new Hobby("Writing Fiction", 1L));
+        hobbies.add(new Hobby("Writing Poetry", 1L));
+        hobbies.add(new Hobby("Writing Nonfiction", 1L));
+        hobbies.add(new Hobby("Essay Writing", 1L));
+        hobbies.add(new Hobby("Blogging", 1L));
+        hobbies.add(new Hobby("Vlogging", 1L));
+        hobbies.add(new Hobby("Screenwriting", 1L));
         hobbies.add(new Hobby("Technical Writing", 1L));
-        hobbies.add(new Hobby("Product Management (Technical)", 1L));
+        hobbies.add(new Hobby("Freelance Writing", 1L));
+        hobbies.add(new Hobby("Novel Writing", 1L));
+        hobbies.add(new Hobby("Editing", 1L));
+        hobbies.add(new Hobby("Proofreading", 1L));
+        hobbies.add(new Hobby("Fan Fiction Writing", 1L));
+        hobbies.add(new Hobby("Journalism", 1L));
+        hobbies.add(new Hobby("Writing Reviews", 1L));
+        hobbies.add(new Hobby("Comic Book Writing", 1L));
+        hobbies.add(new Hobby("Speech Writing", 1L));
+        hobbies.add(new Hobby("Content Creation", 1L));
+        hobbies.add(new Hobby("Ghostwriting", 1L));
+        hobbies.add(new Hobby("Copywriting", 1L));
 
-        // Doctor subcategories
-        hobbies.add(new Hobby("General Practitioner (GP)", 2L));
-        hobbies.add(new Hobby("Pediatrics", 2L));
-        hobbies.add(new Hobby("Cardiology", 2L));
-        hobbies.add(new Hobby("Oncology", 2L));
-        hobbies.add(new Hobby("Neurology", 2L));
-        hobbies.add(new Hobby("Orthopedics", 2L));
-        hobbies.add(new Hobby("Dermatology", 2L));
-        hobbies.add(new Hobby("Psychiatry", 2L));
-        hobbies.add(new Hobby("Radiology", 2L));
-        hobbies.add(new Hobby("Anesthesiology", 2L));
-        hobbies.add(new Hobby("Emergency Medicine", 2L));
-        hobbies.add(new Hobby("Obstetrics and Gynecology (OB/GYN)", 2L));
-        hobbies.add(new Hobby("Endocrinology", 2L));
-        hobbies.add(new Hobby("Gastroenterology", 2L));
-        hobbies.add(new Hobby("Pulmonology", 2L));
-        hobbies.add(new Hobby("Nephrology", 2L));
-        hobbies.add(new Hobby("Rheumatology", 2L));
-        hobbies.add(new Hobby("Infectious Disease", 2L));
-        hobbies.add(new Hobby("Urology", 2L));
-        hobbies.add(new Hobby("Ophthalmology", 2L));
-        hobbies.add(new Hobby("Pathology", 2L));
-        hobbies.add(new Hobby("Sports Medicine", 2L));
-        hobbies.add(new Hobby("Geriatrics", 2L));
-        hobbies.add(new Hobby("Allergy and Immunology", 2L));
-        hobbies.add(new Hobby("Hematology", 2L));
-        hobbies.add(new Hobby("Plastic Surgery", 2L));
-        hobbies.add(new Hobby("Otolaryngology (ENT)", 2L));
-        hobbies.add(new Hobby("Family Medicine", 2L));
-        hobbies.add(new Hobby("Preventive Medicine", 2L));
+// Visual Arts subcategories (parentId = 2)
+        hobbies.add(new Hobby("Drawing", 2L));
+        hobbies.add(new Hobby("Painting", 2L));
+        hobbies.add(new Hobby("Sketching", 2L));
+        hobbies.add(new Hobby("Watercolor Painting", 2L));
+        hobbies.add(new Hobby("Oil Painting", 2L));
+        hobbies.add(new Hobby("Charcoal Drawing", 2L));
+        hobbies.add(new Hobby("Digital Art", 2L));
+        hobbies.add(new Hobby("Graphic Design", 2L));
+        hobbies.add(new Hobby("Comic Art", 2L));
+        hobbies.add(new Hobby("Illustrating", 2L));
+        hobbies.add(new Hobby("Photography", 2L));
+        hobbies.add(new Hobby("Photo Editing", 2L));
+        hobbies.add(new Hobby("Videography", 2L));
+        hobbies.add(new Hobby("Sculpting", 2L));
+        hobbies.add(new Hobby("Ceramics", 2L));
+        hobbies.add(new Hobby("Collage Making", 2L));
+        hobbies.add(new Hobby("Mural Painting", 2L));
+        hobbies.add(new Hobby("Tattoo Design", 2L));
+        hobbies.add(new Hobby("Airbrushing", 2L));
+        hobbies.add(new Hobby("Calligraphy", 2L));
 
-        // Teacher subcategories
-        hobbies.add(new Hobby("Elementary School Teacher", 3L));
-        hobbies.add(new Hobby("High School Teacher", 3L));
-        hobbies.add(new Hobby("College Professor", 3L));
-        hobbies.add(new Hobby("Special Education Teacher", 3L));
-        hobbies.add(new Hobby("ESL Teacher", 3L));
-        hobbies.add(new Hobby("Music Teacher", 3L));
-        hobbies.add(new Hobby("Art Teacher", 3L));
-        hobbies.add(new Hobby("Physical Education Teacher", 3L));
-        hobbies.add(new Hobby("Science Teacher", 3L));
-        hobbies.add(new Hobby("Mathematics Teacher", 3L));
-        hobbies.add(new Hobby("History Teacher", 3L));
-        hobbies.add(new Hobby("Language Teacher", 3L));
-        hobbies.add(new Hobby("Online Educator", 3L));
-        hobbies.add(new Hobby("Tutor", 3L));
-        hobbies.add(new Hobby("Educational Consultant", 3L));
+// Crafts subcategories (parentId = 3)
+        hobbies.add(new Hobby("Knitting", 3L));
+        hobbies.add(new Hobby("Crocheting", 3L));
+        hobbies.add(new Hobby("Embroidery", 3L));
+        hobbies.add(new Hobby("Quilting", 3L));
+        hobbies.add(new Hobby("Sewing", 3L));
+        hobbies.add(new Hobby("Scrapbooking", 3L));
+        hobbies.add(new Hobby("Jewelry Making", 3L));
+        hobbies.add(new Hobby("Soap Making", 3L));
+        hobbies.add(new Hobby("Candle Making", 3L));
+        hobbies.add(new Hobby("Origami", 3L));
+        hobbies.add(new Hobby("Wood Carving", 3L));
+        hobbies.add(new Hobby("Glassblowing", 3L));
+        hobbies.add(new Hobby("Basket Weaving", 3L));
+        hobbies.add(new Hobby("Leatherworking", 3L));
+        hobbies.add(new Hobby("Beadwork", 3L));
+        hobbies.add(new Hobby("Papercraft", 3L));
+        hobbies.add(new Hobby("Card Making", 3L));
+        hobbies.add(new Hobby("Pottery", 3L));
+        hobbies.add(new Hobby("Stained Glass", 3L));
+        hobbies.add(new Hobby("Macramé", 3L));
 
-        // Nurse subcategories
-        hobbies.add(new Hobby("Registered Nurse", 4L));
-        hobbies.add(new Hobby("Pediatric Nurse", 4L));
-        hobbies.add(new Hobby("Intensive Care Unit (ICU) Nurse", 4L));
-        hobbies.add(new Hobby("Emergency Room (ER) Nurse", 4L));
-        hobbies.add(new Hobby("Surgical Nurse", 4L));
-        hobbies.add(new Hobby("Nurse Practitioner", 4L));
-        hobbies.add(new Hobby("Geriatric Nurse", 4L));
-        hobbies.add(new Hobby("Oncology Nurse", 4L));
-        hobbies.add(new Hobby("Cardiac Nurse", 4L));
-        hobbies.add(new Hobby("Psychiatric Nurse", 4L));
-        hobbies.add(new Hobby("Travel Nurse", 4L));
-        hobbies.add(new Hobby("Home Health Nurse", 4L));
-        hobbies.add(new Hobby("Public Health Nurse", 4L));
-        hobbies.add(new Hobby("Nurse Educator", 4L));
-        hobbies.add(new Hobby("Occupational Health Nurse", 4L));
+// Music subcategories (parentId = 4)
+        hobbies.add(new Hobby("Playing Guitar", 4L));
+        hobbies.add(new Hobby("Playing Piano", 4L));
+        hobbies.add(new Hobby("Playing Violin", 4L));
+        hobbies.add(new Hobby("Playing Drums", 4L));
+        hobbies.add(new Hobby("Playing Saxophone", 4L));
+        hobbies.add(new Hobby("Playing Flute", 4L));
+        hobbies.add(new Hobby("Singing", 4L));
+        hobbies.add(new Hobby("Songwriting", 4L));
+        hobbies.add(new Hobby("Music Production", 4L));
+        hobbies.add(new Hobby("DJing", 4L));
+        hobbies.add(new Hobby("Music Composition", 4L));
+        hobbies.add(new Hobby("Audio Engineering", 4L));
+        hobbies.add(new Hobby("Beatboxing", 4L));
+        hobbies.add(new Hobby("Harmonica Playing", 4L));
+        hobbies.add(new Hobby("Ukulele Playing", 4L));
+        hobbies.add(new Hobby("Music Mixing", 4L));
+        hobbies.add(new Hobby("Playing Trumpet", 4L));
+        hobbies.add(new Hobby("Playing Cello", 4L));
+        hobbies.add(new Hobby("Conducting", 4L));
+        hobbies.add(new Hobby("Music Theory", 4L));
 
-        // Artist subcategories
-        hobbies.add(new Hobby("Painter", 5L));
-        hobbies.add(new Hobby("Illustrator", 5L));
-        hobbies.add(new Hobby("Sculptor", 5L));
-        hobbies.add(new Hobby("Digital Artist", 5L));
-        hobbies.add(new Hobby("Tattoo Artist", 5L));
-        hobbies.add(new Hobby("Muralist", 5L));
-        hobbies.add(new Hobby("Calligrapher", 5L));
-        hobbies.add(new Hobby("Concept Artist", 5L));
-        hobbies.add(new Hobby("Caricature Artist", 5L));
-        hobbies.add(new Hobby("Cartoonist", 5L));
+// Performing Arts subcategories (parentId = 5)
+        hobbies.add(new Hobby("Acting", 5L));
+        hobbies.add(new Hobby("Stand-up Comedy", 5L));
+        hobbies.add(new Hobby("Dancing", 5L));
+        hobbies.add(new Hobby("Ballet", 5L));
+        hobbies.add(new Hobby("Tap Dancing", 5L));
+        hobbies.add(new Hobby("Hip-Hop Dancing", 5L));
+        hobbies.add(new Hobby("Street Dancing", 5L));
+        hobbies.add(new Hobby("Magic Tricks", 5L));
+        hobbies.add(new Hobby("Clowning", 5L));
+        hobbies.add(new Hobby("Puppetry", 5L));
+        hobbies.add(new Hobby("Mime", 5L));
+        hobbies.add(new Hobby("Voice Acting", 5L));
+        hobbies.add(new Hobby("Improv Comedy", 5L));
+        hobbies.add(new Hobby("Stage Combat", 5L));
+        hobbies.add(new Hobby("Stage Production", 5L));
+        hobbies.add(new Hobby("Theatre Directing", 5L));
+        hobbies.add(new Hobby("Circus Arts", 5L));
+        hobbies.add(new Hobby("Juggling", 5L));
+        hobbies.add(new Hobby("Fire Dancing", 5L));
+        hobbies.add(new Hobby("Acrobats", 5L));
 
-        // Writer subcategories
-        hobbies.add(new Hobby("Author", 6L));
-        hobbies.add(new Hobby("Copywriter", 6L));
-        hobbies.add(new Hobby("Editor", 6L));
-        hobbies.add(new Hobby("Screenwriter", 6L));
-        hobbies.add(new Hobby("Technical Writer", 6L));
-        hobbies.add(new Hobby("Poet", 6L));
-        hobbies.add(new Hobby("Content Writer", 6L));
-        hobbies.add(new Hobby("Ghostwriter", 6L));
-        hobbies.add(new Hobby("Speechwriter", 6L));
+// Adventure Sports subcategories (parentId = 6)
+        hobbies.add(new Hobby("Rock Climbing", 6L));
+        hobbies.add(new Hobby("Bungee Jumping", 6L));
+        hobbies.add(new Hobby("Skydiving", 6L));
+        hobbies.add(new Hobby("Paragliding", 6L));
+        hobbies.add(new Hobby("Zip Lining", 6L));
+        hobbies.add(new Hobby("Mountaineering", 6L));
+        hobbies.add(new Hobby("Caving", 6L));
+        hobbies.add(new Hobby("Whitewater Rafting", 6L));
+        hobbies.add(new Hobby("Mountain Biking", 6L));
+        hobbies.add(new Hobby("Off-Roading", 6L));
+        hobbies.add(new Hobby("Hang Gliding", 6L));
+        hobbies.add(new Hobby("Sandboarding", 6L));
+        hobbies.add(new Hobby("Windsurfing", 6L));
+        hobbies.add(new Hobby("Parachuting", 6L));
+        hobbies.add(new Hobby("Base Jumping", 6L));
+        hobbies.add(new Hobby("Cliff Diving", 6L));
+        hobbies.add(new Hobby("Free Running", 6L));
+        hobbies.add(new Hobby("Highlining", 6L));
+        hobbies.add(new Hobby("Ice Climbing", 6L));
+        hobbies.add(new Hobby("Dirt Biking", 6L));
 
-        // Photographer subcategories
-        hobbies.add(new Hobby("Portrait Photographer", 7L));
-        hobbies.add(new Hobby("Wedding Photographer", 7L));
-        hobbies.add(new Hobby("Wildlife Photographer", 7L));
-        hobbies.add(new Hobby("Fashion Photographer", 7L));
-        hobbies.add(new Hobby("Sports Photographer", 7L));
-        hobbies.add(new Hobby("Photojournalist", 7L));
-        hobbies.add(new Hobby("Commercial Photographer", 7L));
-        hobbies.add(new Hobby("Event Photographer", 7L));
-        hobbies.add(new Hobby("Food Photographer", 7L));
-        hobbies.add(new Hobby("Street Photographer", 7L));
+// Water Sports subcategories (parentId = 7)
+        hobbies.add(new Hobby("Surfing", 7L));
+        hobbies.add(new Hobby("Scuba Diving", 7L));
+        hobbies.add(new Hobby("Snorkeling", 7L));
+        hobbies.add(new Hobby("Kayaking", 7L));
+        hobbies.add(new Hobby("Canoeing", 7L));
+        hobbies.add(new Hobby("Paddleboarding", 7L));
+        hobbies.add(new Hobby("Sailing", 7L));
+        hobbies.add(new Hobby("Water Skiing", 7L));
+        hobbies.add(new Hobby("Jet Skiing", 7L));
+        hobbies.add(new Hobby("Swimming", 7L));
+        hobbies.add(new Hobby("Fishing", 7L));
+        hobbies.add(new Hobby("Rowing", 7L));
+        hobbies.add(new Hobby("Kite Surfing", 7L));
+        hobbies.add(new Hobby("Bodyboarding", 7L));
+        hobbies.add(new Hobby("Deep Sea Fishing", 7L));
+        hobbies.add(new Hobby("Wakeboarding", 7L));
+        hobbies.add(new Hobby("Rafting", 7L));
+        hobbies.add(new Hobby("Spearfishing", 7L));
+        hobbies.add(new Hobby("Freediving", 7L));
 
-        // Musician subcategories
-        hobbies.add(new Hobby("Singer", 8L));
-        hobbies.add(new Hobby("Composer", 8L));
-        hobbies.add(new Hobby("Music Producer", 8L));
-        hobbies.add(new Hobby("Sound Engineer", 8L));
-        hobbies.add(new Hobby("Guitarist", 8L));
-        hobbies.add(new Hobby("Violinist", 8L));
-        hobbies.add(new Hobby("Drummer", 8L));
-        hobbies.add(new Hobby("DJ", 8L));
-        hobbies.add(new Hobby("Pianist", 8L));
-        hobbies.add(new Hobby("Conductor", 8L));
+// Winter Sports subcategories (parentId = 8)
+        hobbies.add(new Hobby("Skiing", 8L));
+        hobbies.add(new Hobby("Snowboarding", 8L));
+        hobbies.add(new Hobby("Ice Skating", 8L));
+        hobbies.add(new Hobby("Ice Hockey", 8L));
+        hobbies.add(new Hobby("Snowshoeing", 8L));
+        hobbies.add(new Hobby("Snowmobiling", 8L));
+        hobbies.add(new Hobby("Curling", 8L));
+        hobbies.add(new Hobby("Snow Tubing", 8L));
+        hobbies.add(new Hobby("Luge", 8L));
+        hobbies.add(new Hobby("Bobsledding", 8L));
+        hobbies.add(new Hobby("Snow Kiting", 8L));
+        hobbies.add(new Hobby("Sledding", 8L));
+        hobbies.add(new Hobby("Cross-country Skiing", 8L));
+        hobbies.add(new Hobby("Snowball Fighting", 8L));
+        hobbies.add(new Hobby("Winter Camping", 8L));
+        hobbies.add(new Hobby("Ice Fishing", 8L));
+        hobbies.add(new Hobby("Dog Sledding", 8L));
+        hobbies.add(new Hobby("Ski Jumping", 8L));
 
-        // Chef subcategories
-        hobbies.add(new Hobby("Pastry Chef", 9L));
-        hobbies.add(new Hobby("Sous Chef", 9L));
-        hobbies.add(new Hobby("Executive Chef", 9L));
-        hobbies.add(new Hobby("Private Chef", 9L));
-        hobbies.add(new Hobby("Catering Chef", 9L));
-        hobbies.add(new Hobby("Personal Chef", 9L));
-        hobbies.add(new Hobby("Sushi Chef", 9L));
-        hobbies.add(new Hobby("Grill Chef", 9L));
-        hobbies.add(new Hobby("Restaurant Chef", 9L));
-        hobbies.add(new Hobby("Banquet Chef", 9L));
+// Land Sports subcategories (parentId = 9)
+        hobbies.add(new Hobby("Soccer", 9L));
+        hobbies.add(new Hobby("Basketball", 9L));
+        hobbies.add(new Hobby("Baseball", 9L));
+        hobbies.add(new Hobby("American Football", 9L));
+        hobbies.add(new Hobby("Rugby", 9L));
+        hobbies.add(new Hobby("Cricket", 9L));
+        hobbies.add(new Hobby("Tennis", 9L));
+        hobbies.add(new Hobby("Badminton", 9L));
+        hobbies.add(new Hobby("Volleyball", 9L));
+        hobbies.add(new Hobby("Golf", 9L));
+        hobbies.add(new Hobby("Track and Field", 9L));
+        hobbies.add(new Hobby("CrossFit", 9L));
+        hobbies.add(new Hobby("Parkour", 9L));
+        hobbies.add(new Hobby("Lacrosse", 9L));
+        hobbies.add(new Hobby("Handball", 9L));
+        hobbies.add(new Hobby("Table Tennis", 9L));
+        hobbies.add(new Hobby("Field Hockey", 9L));
+        hobbies.add(new Hobby("Dodgeball", 9L));
+        hobbies.add(new Hobby("Ultimate Frisbee", 9L));
+        hobbies.add(new Hobby("Horseback Riding", 9L));
 
-        // Architect subcategories
-        hobbies.add(new Hobby("Residential Architect", 10L));
-        hobbies.add(new Hobby("Commercial Architect", 10L));
-        hobbies.add(new Hobby("Landscape Architect", 10L));
-        hobbies.add(new Hobby("Interior Architect", 10L));
-        hobbies.add(new Hobby("Urban Planner", 10L));
-        hobbies.add(new Hobby("Restoration Architect", 10L));
-        hobbies.add(new Hobby("Sustainable Architect", 10L));
-        hobbies.add(new Hobby("Industrial Architect", 10L));
-        hobbies.add(new Hobby("BIM Specialist", 10L));
+// Target Sports subcategories (parentId = 10)
+        hobbies.add(new Hobby("Archery", 10L));
+        hobbies.add(new Hobby("Airsoft", 10L));
+        hobbies.add(new Hobby("Paintball", 10L));
+        hobbies.add(new Hobby("Skeet Shooting", 10L));
+        hobbies.add(new Hobby("Trap Shooting", 10L));
+        hobbies.add(new Hobby("Pistol Shooting", 10L));
+        hobbies.add(new Hobby("Rifle Shooting", 10L));
+        hobbies.add(new Hobby("Dart Throwing", 10L));
+        hobbies.add(new Hobby("Axe Throwing", 10L));
+        hobbies.add(new Hobby("Slingshot Shooting", 10L));
+        hobbies.add(new Hobby("Clay Pigeon Shooting", 10L));
+        hobbies.add(new Hobby("Bow Hunting", 10L));
+        hobbies.add(new Hobby("Crossbow Shooting", 10L));
+        hobbies.add(new Hobby("Laser Tag", 10L));
+        hobbies.add(new Hobby("Knife Throwing", 10L));
+        hobbies.add(new Hobby("Sporting Clays", 10L));
+        hobbies.add(new Hobby("Biathlon", 10L));
+        hobbies.add(new Hobby("Field Archery", 10L));
+        hobbies.add(new Hobby("Combat Archery", 10L));
+        hobbies.add(new Hobby("Precision Shooting", 10L));
 
-        // Lawyer subcategories
-        hobbies.add(new Hobby("Corporate Lawyer", 11L));
-        hobbies.add(new Hobby("Criminal Lawyer", 11L));
-        hobbies.add(new Hobby("Family Lawyer", 11L));
-        hobbies.add(new Hobby("Intellectual Property Lawyer", 11L));
-        hobbies.add(new Hobby("Environmental Lawyer", 11L));
-        hobbies.add(new Hobby("Tax Lawyer", 11L));
-        hobbies.add(new Hobby("Employment Lawyer", 11L));
-        hobbies.add(new Hobby("Human Rights Lawyer", 11L));
-        hobbies.add(new Hobby("Real Estate Lawyer", 11L));
+// Games and Collecting subcategories (parentId = 11)
+        hobbies.add(new Hobby("Chess", 11L));
+        hobbies.add(new Hobby("Checkers", 11L));
+        hobbies.add(new Hobby("Poker", 11L));
+        hobbies.add(new Hobby("Bridge", 11L));
+        hobbies.add(new Hobby("Backgammon", 11L));
+        hobbies.add(new Hobby("Scrabble", 11L));
+        hobbies.add(new Hobby("Dungeons and Dragons", 11L));
+        hobbies.add(new Hobby("Magic: The Gathering", 11L));
+        hobbies.add(new Hobby("Board Games", 11L));
+        hobbies.add(new Hobby("Card Collecting", 11L));
+        hobbies.add(new Hobby("Coin Collecting", 11L));
+        hobbies.add(new Hobby("Stamp Collecting", 11L));
+        hobbies.add(new Hobby("Antique Collecting", 11L));
+        hobbies.add(new Hobby("Action Figure Collecting", 11L));
+        hobbies.add(new Hobby("Comic Book Collecting", 11L));
+        hobbies.add(new Hobby("Model Train Building", 11L));
+        hobbies.add(new Hobby("Puzzle Solving", 11L));
+        hobbies.add(new Hobby("Fantasy Football", 11L));
+        hobbies.add(new Hobby("Cosplay", 11L));
+        hobbies.add(new Hobby("Video Gaming", 11L));
 
-        // Engineer subcategories
-        hobbies.add(new Hobby("Mechanical Engineer", 12L));
-        hobbies.add(new Hobby("Electrical Engineer", 12L));
-        hobbies.add(new Hobby("Aerospace Engineer", 12L));
-        hobbies.add(new Hobby("Biomedical Engineer", 12L));
-        hobbies.add(new Hobby("Chemical Engineer", 12L));
-        hobbies.add(new Hobby("Industrial Engineer", 12L));
-        hobbies.add(new Hobby("Automotive Engineer", 12L));
-        hobbies.add(new Hobby("Petroleum Engineer", 12L));
+// Nature Hobbies subcategories (parentId = 12)
+        hobbies.add(new Hobby("Bird Watching", 12L));
+        hobbies.add(new Hobby("Gardening", 12L));
+        hobbies.add(new Hobby("Beekeeping", 12L));
+        hobbies.add(new Hobby("Butterfly Watching", 12L));
+        hobbies.add(new Hobby("Hiking", 12L));
+        hobbies.add(new Hobby("Camping", 12L));
+        hobbies.add(new Hobby("Nature Photography", 12L));
+        hobbies.add(new Hobby("Forest Bathing", 12L));
+        hobbies.add(new Hobby("Tree Climbing", 12L));
+        hobbies.add(new Hobby("Plant Identification", 12L));
+        hobbies.add(new Hobby("Animal Tracking", 12L));
+        hobbies.add(new Hobby("Mushroom Hunting", 12L));
+        hobbies.add(new Hobby("Stargazing", 12L));
+        hobbies.add(new Hobby("Geocaching", 12L));
+        hobbies.add(new Hobby("Fossil Hunting", 12L));
+        hobbies.add(new Hobby("Rock Collecting", 12L));
+        hobbies.add(new Hobby("Wildlife Conservation", 12L));
+        hobbies.add(new Hobby("Flower Arranging", 12L));
+        hobbies.add(new Hobby("Foraging", 12L));
+        hobbies.add(new Hobby("Herb Gardening", 12L));
 
-        // Scientist subcategories
-        hobbies.add(new Hobby("Physicist", 13L));
-        hobbies.add(new Hobby("Chemist", 13L));
-        hobbies.add(new Hobby("Biologist", 13L));
-        hobbies.add(new Hobby("Astronomer", 13L));
-        hobbies.add(new Hobby("Geologist", 13L));
-        hobbies.add(new Hobby("Neuroscientist", 13L));
-        hobbies.add(new Hobby("Environmental Scientist", 13L));
-        hobbies.add(new Hobby("Data Scientist", 13L));
-        hobbies.add(new Hobby("Materials Scientist", 13L));
-        hobbies.add(new Hobby("Marine Biologist", 13L));
+// Miscellaneous subcategories (parentId = 13)
+        hobbies.add(new Hobby("Traveling", 13L));
+        hobbies.add(new Hobby("Volunteering", 13L));
+        hobbies.add(new Hobby("Meditation", 13L));
+        hobbies.add(new Hobby("Yoga", 13L));
+        hobbies.add(new Hobby("Dog Training", 13L));
+        hobbies.add(new Hobby("Cat Care", 13L));
+        hobbies.add(new Hobby("Pet Sitting", 13L));
+        hobbies.add(new Hobby("Cooking", 13L));
+        hobbies.add(new Hobby("Baking", 13L));
+        hobbies.add(new Hobby("Wine Tasting", 13L));
+        hobbies.add(new Hobby("Cheese Making", 13L));
+        hobbies.add(new Hobby("Mixology", 13L));
+        hobbies.add(new Hobby("Interior Decorating", 13L));
+        hobbies.add(new Hobby("Personal Shopping", 13L));
+        hobbies.add(new Hobby("Fashion Styling", 13L));
+        hobbies.add(new Hobby("Event Planning", 13L));
+        hobbies.add(new Hobby("Social Media Management", 13L));
+        hobbies.add(new Hobby("Car Collecting", 13L));
+        hobbies.add(new Hobby("Antique Restoration", 13L));
+        hobbies.add(new Hobby("Bartending", 13L));
 
-        // Sales Manager subcategories
-        hobbies.add(new Hobby("Regional Sales Manager", 14L));
-        hobbies.add(new Hobby("Business Development Manager", 14L));
-        hobbies.add(new Hobby("Retail Sales Manager", 14L));
-        hobbies.add(new Hobby("Inside Sales Manager", 14L));
-        hobbies.add(new Hobby("B2B Sales Manager", 14L));
-        hobbies.add(new Hobby("Account Sales Manager", 14L));
-        hobbies.add(new Hobby("Direct Sales Manager", 14L));
-        hobbies.add(new Hobby("Pharmaceutical Sales Manager", 14L));
-        hobbies.add(new Hobby("E-commerce Sales Manager", 14L));
-        hobbies.add(new Hobby("Field Sales Manager", 14L));
+// Tech Hobbies subcategories (parentId = 14)
+        hobbies.add(new Hobby("Coding", 14L));
+        hobbies.add(new Hobby("Game Development", 14L));
+        hobbies.add(new Hobby("App Development", 14L));
+        hobbies.add(new Hobby("Web Development", 14L));
+        hobbies.add(new Hobby("Software Testing", 14L));
+        hobbies.add(new Hobby("Cybersecurity", 14L));
+        hobbies.add(new Hobby("Ethical Hacking", 14L));
+        hobbies.add(new Hobby("Arduino Programming", 14L));
+        hobbies.add(new Hobby("Raspberry Pi Projects", 14L));
+        hobbies.add(new Hobby("3D Printing", 14L));
+        hobbies.add(new Hobby("Drone Piloting", 14L));
+        hobbies.add(new Hobby("Electronics Repair", 14L));
+        hobbies.add(new Hobby("Computer Building", 14L));
+        hobbies.add(new Hobby("Virtual Reality Design", 14L));
+        hobbies.add(new Hobby("Augmented Reality Design", 14L));
+        hobbies.add(new Hobby("Robotics", 14L));
+        hobbies.add(new Hobby("Machine Learning", 14L));
+        hobbies.add(new Hobby("Artificial Intelligence", 14L));
+        hobbies.add(new Hobby("Data Science", 14L));
+        hobbies.add(new Hobby("Quantum Computing", 14L));
 
-        // Accountant subcategories
-        hobbies.add(new Hobby("Financial Accountant", 15L));
-        hobbies.add(new Hobby("Tax Accountant", 15L));
-        hobbies.add(new Hobby("Forensic Accountant", 15L));
-        hobbies.add(new Hobby("Management Accountant", 15L));
-        hobbies.add(new Hobby("Cost Accountant", 15L));
-        hobbies.add(new Hobby("Auditor", 15L));
-        hobbies.add(new Hobby("Government Accountant", 15L));
-        hobbies.add(new Hobby("Investment Accountant", 15L));
+// DIY Projects subcategories (parentId = 15)
+        hobbies.add(new Hobby("Home Improvement", 15L));
+        hobbies.add(new Hobby("Furniture Making", 15L));
+        hobbies.add(new Hobby("Carpentry", 15L));
+        hobbies.add(new Hobby("Electrical Work", 15L));
+        hobbies.add(new Hobby("Plumbing", 15L));
+        hobbies.add(new Hobby("Welding", 15L));
+        hobbies.add(new Hobby("Metalworking", 15L));
+        hobbies.add(new Hobby("Model Building", 15L));
+        hobbies.add(new Hobby("Car Restoration", 15L));
+        hobbies.add(new Hobby("Bicycle Repair", 15L));
+        hobbies.add(new Hobby("Masonry", 15L));
+        hobbies.add(new Hobby("Gardening Structures", 15L));
+        hobbies.add(new Hobby("Home Automation", 15L));
+        hobbies.add(new Hobby("Solar Panel Installation", 15L));
+        hobbies.add(new Hobby("Painting Walls", 15L));
+        hobbies.add(new Hobby("Tiling", 15L));
+        hobbies.add(new Hobby("Flooring Installation", 15L));
+        hobbies.add(new Hobby("Window Repair", 15L));
+        hobbies.add(new Hobby("Roof Repair", 15L));
+        hobbies.add(new Hobby("Insulation Installation", 15L));
 
-        // Electrician subcategories
-        hobbies.add(new Hobby("Residential Electrician", 16L));
-        hobbies.add(new Hobby("Commercial Electrician", 16L));
-        hobbies.add(new Hobby("Industrial Electrician", 16L));
-        hobbies.add(new Hobby("Maintenance Electrician", 16L));
-        hobbies.add(new Hobby("Automotive Electrician", 16L));
-        hobbies.add(new Hobby("Marine Electrician", 16L));
-        hobbies.add(new Hobby("Lineman", 16L));
-        hobbies.add(new Hobby("Security Systems Electrician", 16L));
-        hobbies.add(new Hobby("Renewable Energy Technician", 16L));
-        hobbies.add(new Hobby("Electrical Inspector", 16L));
+// Physical Activities subcategories (parentId = 16)
+        hobbies.add(new Hobby("Running", 16L));
+        hobbies.add(new Hobby("Walking", 16L));
+        hobbies.add(new Hobby("Jogging", 16L));
+        hobbies.add(new Hobby("Weightlifting", 16L));
+        hobbies.add(new Hobby("Aerobics", 16L));
+        hobbies.add(new Hobby("Pilates", 16L));
+        hobbies.add(new Hobby("Spinning", 16L));
+        hobbies.add(new Hobby("Zumba", 16L));
+        hobbies.add(new Hobby("Martial Arts", 16L));
+        hobbies.add(new Hobby("Boxing", 16L));
+        hobbies.add(new Hobby("Kickboxing", 16L));
+        hobbies.add(new Hobby("Jiu-Jitsu", 16L));
+        hobbies.add(new Hobby("Karate", 16L));
+        hobbies.add(new Hobby("Taekwondo", 16L));
+        hobbies.add(new Hobby("Capoeira", 16L));
+        hobbies.add(new Hobby("Krav Maga", 16L));
+        hobbies.add(new Hobby("Powerlifting", 16L));
+        hobbies.add(new Hobby("Bodybuilding", 16L));
+        hobbies.add(new Hobby("Wrestling", 16L));
 
-        // Plumber subcategories
-        hobbies.add(new Hobby("Residential Plumber", 17L));
-        hobbies.add(new Hobby("Commercial Plumber", 17L));
-        hobbies.add(new Hobby("Industrial Plumber", 17L));
-        hobbies.add(new Hobby("Pipefitter", 17L));
-        hobbies.add(new Hobby("Steamfitter", 17L));
-        hobbies.add(new Hobby("Sprinkler Fitter", 17L));
-        hobbies.add(new Hobby("Water Supply Plumber", 17L));
-        hobbies.add(new Hobby("Gas Plumber", 17L));
-        hobbies.add(new Hobby("Drainage Plumber", 17L));
-        hobbies.add(new Hobby("Septic System Specialist", 17L));
+// Science Activities subcategories (parentId = 17)
+        hobbies.add(new Hobby("Astronomy", 17L));
+        hobbies.add(new Hobby("Chemistry Experiments", 17L));
+        hobbies.add(new Hobby("Physics Projects", 17L));
+        hobbies.add(new Hobby("Electronics Projects", 17L));
+        hobbies.add(new Hobby("Space Exploration", 17L));
+        hobbies.add(new Hobby("Geology", 17L));
+        hobbies.add(new Hobby("Meteorology", 17L));
+        hobbies.add(new Hobby("Biology Research", 17L));
+        hobbies.add(new Hobby("Environmental Science", 17L));
+        hobbies.add(new Hobby("Amateur Meteorology", 17L));
+        hobbies.add(new Hobby("Marine Biology", 17L));
+        hobbies.add(new Hobby("Botany", 17L));
+        hobbies.add(new Hobby("Paleontology", 17L));
+        hobbies.add(new Hobby("Zoology", 17L));
+        hobbies.add(new Hobby("DNA Testing", 17L));
+        hobbies.add(new Hobby("Genealogy", 17L));
+        hobbies.add(new Hobby("Weather Forecasting", 17L));
+        hobbies.add(new Hobby("Natural History Research", 17L));
 
-        // Civil Engineer subcategories
-        hobbies.add(new Hobby("Structural Engineer", 18L));
-        hobbies.add(new Hobby("Geotechnical Engineer", 18L));
-        hobbies.add(new Hobby("Transportation Engineer", 18L));
-        hobbies.add(new Hobby("Water Resources Engineer", 18L));
-        hobbies.add(new Hobby("Construction Engineer", 18L));
-        hobbies.add(new Hobby("Environmental Engineer", 18L));
-        hobbies.add(new Hobby("Coastal Engineer", 18L));
-        hobbies.add(new Hobby("Surveying Engineer", 18L));
-        hobbies.add(new Hobby("Urban Planning Engineer", 18L));
-        hobbies.add(new Hobby("Earthquake Engineer", 18L));
+// Language Hobbies subcategories (parentId = 18)
+        hobbies.add(new Hobby("Language Learning", 18L));
+        hobbies.add(new Hobby("Conlanging", 18L));
+        hobbies.add(new Hobby("Translation", 18L));
+        hobbies.add(new Hobby("Sign Language", 18L));
+        hobbies.add(new Hobby("Linguistics", 18L));
 
-        // Web Developer subcategories
-        hobbies.add(new Hobby("Frontend Developer", 19L));
-        hobbies.add(new Hobby("Backend Developer", 19L));
-        hobbies.add(new Hobby("Full Stack Developer", 19L));
-        hobbies.add(new Hobby("UI/UX Developer", 19L));
-        hobbies.add(new Hobby("CMS Developer", 19L));
-        hobbies.add(new Hobby("E-commerce Developer", 19L));
-        hobbies.add(new Hobby("Web Security Specialist", 19L));
-        hobbies.add(new Hobby("WordPress Developer", 19L));
-        hobbies.add(new Hobby("SEO Developer", 19L));
-        hobbies.add(new Hobby("API Developer", 19L));
+// Aerial Arts subcategories (parentId = 19)
+        hobbies.add(new Hobby("Aerial Silks", 19L));
+        hobbies.add(new Hobby("Aerial Hoop", 19L));
+        hobbies.add(new Hobby("Pole Dancing", 19L));
+        hobbies.add(new Hobby("Trapeze", 19L));
+        hobbies.add(new Hobby("Aerial Rope", 19L));
+        hobbies.add(new Hobby("Aerial Hammock", 19L));
+        hobbies.add(new Hobby("Lyra", 19L));
+        hobbies.add(new Hobby("Cloud Swing", 19L));
+        hobbies.add(new Hobby("Spanish Web", 19L));
+        hobbies.add(new Hobby("Corde Lisse", 19L));
 
-        // Graphic Designer subcategories
-        hobbies.add(new Hobby("Brand Identity Designer", 20L));
-        hobbies.add(new Hobby("Motion Graphics Designer", 20L));
-        hobbies.add(new Hobby("UI/UX Designer", 20L));
-        hobbies.add(new Hobby("Packaging Designer", 20L));
-        hobbies.add(new Hobby("Typography Designer", 20L));
-        hobbies.add(new Hobby("3D Designer", 20L));
-        hobbies.add(new Hobby("Advertising Designer", 20L));
-        hobbies.add(new Hobby("Infographic Designer", 20L));
-        hobbies.add(new Hobby("Print Designer", 20L));
+// Mindfulness subcategories (parentId = 20)
+        hobbies.add(new Hobby("Guided Meditation", 20L));
+        hobbies.add(new Hobby("Breathwork", 20L));
+        hobbies.add(new Hobby("Sound Baths", 20L));
+        hobbies.add(new Hobby("Forest Therapy", 20L));
+        hobbies.add(new Hobby("Gratitude Journaling", 20L));
+        hobbies.add(new Hobby("Mindful Walking", 20L));
+        hobbies.add(new Hobby("Body Scanning", 20L));
+        hobbies.add(new Hobby("Loving-Kindness Meditation", 20L));
+        hobbies.add(new Hobby("Zen Meditation", 20L));
+        hobbies.add(new Hobby("Chakra Balancing", 20L));
 
-        // Marketing Manager subcategories
-        hobbies.add(new Hobby("Digital Marketing Manager", 21L));
-        hobbies.add(new Hobby("Product Marketing Manager", 21L));
-        hobbies.add(new Hobby("Content Marketing Manager", 21L));
-        hobbies.add(new Hobby("Social Media Marketing Manager", 21L));
-        hobbies.add(new Hobby("SEO Manager", 21L));
-        hobbies.add(new Hobby("PPC Manager", 21L));
-        hobbies.add(new Hobby("Email Marketing Manager", 21L));
-        hobbies.add(new Hobby("Affiliate Marketing Manager", 21L));
-        hobbies.add(new Hobby("Brand Marketing Manager", 21L));
-        hobbies.add(new Hobby("Marketing Analyst", 21L));
+// Transportation subcategories (parentId = 21)
+        hobbies.add(new Hobby("Bicycle Touring", 21L));
+        hobbies.add(new Hobby("Motorcycle Riding", 21L));
+        hobbies.add(new Hobby("Sailing Voyages", 21L));
+        hobbies.add(new Hobby("RV Travel", 21L));
+        hobbies.add(new Hobby("Train Spotting", 21L));
+        hobbies.add(new Hobby("Aircraft Spotting", 21L));
+        hobbies.add(new Hobby("Hot Air Ballooning", 21L));
+        hobbies.add(new Hobby("Segway Touring", 21L));
+        hobbies.add(new Hobby("Horseback Travel", 21L));
+        hobbies.add(new Hobby("Canoe Camping", 21L));
 
-        // HR Specialist subcategories
-        hobbies.add(new Hobby("Recruitment Specialist", 22L));
-        hobbies.add(new Hobby("Employee Relations Specialist", 22L));
-        hobbies.add(new Hobby("Compensation and Benefits Specialist", 22L));
-        hobbies.add(new Hobby("HR Compliance Specialist", 22L));
-        hobbies.add(new Hobby("Training and Development Specialist", 22L));
-        hobbies.add(new Hobby("HR Analyst", 22L));
-        hobbies.add(new Hobby("HR Generalist", 22L));
-        hobbies.add(new Hobby("HR Consultant", 22L));
-        hobbies.add(new Hobby("Diversity and Inclusion Specialist", 22L));
-        hobbies.add(new Hobby("Workforce Planning Specialist", 22L));
+// Fashion subcategories (parentId = 22)
+        hobbies.add(new Hobby("Sewing Clothes", 22L));
+        hobbies.add(new Hobby("Fashion Design", 22L));
+        hobbies.add(new Hobby("Upcycling Clothes", 22L));
+        hobbies.add(new Hobby("Shoe Making", 22L));
+        hobbies.add(new Hobby("Hat Making", 22L));
+        hobbies.add(new Hobby("Jewelry Design", 22L));
+        hobbies.add(new Hobby("Handbag Design", 22L));
+        hobbies.add(new Hobby("Fashion Photography", 22L));
+        hobbies.add(new Hobby("Wardrobe Styling", 22L));
+        hobbies.add(new Hobby("Fabric Dyeing", 22L));
 
-        // Project Manager subcategories
-        hobbies.add(new Hobby("Construction Project Manager", 23L));
-        hobbies.add(new Hobby("IT Project Manager", 23L));
-        hobbies.add(new Hobby("Agile Project Manager", 23L));
-        hobbies.add(new Hobby("Healthcare Project Manager", 23L));
-        hobbies.add(new Hobby("Marketing Project Manager", 23L));
-        hobbies.add(new Hobby("Finance Project Manager", 23L));
-        hobbies.add(new Hobby("Retail Project Manager", 23L));
-        hobbies.add(new Hobby("Engineering Project Manager", 23L));
-        hobbies.add(new Hobby("Government Project Manager", 23L));
-        hobbies.add(new Hobby("Education Project Manager", 23L));
+// Home Economics subcategories (parentId = 23)
+        hobbies.add(new Hobby("Meal Planning", 23L));
+        hobbies.add(new Hobby("Budgeting", 23L));
+        hobbies.add(new Hobby("Home Organization", 23L));
+        hobbies.add(new Hobby("Minimalism", 23L));
+        hobbies.add(new Hobby("Zero Waste Living", 23L));
+        hobbies.add(new Hobby("Sustainable Living", 23L));
+        hobbies.add(new Hobby("Home Canning", 23L));
+        hobbies.add(new Hobby("Fermentation", 23L));
+        hobbies.add(new Hobby("Home Brewing", 23L));
+        hobbies.add(new Hobby("Preserving Food", 23L));
 
-        // Dentist subcategories
-        hobbies.add(new Hobby("General Dentist", 24L));
-        hobbies.add(new Hobby("Orthodontist", 24L));
-        hobbies.add(new Hobby("Pediatric Dentist", 24L));
-        hobbies.add(new Hobby("Oral Surgeon", 24L));
-        hobbies.add(new Hobby("Endodontist", 24L));
-        hobbies.add(new Hobby("Periodontist", 24L));
-        hobbies.add(new Hobby("Prosthodontist", 24L));
-        hobbies.add(new Hobby("Dental Hygienist", 24L));
-        hobbies.add(new Hobby("Dental Technician", 24L));
-        hobbies.add(new Hobby("Public Health Dentist", 24L));
+// Social Dances subcategories (parentId = 24)
+        hobbies.add(new Hobby("Swing Dancing", 24L));
+        hobbies.add(new Hobby("Salsa Dancing", 24L));
+        hobbies.add(new Hobby("Tango Dancing", 24L));
+        hobbies.add(new Hobby("Ballroom Dancing", 24L));
+        hobbies.add(new Hobby("Square Dancing", 24L));
+        hobbies.add(new Hobby("Line Dancing", 24L));
+        hobbies.add(new Hobby("Folk Dancing", 24L));
+        hobbies.add(new Hobby("Country Western Dancing", 24L));
+        hobbies.add(new Hobby("Belly Dancing", 24L));
+        hobbies.add(new Hobby("Irish Step Dancing", 24L));
 
-        // Psychologist subcategories
-        hobbies.add(new Hobby("Clinical Psychologist", 25L));
-        hobbies.add(new Hobby("Counseling Psychologist", 25L));
-        hobbies.add(new Hobby("Educational Psychologist", 25L));
-        hobbies.add(new Hobby("Forensic Psychologist", 25L));
-        hobbies.add(new Hobby("Industrial-Organizational Psychologist", 25L));
-        hobbies.add(new Hobby("Neuropsychologist", 25L));
-        hobbies.add(new Hobby("Sports Psychologist", 25L));
-        hobbies.add(new Hobby("Health Psychologist", 25L));
-        hobbies.add(new Hobby("Rehabilitation Psychologist", 25L));
-        hobbies.add(new Hobby("Developmental Psychologist", 25L));
+// History Reenactment subcategories (parentId = 25)
+        hobbies.add(new Hobby("Medieval Reenactment", 25L));
+        hobbies.add(new Hobby("Civil War Reenactment", 25L));
+        hobbies.add(new Hobby("Viking Reenactment", 25L));
+        hobbies.add(new Hobby("Renaissance Fairs", 25L));
+        hobbies.add(new Hobby("Ancient Roman Reenactment", 25L));
+        hobbies.add(new Hobby("Wild West Reenactment", 25L));
+        hobbies.add(new Hobby("World War II Reenactment", 25L));
+        hobbies.add(new Hobby("Historical Fencing", 25L));
+        hobbies.add(new Hobby("Traditional Archery", 25L));
+        hobbies.add(new Hobby("Blacksmithing", 25L));
 
-        // Veterinarian subcategories
-        hobbies.add(new Hobby("Small Animal Veterinarian", 26L));
-        hobbies.add(new Hobby("Large Animal Veterinarian", 26L));
-        hobbies.add(new Hobby("Wildlife Veterinarian", 26L));
-        hobbies.add(new Hobby("Equine Veterinarian", 26L));
-        hobbies.add(new Hobby("Veterinary Surgeon", 26L));
-        hobbies.add(new Hobby("Veterinary Pathologist", 26L));
-        hobbies.add(new Hobby("Veterinary Pharmacologist", 26L));
-        hobbies.add(new Hobby("Zoo Veterinarian", 26L));
-        hobbies.add(new Hobby("Marine Veterinarian", 26L));
-        hobbies.add(new Hobby("Veterinary Behaviorist", 26L));
+// Astronomy Observation subcategories (parentId = 26)
+        hobbies.add(new Hobby("Solar Observation", 26L));
+        hobbies.add(new Hobby("Lunar Observation", 26L));
+        hobbies.add(new Hobby("Planetary Observation", 26L));
+        hobbies.add(new Hobby("Deep Sky Observation", 26L));
+        hobbies.add(new Hobby("Meteor Watching", 26L));
+        hobbies.add(new Hobby("Comet Hunting", 26L));
+        hobbies.add(new Hobby("Aurora Watching", 26L));
+        hobbies.add(new Hobby("Satellite Tracking", 26L));
+        hobbies.add(new Hobby("Eclipse Chasing", 26L));
+        hobbies.add(new Hobby("Astrophotography", 26L));
 
-        // Social Worker subcategories
-        hobbies.add(new Hobby("Child Welfare Social Worker", 27L));
-        hobbies.add(new Hobby("School Social Worker", 27L));
-        hobbies.add(new Hobby("Medical Social Worker", 27L));
-        hobbies.add(new Hobby("Substance Abuse Social Worker", 27L));
-        hobbies.add(new Hobby("Mental Health Social Worker", 27L));
-        hobbies.add(new Hobby("Geriatric Social Worker", 27L));
-        hobbies.add(new Hobby("Forensic Social Worker", 27L));
-        hobbies.add(new Hobby("Community Social Worker", 27L));
-        hobbies.add(new Hobby("Hospice Social Worker", 27L));
-        hobbies.add(new Hobby("Policy Social Worker", 27L));
+// Puzzles subcategories (parentId = 27)
+        hobbies.add(new Hobby("Crossword Puzzles", 27L));
+        hobbies.add(new Hobby("Sudoku", 27L));
+        hobbies.add(new Hobby("Jigsaw Puzzles", 27L));
+        hobbies.add(new Hobby("Logic Puzzles", 27L));
+        hobbies.add(new Hobby("Escape Rooms", 27L));
+        hobbies.add(new Hobby("Brain Teasers", 27L));
+        hobbies.add(new Hobby("Rubik's Cube", 27L));
+        hobbies.add(new Hobby("Cryptic Puzzles", 27L));
+        hobbies.add(new Hobby("Puzzle Hunts", 27L));
+        hobbies.add(new Hobby("Mechanical Puzzles", 27L));
 
-        // Data Analyst subcategories
-        hobbies.add(new Hobby("Business Data Analyst", 28L));
-        hobbies.add(new Hobby("Financial Data Analyst", 28L));
-        hobbies.add(new Hobby("Marketing Data Analyst", 28L));
-        hobbies.add(new Hobby("Healthcare Data Analyst", 28L));
-        hobbies.add(new Hobby("Operations Data Analyst", 28L));
-        hobbies.add(new Hobby("Retail Data Analyst", 28L));
-        hobbies.add(new Hobby("Fraud Detection Analyst", 28L));
-        hobbies.add(new Hobby("Risk Analyst", 28L));
-        hobbies.add(new Hobby("Sports Data Analyst", 28L));
-        hobbies.add(new Hobby("Supply Chain Analyst", 28L));
+// Extreme Sports subcategories (parentId = 28)
+        hobbies.add(new Hobby("Wingsuit Flying", 28L));
+        hobbies.add(new Hobby("Cave Diving", 28L));
+        hobbies.add(new Hobby("Big Wave Surfing", 28L));
+        hobbies.add(new Hobby("Volcano Boarding", 28L));
+        hobbies.add(new Hobby("Ice Cross Downhill", 28L));
+        hobbies.add(new Hobby("Street Luge", 28L));
+        hobbies.add(new Hobby("Freestyle Motocross", 28L));
+        hobbies.add(new Hobby("Whitewater Kayaking", 28L));
+        hobbies.add(new Hobby("Mountain Unicycling", 28L));
+        hobbies.add(new Hobby("Ultra Running", 28L));
+        hobbies.add(new Hobby("Sous Vide Cooking", 29L));
+        hobbies.add(new Hobby("Molecular Gastronomy", 29L));
+        hobbies.add(new Hobby("Fermentation", 29L));
+        hobbies.add(new Hobby("Smoking Foods", 29L));
+        hobbies.add(new Hobby("Butchery", 29L));
+        hobbies.add(new Hobby("Charcuterie", 29L));
+        hobbies.add(new Hobby("Artisan Bread Making", 29L));
+        hobbies.add(new Hobby("Pasta Making", 29L));
+        hobbies.add(new Hobby("Chocolate Tempering", 29L));
+        hobbies.add(new Hobby("Sugar Art", 29L));
 
-        // Entrepreneur subcategories
-        hobbies.add(new Hobby("Startup Founder", 29L));
-        hobbies.add(new Hobby("Tech Entrepreneur", 29L));
-        hobbies.add(new Hobby("Social Entrepreneur", 29L));
-        hobbies.add(new Hobby("Retail Entrepreneur", 29L));
-        hobbies.add(new Hobby("E-commerce Entrepreneur", 29L));
-        hobbies.add(new Hobby("Real Estate Entrepreneur", 29L));
-        hobbies.add(new Hobby("Food Business Entrepreneur", 29L));
-        hobbies.add(new Hobby("Green Business Entrepreneur", 29L));
-        hobbies.add(new Hobby("Creative Entrepreneur", 29L));
-        hobbies.add(new Hobby("Lifestyle Entrepreneur", 29L));
+// Animal Care subcategories (parentId = 30)
+        hobbies.add(new Hobby("Dog Breeding", 30L));
+        hobbies.add(new Hobby("Horse Training", 30L));
+        hobbies.add(new Hobby("Falconry", 30L));
+        hobbies.add(new Hobby("Beekeeping", 30L));
+        hobbies.add(new Hobby("Butterfly Rearing", 30L));
+        hobbies.add(new Hobby("Aquarium Keeping", 30L));
+        hobbies.add(new Hobby("Reptile Care", 30L));
+        hobbies.add(new Hobby("Bird Watching", 30L));
+        hobbies.add(new Hobby("Animal Rescue", 30L));
+        hobbies.add(new Hobby("Pet Grooming", 30L));
 
-        // Real Estate Agent subcategories
-        hobbies.add(new Hobby("Residential Real Estate Agent", 30L));
-        hobbies.add(new Hobby("Commercial Real Estate Agent", 30L));
-        hobbies.add(new Hobby("Luxury Real Estate Agent", 30L));
-        hobbies.add(new Hobby("Property Manager", 30L));
-        hobbies.add(new Hobby("Real Estate Broker", 30L));
-        hobbies.add(new Hobby("Investment Property Consultant", 30L));
-        hobbies.add(new Hobby("Real Estate Developer", 30L));
-        hobbies.add(new Hobby("Leasing Agent", 30L));
-        hobbies.add(new Hobby("Foreclosure Specialist", 30L));
-        hobbies.add(new Hobby("Real Estate Appraiser", 30L));
+// Urban Exploration subcategories (parentId = 31)
+        hobbies.add(new Hobby("Abandoned Buildings", 31L));
+        hobbies.add(new Hobby("Drainage Tunnels", 31L));
+        hobbies.add(new Hobby("Rooftopping", 31L));
+        hobbies.add(new Hobby("Catacombs", 31L));
+        hobbies.add(new Hobby("Industrial Sites", 31L));
+        hobbies.add(new Hobby("Ghost Towns", 31L));
+        hobbies.add(new Hobby("Underground Bunkers", 31L));
+        hobbies.add(new Hobby("Bridge Climbing", 31L));
+        hobbies.add(new Hobby("Urban Caving", 31L));
+        hobbies.add(new Hobby("Subway Tunnels", 31L));
 
-        // Mechanic subcategories
-        hobbies.add(new Hobby("Automotive Mechanic", 31L));
-        hobbies.add(new Hobby("Diesel Mechanic", 31L));
-        hobbies.add(new Hobby("Aircraft Mechanic", 31L));
-        hobbies.add(new Hobby("Marine Mechanic", 31L));
-        hobbies.add(new Hobby("Small Engine Mechanic", 31L));
-        hobbies.add(new Hobby("Heavy Equipment Mechanic", 31L));
-        hobbies.add(new Hobby("Motorcycle Mechanic", 31L));
-        hobbies.add(new Hobby("Industrial Machinery Mechanic", 31L));
-        hobbies.add(new Hobby("Brake and Transmission Specialist", 31L));
-        hobbies.add(new Hobby("Auto Body Technician", 31L));
+// Green Tech subcategories (parentId = 32)
+        hobbies.add(new Hobby("Solar Power DIY", 32L));
+        hobbies.add(new Hobby("Wind Turbine Building", 32L));
+        hobbies.add(new Hobby("Hydroponics", 32L));
+        hobbies.add(new Hobby("Aquaponics", 32L));
+        hobbies.add(new Hobby("Composting", 32L));
+        hobbies.add(new Hobby("Rainwater Harvesting", 32L));
+        hobbies.add(new Hobby("Eco-Building", 32L));
+        hobbies.add(new Hobby("Upcycling Projects", 32L));
+        hobbies.add(new Hobby("Zero-Waste Living", 32L));
+        hobbies.add(new Hobby("Bamboo Crafting", 32L));
 
-        // Flight Attendant subcategories
-        hobbies.add(new Hobby("International Flight Attendant", 32L));
-        hobbies.add(new Hobby("Domestic Flight Attendant", 32L));
-        hobbies.add(new Hobby("Corporate Flight Attendant", 32L));
-        hobbies.add(new Hobby("Charter Flight Attendant", 32L));
-        hobbies.add(new Hobby("VIP Flight Attendant", 32L));
-        hobbies.add(new Hobby("Cabin Crew Trainer", 32L));
-        hobbies.add(new Hobby("In-flight Safety Instructor", 32L));
-        hobbies.add(new Hobby("Purser", 32L));
-        hobbies.add(new Hobby("Customer Service Flight Attendant", 32L));
-        hobbies.add(new Hobby("Private Jet Flight Attendant", 32L));
+// Martial Arts subcategories (parentId = 33)
+        hobbies.add(new Hobby("Kendo", 33L));
+        hobbies.add(new Hobby("Aikido", 33L));
+        hobbies.add(new Hobby("Muay Thai", 33L));
+        hobbies.add(new Hobby("Brazilian Jiu-Jitsu", 33L));
+        hobbies.add(new Hobby("Krav Maga", 33L));
+        hobbies.add(new Hobby("Wing Chun", 33L));
+        hobbies.add(new Hobby("Kung Fu", 33L));
+        hobbies.add(new Hobby("Judo", 33L));
+        hobbies.add(new Hobby("Taekwondo", 33L));
+        hobbies.add(new Hobby("Hapkido", 33L));
 
-        // Tour Guide subcategories
-        hobbies.add(new Hobby("Historical Tour Guide", 33L));
-        hobbies.add(new Hobby("Adventure Tour Guide", 33L));
-        hobbies.add(new Hobby("Wildlife Tour Guide", 33L));
-        hobbies.add(new Hobby("Cultural Tour Guide", 33L));
-        hobbies.add(new Hobby("Eco-Tour Guide", 33L));
-        hobbies.add(new Hobby("Food and Wine Tour Guide", 33L));
-        hobbies.add(new Hobby("Museum Tour Guide", 33L));
-        hobbies.add(new Hobby("Cruise Ship Tour Guide", 33L));
-        hobbies.add(new Hobby("Urban Walking Tour Guide", 33L));
-        hobbies.add(new Hobby("Safari Tour Guide", 33L));
+// Collectibles subcategories (parentId = 34)
+        hobbies.add(new Hobby("Vinyl Records", 34L));
+        hobbies.add(new Hobby("Sports Memorabilia", 34L));
+        hobbies.add(new Hobby("Movie Props", 34L));
+        hobbies.add(new Hobby("Autographs", 34L));
+        hobbies.add(new Hobby("Trading Cards", 34L));
+        hobbies.add(new Hobby("Diecast Models", 34L));
+        hobbies.add(new Hobby("Vintage Toys", 34L));
+        hobbies.add(new Hobby("Art Collecting", 34L));
+        hobbies.add(new Hobby("Mineral Specimens", 34L));
+        hobbies.add(new Hobby("Militaria", 34L));
 
-        // Journalist subcategories
-        hobbies.add(new Hobby("Investigative Journalist", 34L));
-        hobbies.add(new Hobby("Political Journalist", 34L));
-        hobbies.add(new Hobby("Sports Journalist", 34L));
-        hobbies.add(new Hobby("Entertainment Journalist", 34L));
-        hobbies.add(new Hobby("Broadcast Journalist", 34L));
-        hobbies.add(new Hobby("War Correspondent", 34L));
-        hobbies.add(new Hobby("Business Journalist", 34L));
-        hobbies.add(new Hobby("Science Journalist", 34L));
-        hobbies.add(new Hobby("Environmental Journalist", 34L));
+// Board Sports subcategories (parentId = 35)
+        hobbies.add(new Hobby("Skateboarding", 35L));
+        hobbies.add(new Hobby("Longboarding", 35L));
+        hobbies.add(new Hobby("Snowboarding", 35L));
+        hobbies.add(new Hobby("Surfing", 35L));
+        hobbies.add(new Hobby("Paddleboarding", 35L));
+        hobbies.add(new Hobby("Sandboarding", 35L));
+        hobbies.add(new Hobby("Wakeboarding", 35L));
+        hobbies.add(new Hobby("Kiteboarding", 35L));
+        hobbies.add(new Hobby("Mountainboarding", 35L));
+        hobbies.add(new Hobby("Streetboarding", 35L));
 
-        // Event Planner subcategories
-        hobbies.add(new Hobby("Corporate Event Planner", 35L));
-        hobbies.add(new Hobby("Wedding Planner", 35L));
-        hobbies.add(new Hobby("Conference Organizer", 35L));
-        hobbies.add(new Hobby("Exhibition Coordinator", 35L));
-        hobbies.add(new Hobby("Charity Event Planner", 35L));
-        hobbies.add(new Hobby("Festival Coordinator", 35L));
-        hobbies.add(new Hobby("Concert Organizer", 35L));
-        hobbies.add(new Hobby("Destination Event Planner", 35L));
-        hobbies.add(new Hobby("Social Events Planner", 35L));
-        hobbies.add(new Hobby("Product Launch Coordinator", 35L));
+// Water Activities subcategories (parentId = 36)
+        hobbies.add(new Hobby("Freediving", 36L));
+        hobbies.add(new Hobby("Spearfishing", 36L));
+        hobbies.add(new Hobby("Underwater Photography", 36L));
+        hobbies.add(new Hobby("Underwater Hockey", 36L));
+        hobbies.add(new Hobby("Synchronized Swimming", 36L));
+        hobbies.add(new Hobby("Water Polo", 36L));
+        hobbies.add(new Hobby("Dock Diving", 36L));
+        hobbies.add(new Hobby("River Tubing", 36L));
+        hobbies.add(new Hobby("Parasailing", 36L));
+        hobbies.add(new Hobby("Flyboarding", 36L));
 
-        // Construction Worker subcategories
-        hobbies.add(new Hobby("General Laborer", 36L));
-        hobbies.add(new Hobby("Carpenter", 36L));
-        hobbies.add(new Hobby("Mason", 36L));
-        hobbies.add(new Hobby("Welder", 36L));
-        hobbies.add(new Hobby("Heavy Equipment Operator", 36L));
-        hobbies.add(new Hobby("Steel Worker", 36L));
-        hobbies.add(new Hobby("Roofing Specialist", 36L));
-        hobbies.add(new Hobby("Concrete Finisher", 36L));
+// Mind Sports subcategories (parentId = 37)
+        hobbies.add(new Hobby("Chess", 37L));
+        hobbies.add(new Hobby("Go", 37L));
+        hobbies.add(new Hobby("Bridge", 37L));
+        hobbies.add(new Hobby("Poker", 37L));
+        hobbies.add(new Hobby("Backgammon", 37L));
+        hobbies.add(new Hobby("Mahjong", 37L));
+        hobbies.add(new Hobby("Scrabble", 37L));
+        hobbies.add(new Hobby("Sudoku", 37L));
+        hobbies.add(new Hobby("Crossword Puzzles", 37L));
+        hobbies.add(new Hobby("Memory Sports", 37L));
 
-        // Librarian subcategories
-        hobbies.add(new Hobby("Reference Librarian", 37L));
-        hobbies.add(new Hobby("Children's Librarian", 37L));
-        hobbies.add(new Hobby("Academic Librarian", 37L));
-        hobbies.add(new Hobby("Archivist", 37L));
-        hobbies.add(new Hobby("Digital Services Librarian", 37L));
-        hobbies.add(new Hobby("Law Librarian", 37L));
-        hobbies.add(new Hobby("Medical Librarian", 37L));
-        hobbies.add(new Hobby("School Librarian", 37L));
-        hobbies.add(new Hobby("Special Collections Librarian", 37L));
+// Fiber Arts subcategories (parentId = 38)
+        hobbies.add(new Hobby("Spinning Yarn", 38L));
+        hobbies.add(new Hobby("Weaving", 38L));
+        hobbies.add(new Hobby("Felting", 38L));
+        hobbies.add(new Hobby("Tapestry", 38L));
+        hobbies.add(new Hobby("Rug Hooking", 38L));
+        hobbies.add(new Hobby("Lace Making", 38L));
+        hobbies.add(new Hobby("Quilting", 38L));
+        hobbies.add(new Hobby("Embroidery", 38L));
+        hobbies.add(new Hobby("Needlepoint", 38L));
+        hobbies.add(new Hobby("Macrame", 38L));
 
-        // Fashion Designer subcategories
-        hobbies.add(new Hobby("Couturier", 38L));
-        hobbies.add(new Hobby("Textile Designer", 38L));
-        hobbies.add(new Hobby("Fashion Illustrator", 38L));
-        hobbies.add(new Hobby("Costume Designer", 38L));
-        hobbies.add(new Hobby("Pattern Maker", 38L));
-        hobbies.add(new Hobby("Fashion Stylist", 38L));
-        hobbies.add(new Hobby("Apparel Merchandiser", 38L));
-        hobbies.add(new Hobby("Shoe Designer", 38L));
-        hobbies.add(new Hobby("Jewelry Designer", 38L));
+// Home Brewing subcategories (parentId = 39)
+        hobbies.add(new Hobby("Beer Brewing", 39L));
+        hobbies.add(new Hobby("Mead Making", 39L));
+        hobbies.add(new Hobby("Wine Making", 39L));
+        hobbies.add(new Hobby("Cider Making", 39L));
+        hobbies.add(new Hobby("Sake Brewing", 39L));
+        hobbies.add(new Hobby("Distilling", 39L));
+        hobbies.add(new Hobby("Kombucha Brewing", 39L));
+        hobbies.add(new Hobby("Kefir Making", 39L));
+        hobbies.add(new Hobby("Kvass Brewing", 39L));
+        hobbies.add(new Hobby("Root Beer Brewing", 39L));
 
-        // Interior Designer subcategories
-        hobbies.add(new Hobby("Residential Interior Designer", 39L));
-        hobbies.add(new Hobby("Commercial Interior Designer", 39L));
-        hobbies.add(new Hobby("Sustainable Interior Designer", 39L));
-        hobbies.add(new Hobby("Lighting Designer", 39L));
-        hobbies.add(new Hobby("Set Designer", 39L));
-        hobbies.add(new Hobby("Retail Space Designer", 39L));
-        hobbies.add(new Hobby("Hospitality Interior Designer", 39L));
-        hobbies.add(new Hobby("Kitchen and Bath Designer", 39L));
-        hobbies.add(new Hobby("Exhibition Designer", 39L));
-        hobbies.add(new Hobby("Furniture Designer", 39L));
+// Geocaching subcategories (parentId = 40)
+        hobbies.add(new Hobby("Traditional Cache", 40L));
+        hobbies.add(new Hobby("Multi-Cache", 40L));
+        hobbies.add(new Hobby("Mystery Cache", 40L));
+        hobbies.add(new Hobby("EarthCache", 40L));
+        hobbies.add(new Hobby("Letterbox Hybrid", 40L));
+        hobbies.add(new Hobby("Virtual Cache", 40L));
+        hobbies.add(new Hobby("Wherigo Cache", 40L));
+        hobbies.add(new Hobby("Event Cache", 40L));
+        hobbies.add(new Hobby("Mega-Event Cache", 40L));
+        hobbies.add(new Hobby("Cache In Trash Out", 40L));
 
-        // Public Relations Specialist subcategories
-        hobbies.add(new Hobby("Corporate Communications Specialist", 40L));
-        hobbies.add(new Hobby("Media Relations Specialist", 40L));
-        hobbies.add(new Hobby("Crisis Communication Manager", 40L));
-        hobbies.add(new Hobby("Public Affairs Officer", 40L));
-        hobbies.add(new Hobby("Brand Strategist", 40L));
-        hobbies.add(new Hobby("Event Publicist", 40L));
-        hobbies.add(new Hobby("Social Media PR Manager", 40L));
-        hobbies.add(new Hobby("Investor Relations Coordinator", 40L));
-        hobbies.add(new Hobby("Content and Media Strategist", 40L));
-        hobbies.add(new Hobby("Political Communications Specialist", 40L));
+// Cosplay subcategories (parentId = 41)
+        hobbies.add(new Hobby("Character Design", 41L));
+        hobbies.add(new Hobby("Prop Making", 41L));
+        hobbies.add(new Hobby("Armor Crafting", 41L));
+        hobbies.add(new Hobby("Wig Styling", 41L));
+        hobbies.add(new Hobby("Makeup Effects", 41L));
+        hobbies.add(new Hobby("Foam Crafting", 41L));
+        hobbies.add(new Hobby("3D Printing Props", 41L));
+        hobbies.add(new Hobby("Photoshoots", 41L));
+        hobbies.add(new Hobby("Performance Cosplay", 41L));
+        hobbies.add(new Hobby("Group Cosplay", 41L));
 
-        // Customer Service Representative subcategories
-        hobbies.add(new Hobby("Call Center Representative", 41L));
-        hobbies.add(new Hobby("Help Desk Support", 41L));
-        hobbies.add(new Hobby("Technical Support Representative", 41L));
-        hobbies.add(new Hobby("Retail Customer Service Associate", 41L));
-        hobbies.add(new Hobby("Client Relations Manager", 41L));
-        hobbies.add(new Hobby("Guest Services Representative", 41L));
-        hobbies.add(new Hobby("Hospitality Customer Service Specialist", 41L));
-        hobbies.add(new Hobby("Customer Experience Manager", 41L));
-        hobbies.add(new Hobby("Live Chat Support Specialist", 41L));
-        hobbies.add(new Hobby("E-commerce Customer Support", 41L));
+// Vintage Cars subcategories (parentId = 42)
+        hobbies.add(new Hobby("Classic Car Restoration", 42L));
+        hobbies.add(new Hobby("Hot Rod Building", 42L));
+        hobbies.add(new Hobby("Rat Rod Building", 42L));
+        hobbies.add(new Hobby("Vintage Racing", 42L));
+        hobbies.add(new Hobby("Car Shows", 42L));
+        hobbies.add(new Hobby("Automobilia Collecting", 42L));
+        hobbies.add(new Hobby("Vintage Part Hunting", 42L));
+        hobbies.add(new Hobby("Barn Finds", 42L));
+        hobbies.add(new Hobby("Model Car Building", 42L));
+        hobbies.add(new Hobby("Vintage Car Photography", 42L));
 
-        // Digital Marketer subcategories
-        hobbies.add(new Hobby("Social Media Manager", 42L));
-        hobbies.add(new Hobby("PPC Specialist", 42L));
-        hobbies.add(new Hobby("Email Marketing Specialist", 42L));
-        hobbies.add(new Hobby("Growth Hacker", 42L));
-        hobbies.add(new Hobby("Content Marketing Strategist", 42L));
+// Aquariums subcategories (parentId = 43)
+        hobbies.add(new Hobby("Freshwater Tanks", 43L));
+        hobbies.add(new Hobby("Saltwater Tanks", 43L));
+        hobbies.add(new Hobby("Reef Keeping", 43L));
+        hobbies.add(new Hobby("Planted Tanks", 43L));
+        hobbies.add(new Hobby("Aquascaping", 43L));
+        hobbies.add(new Hobby("Breeding Fish", 43L));
+        hobbies.add(new Hobby("Shrimp Keeping", 43L));
+        hobbies.add(new Hobby("Coral Propagation", 43L));
+        hobbies.add(new Hobby("Aquatic Photography", 43L));
+        hobbies.add(new Hobby("Paludariums", 43L));
 
-        // SEO Specialist subcategories
-        hobbies.add(new Hobby("On-Page SEO Specialist", 43L));
-        hobbies.add(new Hobby("Off-Page SEO Expert", 43L));
-        hobbies.add(new Hobby("Technical SEO Specialist", 43L));
-        hobbies.add(new Hobby("Local SEO Consultant", 43L));
-        hobbies.add(new Hobby("E-commerce SEO Manager", 43L));
-        hobbies.add(new Hobby("SEO Copywriter", 43L));
+// Bonsai subcategories (parentId = 44)
+        hobbies.add(new Hobby("Indoor Bonsai", 44L));
+        hobbies.add(new Hobby("Outdoor Bonsai", 44L));
+        hobbies.add(new Hobby("Tropical Bonsai", 44L));
+        hobbies.add(new Hobby("Conifer Bonsai", 44L));
+        hobbies.add(new Hobby("Deciduous Bonsai", 44L));
+        hobbies.add(new Hobby("Bonsai Wiring", 44L));
+        hobbies.add(new Hobby("Bonsai Pruning", 44L));
+        hobbies.add(new Hobby("Bonsai Pottery", 44L));
+        hobbies.add(new Hobby("Bonsai Exhibitions", 44L));
+        hobbies.add(new Hobby("Bonsai Photography", 44L));
 
-        // Business Consultant subcategories
-        hobbies.add(new Hobby("Management Consultant", 44L));
-        hobbies.add(new Hobby("Strategy Consultant", 44L));
-        hobbies.add(new Hobby("Financial Consultant", 44L));
-        hobbies.add(new Hobby("Marketing Consultant", 44L));
-        hobbies.add(new Hobby("Operations Consultant", 44L));
-        hobbies.add(new Hobby("IT Consultant", 44L));
+// Amateur Radio subcategories (parentId = 45)
+        hobbies.add(new Hobby("HF Operating", 45L));
+        hobbies.add(new Hobby("VHF/UHF Operating", 45L));
+        hobbies.add(new Hobby("DXing", 45L));
+        hobbies.add(new Hobby("Contesting", 45L));
+        hobbies.add(new Hobby("QSL Cards", 45L));
+        hobbies.add(new Hobby("Antenna Building", 45L));
+        hobbies.add(new Hobby("Satellite Communication", 45L));
+        hobbies.add(new Hobby("Morse Code", 45L));
+        hobbies.add(new Hobby("Fox Hunting", 45L));
+        hobbies.add(new Hobby("Emergency Communication", 45L));
 
-        // Content Creator subcategories
-        hobbies.add(new Hobby("YouTuber", 45L));
-        hobbies.add(new Hobby("Blogger", 45L));
-        hobbies.add(new Hobby("Podcaster", 45L));
-        hobbies.add(new Hobby("Social Media Influencer", 45L));
-        hobbies.add(new Hobby("Videographer", 45L));
-        hobbies.add(new Hobby("Vlogger", 45L));
+// Lock Picking subcategories (parentId = 46)
+        hobbies.add(new Hobby("Pin Tumbler Locks", 46L));
+        hobbies.add(new Hobby("Wafer Locks", 46L));
+        hobbies.add(new Hobby("Disc Detainer Locks", 46L));
+        hobbies.add(new Hobby("Dimple Locks", 46L));
+        hobbies.add(new Hobby("Lever Locks", 46L));
+        hobbies.add(new Hobby("Combination Locks", 46L));
+        hobbies.add(new Hobby("Challenge Locks", 46L));
+        hobbies.add(new Hobby("Lock Sport Competitions", 46L));
+        hobbies.add(new Hobby("Lock Making", 46L));
+        hobbies.add(new Hobby("Safe Cracking", 46L));
 
-        // Translator subcategories
-        hobbies.add(new Hobby("Medical Translator", 46L));
-        hobbies.add(new Hobby("Legal Translator", 46L));
-        hobbies.add(new Hobby("Technical Translator", 46L));
-        hobbies.add(new Hobby("Literary Translator", 46L));
-        hobbies.add(new Hobby("Conference Interpreter", 46L));
-        hobbies.add(new Hobby("Localization Specialist", 46L));
+// Escapology subcategories (parentId = 47)
+        hobbies.add(new Hobby("Handcuff Escapes", 47L));
+        hobbies.add(new Hobby("Rope Escapes", 47L));
+        hobbies.add(new Hobby("Straightjacket Escapes", 47L));
+        hobbies.add(new Hobby("Water Tank Escapes", 47L));
+        hobbies.add(new Hobby("Buried Alive Escapes", 47L));
+        hobbies.add(new Hobby("Chain Escapes", 47L));
+        hobbies.add(new Hobby("Box Escapes", 47L));
+        hobbies.add(new Hobby("Suspension Escapes", 47L));
+        hobbies.add(new Hobby("Ice Block Escapes", 47L));
+        hobbies.add(new Hobby("Performance Escapology", 47L));
 
-        // Fitness Trainer subcategories
-        hobbies.add(new Hobby("Strength Coach", 47L));
-        hobbies.add(new Hobby("Yoga Instructor", 47L));
-        hobbies.add(new Hobby("Pilates Trainer", 47L));
-        hobbies.add(new Hobby("Athletic Trainer", 47L));
-        hobbies.add(new Hobby("Personal Trainer", 47L));
-        hobbies.add(new Hobby("Group Fitness Instructor", 47L));
-
-        // Hairdresser subcategories
-        hobbies.add(new Hobby("Hairstylist", 48L));
-        hobbies.add(new Hobby("Barber", 48L));
-        hobbies.add(new Hobby("Colorist", 48L));
-        hobbies.add(new Hobby("Salon Manager", 48L));
-        hobbies.add(new Hobby("Wig Specialist", 48L));
-
-        // Barista subcategories
-        hobbies.add(new Hobby("Espresso Specialist", 49L));
-        hobbies.add(new Hobby("Latte Artist", 49L));
-        hobbies.add(new Hobby("Café Manager", 49L));
-        hobbies.add(new Hobby("Coffee Roaster", 49L));
-        hobbies.add(new Hobby("Brew Master", 49L));
-
-        // Baker subcategories
-        hobbies.add(new Hobby("Cake Decorator", 50L));
-        hobbies.add(new Hobby("Artisan Baker", 50L));
-        hobbies.add(new Hobby("Bread Maker", 50L));
-        hobbies.add(new Hobby("Confectioner", 50L));
-
-        // Security Guard subcategories
-        hobbies.add(new Hobby("Night Watchman", 51L));
-        hobbies.add(new Hobby("Bodyguard", 51L));
-        hobbies.add(new Hobby("Event Security", 51L));
-        hobbies.add(new Hobby("Mall Security", 51L));
-        hobbies.add(new Hobby("Cyber Security Guard", 51L));
-
-        // Pharmacist subcategories
-        hobbies.add(new Hobby("Clinical Pharmacist", 52L));
-        hobbies.add(new Hobby("Hospital Pharmacist", 52L));
-        hobbies.add(new Hobby("Community Pharmacist", 52L));
-        hobbies.add(new Hobby("Industrial Pharmacist", 52L));
-        hobbies.add(new Hobby("Pharmaceutical Researcher", 52L));
+// Stargazing subcategories (parentId = 48)
+        hobbies.add(new Hobby("Naked Eye Astronomy", 48L));
+        hobbies.add(new Hobby("Binocular Astronomy", 48L));
+        hobbies.add(new Hobby("Telescope Astronomy", 48L));
+        hobbies.add(new Hobby("Planetary Observation", 48L));
+        hobbies.add(new Hobby("Deep Sky Observation", 48L));
+        hobbies.add(new Hobby("Meteor Shower Watching", 48L));
+        hobbies.add(new Hobby("Satellite Tracking", 48L));
+        hobbies.add(new Hobby("Aurora Watching", 48L));
+        hobbies.add(new Hobby("Eclipse Chasing", 48L));
 
         hobbyRepository.saveAll(hobbies);
     }

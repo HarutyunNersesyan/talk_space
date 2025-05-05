@@ -466,7 +466,7 @@ public class PublicUserController {
 
     @PostMapping("/review/add")
     public Review addReview(@RequestParam String userName, @RequestParam String message){
-       return reviewService.addReview(userName,message);
+       return reviewService.addReview(message,userName);
     }
 }
 
