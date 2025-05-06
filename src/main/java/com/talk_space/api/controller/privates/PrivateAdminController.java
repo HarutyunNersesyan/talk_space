@@ -32,7 +32,7 @@ public class PrivateAdminController {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id)));
     }
 
-    @GetMapping("/")
+    @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAll() {
         List<User> users = userService.getAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -164,7 +164,7 @@ public class PrivateAdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-    @GetMapping("/review/")
+    @GetMapping("/review")
     public List<Review> getAllReviews(){
         return reviewService.getAll();
     }
