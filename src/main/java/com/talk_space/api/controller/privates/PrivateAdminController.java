@@ -4,6 +4,7 @@ import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.APIResponse;
 import com.talk_space.model.dto.BlockAccount;
+import com.talk_space.model.dto.ChatMessageDto;
 import com.talk_space.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,9 @@ public class PrivateAdminController {
 
     private final SpecialityService specialityService;
 
-    private final ReviewService reviewService;
+    private final FeedBacksService feedBacksService;
+
+    private final ChatService chatService;
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
@@ -165,8 +168,16 @@ public class PrivateAdminController {
         }
     }
     @GetMapping("/review")
-    public List<Review> getAllReviews(){
-        return reviewService.getAll();
+    public List<FeedBacks> getAllReviews(){
+        return feedBacksService.getAll();
+    }
+
+
+    @GetMapping("/history/{user1}/{user2}")
+    public ResponseEntity<List<ChatMessageDto>> getChatHistory(
+            @PathVariable String user1,
+            @PathVariable String user2) {
+        return ResponseEntity.ok(chatService.getChatHistory(user1, user2));
     }
 }
 

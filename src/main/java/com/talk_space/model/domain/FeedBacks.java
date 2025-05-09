@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "review")
+@Table(name = "feed_backs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review {
+public class FeedBacks {
 
 
     @Id
@@ -26,13 +26,19 @@ public class Review {
     @Column(name = "sender_user_name", nullable = false)
     private String senderUserName;
 
+    @Column(name = "rating")
+    private Double rating;
+
 
     @Column(name = "review_date")
     private LocalDate reviewDate;
-    public Review(String message, String senderUserName, LocalDate reviewDate) {
-        this.message = message;
+
+    public FeedBacks(String senderUserName, String message, LocalDate reviewDate, Double rating) {
+
         this.senderUserName = senderUserName;
+        this.message = message;
         this.reviewDate = reviewDate;
+        this.rating = rating;
 
     }
 }

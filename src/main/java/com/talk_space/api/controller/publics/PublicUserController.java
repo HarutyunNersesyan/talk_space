@@ -21,10 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -41,7 +39,7 @@ public class PublicUserController {
     private final SocialNetworksService socialNetworksService;
     private final SpecialityService specialityService;
 
-    private final ReviewService reviewService;
+    private final FeedBacksService feedBacksService;
 
 
     @GetMapping("/get/userName/{email}")
@@ -464,10 +462,37 @@ public class PublicUserController {
                 .orElseThrow(() -> new RuntimeException("User not found with user name: " + userName));
     }
 
-    @PostMapping("/review/add")
-    public Review addReview(@RequestParam String userName, @RequestParam String message){
-       return reviewService.addReview(message,userName);
+
+
+    @GetMapping("/review/{userName}")
+    public List<FeedBacks> getAllFeedbacks(@PathVariable String userName){
+        return feedBacksService.getAll(userName);
     }
+
+    @PostMapping("/review/add")
+    public ResponseEntity<?> addReview(
+            @RequestBody Map<String, Object> requestBody) {
+
+        String userName = (String) requestBody.get("userName");
+        String message = (String) requestBody.get("message");
+        Double rating = ((Number) requestBody.get("rating")).doubleValue();
+
+        Object result = feedBacksService.addReview(userName, message, rating);
+
+        if (result instanceof FeedBacks) {
+            return ResponseEntity.ok(Collections.singletonMap("message", "Feedback submitted successfully"));
+        } else if (result instanceof LocalDate) {
+            LocalDate nextAllowedDate = (LocalDate) result;
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "You can leave your next review on or after: " + nextAllowedDate);
+            return ResponseEntity.status(HttpStatus.TOO_EARLY)
+                    .body(response);
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Collections.singletonMap("message", "Unexpected error occurred"));
+    }
+
 }
 
 

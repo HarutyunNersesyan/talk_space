@@ -23,6 +23,10 @@ public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
     List<ChatMessage> findAllUserMessages(@Param("userName") String userName);
 
 
+
+
+
+
     @Query("SELECT m FROM ChatMessage m WHERE " +
             "(m.sender.userName = :user1 AND m.receiver.userName = :user2) OR " +
             "(m.sender.userName = :user2 AND m.receiver.userName = :user1) " +
