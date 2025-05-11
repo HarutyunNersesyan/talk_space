@@ -258,8 +258,9 @@ public class UserService implements UserDetailsService {
         }
         user.get().setStatus(Status.BLOCKED);
         user.get().setBlockedMessage(blockAccount.getBlockMessage());
+        user.get().setUntilBlockedDate(blockAccount.getBlockUntil());
         userRepository.save(user.get());
-        return blockAccount.getBlockMessage();
+        return "User blocked until " + blockAccount.getBlockUntil() + ". Reason: " + blockAccount.getBlockMessage();
     }
 
     public String unblockUser(String username) {

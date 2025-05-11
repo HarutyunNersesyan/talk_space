@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class BlockAccount {
 
     private String userName;
-
     private String blockMessage;
-
+    private LocalDate blockUntil;
 }
