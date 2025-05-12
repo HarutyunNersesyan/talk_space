@@ -274,8 +274,6 @@ public class UserService implements UserDetailsService {
     }
 
 
-
-
     @Transactional
     public SearchUser findUsersByHobbies(String userName) {
         Optional<User> optionalUser = userRepository.findUserByUserName(userName);
@@ -335,6 +333,14 @@ public class UserService implements UserDetailsService {
         List<User> users = new ArrayList<>();
         Set<String> existingUsersForS;
         Set<String> existingUsersForH;
+
+
+        User admin = new User(new FillUsers("Talk", "Space", "admin",
+                LocalDate.of(1999, 9, 19), "talkspace783@gmail.com",
+                hashPassword("Admin_783#"), Gender.MALE));
+        admin.setRole(Role.ADMIN);
+        users.add(admin);
+
         users.add(new User(new FillUsers("Aram", "Hakobyan", "AramH95",
                 LocalDate.of(1995, 11, 1), "aram.hakob95@gmail.com",
                 hashPassword("Aram_H95#"), Gender.MALE)));
