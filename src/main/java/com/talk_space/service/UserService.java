@@ -2,11 +2,14 @@ package com.talk_space.service;
 
 
 import com.talk_space.exceptions.CustomExceptions;
+import com.talk_space.model.domain.ChatMessage;
+import com.talk_space.model.domain.FeedBacks;
+import com.talk_space.model.domain.SocialNetworks;
 import com.talk_space.model.domain.User;
 import com.talk_space.model.dto.*;
 import com.talk_space.model.dto.getters.fillers.FillUsers;
 import com.talk_space.model.enums.*;
-import com.talk_space.repository.UserRepository;
+import com.talk_space.repository.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -42,17 +45,31 @@ public class UserService implements UserDetailsService {
 
     private final MailSenderService mailSenderService;
 
+    private final LikeRepository likeRepository;
+
+    private final ChatRepository chatRepository;
+
+    private final SocialNetworksRepository socialNetworksRepository;
+
+    private final FeedBacksRepository feedBacksRepository;
+
+    Set<String> myLikes = new HashSet<>();
+
     private Map<String, Set<String>> existingUsersForSpecialities = new ConcurrentHashMap<>();
     private Map<String, Set<String>> existingUsersForHobbies = new ConcurrentHashMap<>();
 
 
     @Autowired
-    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService, @Lazy MailSenderService mailSenderService) {
+    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService, @Lazy MailSenderService mailSenderService, LikeRepository likeRepository, ChatRepository chatRepository, SocialNetworksRepository socialNetworksRepository, FeedBacksRepository feedBacksRepository) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
         this.mailSenderService = mailSenderService;
+        this.likeRepository = likeRepository;
+        this.chatRepository = chatRepository;
+        this.socialNetworksRepository = socialNetworksRepository;
+        this.feedBacksRepository = feedBacksRepository;
     }
 
 
@@ -79,7 +96,7 @@ public class UserService implements UserDetailsService {
         Set<String> existingUsersS = new HashSet<>();
         existingUsersH.add(user.getUserName());
         existingUsersS.add(user.getUserName());
-        existingUsersForHobbies.put(user.getUserName(), existingUsersH);
+//        existingUsersForHobbies.put(user.getUserName(), existingUsersH);
         existingUsersForSpecialities.put(user.getUserName(), existingUsersS);
         return userRepository.save(user);
     }
@@ -129,9 +146,30 @@ public class UserService implements UserDetailsService {
         if (user.getImage() != null) {
             imageService.deleteUserImage(user.getUserName());
         }
-
-        existingUsersForHobbies.get(deleteAccount.getEmail()).clear();
-        existingUsersForSpecialities.get(deleteAccount.getEmail()).clear();
+        if (!user.getSpecialities().isEmpty()) {
+            user.getSpecialities().clear();
+        }
+        if (!user.getHobbies().isEmpty()) {
+            user.getHobbies().clear();
+        }
+        List<ChatMessage> chatMessages = chatRepository.findSenderChatHistory(user.getUserName());
+        if (!chatMessages.isEmpty()) {
+            chatRepository.deleteAll(chatMessages);
+        }
+        List<ChatMessage> chatMessageList = chatRepository.findReceiverChatHistory(user.getUserName());
+        if (!chatMessageList.isEmpty()) {
+            chatRepository.deleteAll(chatMessageList);
+        }
+        List<SocialNetworks> socialNetworks = socialNetworksRepository.getSocialNetworksByUserUserName(user.getUserName());
+        if (!socialNetworks.isEmpty()) {
+            socialNetworksRepository.deleteAll(socialNetworks);
+        }
+        List<FeedBacks> feedBacks = feedBacksRepository.findFeedBacks(user.getUserName());
+        if (!feedBacks.isEmpty()) {
+            feedBacksRepository.deleteAll(feedBacks);
+        }
+//        existingUsersForHobbies.get(deleteAccount.getEmail()).clear();
+//        existingUsersForSpecialities.get(deleteAccount.getEmail()).clear();
 
         userRepository.delete(user);
     }
@@ -177,8 +215,9 @@ public class UserService implements UserDetailsService {
         }
         User existingUser = user.get();
         existingUser.setVerifyMail(true);
+        existingUser.setPin(null);
         update(existingUser);
-        return "Mail Verified successfully";
+        return "Mail verified successfully";
     }
 
 
@@ -286,17 +325,15 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("User hobbies cannot be empty");
         }
 
-
-        Set<String> users = existingUsersForHobbies.get(user.getUserName());
-
-        Optional<User> nextUser = userRepository.findNextUserByHobbies(user.getUserName(), users);
+        if (!myLikes.isEmpty()) {
+            myLikes = likeRepository.findLikesByLiker(userName);
+        }
+        Optional<User> nextUser = userRepository.findNextUserByHobbies(user.getUserName(), myLikes);
 
         if (nextUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("Profiles are out of date, please try again later.");
         }
-        SearchUser searchUser = new SearchUser(nextUser.get());
-        existingUsersForHobbies.get(user.getUserName()).add(nextUser.get().getUserName());
-        return searchUser;
+        return new SearchUser(nextUser.get());
     }
 
     @Transactional
@@ -310,16 +347,17 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("User specialities cannot be empty");
         }
 
-        Set<String> users = existingUsersForSpecialities.get(user.getUserName());
+        if (!myLikes.isEmpty()) {
+            myLikes = likeRepository.findLikesByLiker(userName);
+        }
 
-        Optional<User> nextUser = userRepository.findNextUserBySpecialities(user.getUserName(), users);
+        Optional<User> nextUser = userRepository.findNextUserBySpecialities(user.getUserName(), myLikes);
 
         if (nextUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("Profiles are out of date, please try again later.");
         }
-        SearchUser searchUser = new SearchUser(nextUser.get());
-        existingUsersForSpecialities.get(user.getUserName()).add(nextUser.get().getUserName());
-        return searchUser;
+
+        return new SearchUser(nextUser.get());
     }
 
 

@@ -25,12 +25,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 JOIN user_hobbies us ON u.user_name = us.user_name
                 JOIN hobby s ON us.hobby_name = s.name
                 WHERE u.status = 'ACTIVE'
+                AND u.user_name != :userName
                 AND (:excludedUserNames IS NULL OR u.user_name NOT IN (:excludedUserNames))
                 AND (
                     s.name IN (SELECT hobby_name FROM user_hobbies WHERE user_name = :userName)
-                    OR s.parent_id IN (SELECT parent_id FROM hobby WHERE name IN 
-                                       (SELECT hobby_name FROM user_hobbies WHERE user_name = :userName) 
-                                       AND parent_id IS NOT NULL)
+                    OR s.parent_id IN (
+                        SELECT parent_id FROM hobby 
+                        WHERE name IN (
+                            SELECT hobby_name FROM user_hobbies WHERE user_name = :userName
+                        ) AND parent_id IS NOT NULL
+                    )
                 )
                 ORDER BY RANDOM()
                 LIMIT 1
@@ -47,6 +51,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 JOIN user_specialities us ON u.user_name = us.user_name
                 JOIN speciality s ON us.speciality_name = s.name
                 WHERE u.status = 'ACTIVE'
+                AND u.user_name != :userName
                 AND (:excludedUserNames IS NULL OR u.user_name NOT IN (:excludedUserNames))
                 AND (
                     s.name IN (SELECT speciality_name FROM user_specialities WHERE user_name = :userName)

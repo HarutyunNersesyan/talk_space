@@ -23,17 +23,21 @@ public class SecurityConfig {
     private final UserService userService;
     private final JwtRequestFilter jwtRequestFilter;
 
+    private final RateLimitingFilter rateLimitingFilter;
+
     @Autowired
-    public SecurityConfig(UserService userService, JwtRequestFilter jwtRequestFilter) {
+    public SecurityConfig(UserService userService, JwtRequestFilter jwtRequestFilter, RateLimitingFilter rateLimitingFilter) {
         this.userService = userService;
         this.jwtRequestFilter = jwtRequestFilter;
+        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors().and()
                 .csrf().disable()
+                .cors().and()
+                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/public/user/signUp").permitAll()
                         .requestMatchers("/api/public/user/verify").permitAll()
@@ -41,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/user/hobby").permitAll()
                         .requestMatchers("/api/public/user/delete/verify/**").permitAll()
                         .requestMatchers("/api/public/**").authenticated()
-                        .requestMatchers("/api/private/**").permitAll()
+                        .requestMatchers("/api/private/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

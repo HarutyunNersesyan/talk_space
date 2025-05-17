@@ -34,6 +34,16 @@ public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
     List<ChatMessage> findChatHistory(@Param("user1") String user1,
                                       @Param("user2") String user2);
 
+    @Query("SELECT m FROM ChatMessage m WHERE " +
+            "(m.sender.userName = :user1)" +
+            "ORDER BY m.timestamp")
+    List<ChatMessage> findSenderChatHistory(@Param("user1") String user1);
+
+    @Query("SELECT m FROM ChatMessage m WHERE " +
+            "(m.receiver.userName = :user1)" +
+            "ORDER BY m.timestamp")
+    List<ChatMessage> findReceiverChatHistory(@Param("user1") String user1);
+
 
     @Modifying
     @Query("UPDATE ChatMessage m SET m.isRead = true WHERE " +
@@ -45,5 +55,7 @@ public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
             "m.sender.userName = :sender AND m.receiver.userName = :receiver AND m.isRead = false")
     long countUnreadMessages(@Param("sender") String sender,
                              @Param("receiver") String receiver);
+
+
 
 }

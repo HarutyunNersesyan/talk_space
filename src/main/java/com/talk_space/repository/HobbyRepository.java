@@ -15,6 +15,6 @@ public interface HobbyRepository extends JpaRepository<Hobby, Long> {
 
   void deleteHobbyByName(String hobbyName);
 
-  List<Hobby> findHobbiesByParentId(Long parentId);
+
 
 }

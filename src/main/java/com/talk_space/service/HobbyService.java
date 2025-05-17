@@ -306,7 +306,7 @@ public class HobbyService {
         hobbies.add(new Hobby("Ski Jumping", 8L));
 
 // Land Sports subcategories (parentId = 9)
-        hobbies.add(new Hobby("Soccer", 9L));
+        hobbies.add(new Hobby("Football", 9L));
         hobbies.add(new Hobby("Basketball", 9L));
         hobbies.add(new Hobby("Baseball", 9L));
         hobbies.add(new Hobby("American Football", 9L));

@@ -52,14 +52,12 @@ public class MailSenderService {
         user.setPin(pin);
         userService.update(user);
 
-        sendEmail(email, "Verify code", pin);
+        sendEmail(email, "Verify code", pin + "\n\n Welcome to Talk Space, thank you for using our system.");
 
         schedulePinReset(email);
 
         return "A verification code has been sent to your email.";
     }
-
-
 
 
     public void schedulePinReset(String mail) {
@@ -70,7 +68,6 @@ public class MailSenderService {
                         if (!user.getVerifyMail()) {
                             userRepository.delete(user);
                         } else {
-                            user.setPin(null);
                             userService.update(user);
                         }
                     });
