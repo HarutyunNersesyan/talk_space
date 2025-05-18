@@ -70,15 +70,7 @@ public class SearchUser {
         if (user.getImage() != null) {
             this.image = user.getImage().getFilePath();
         }
-//        if (user.getImage() != null) {
-//
-//            String baseLocalPath = "C:/Users/HARUT_037/Desktop/talk_space/images/";
-//
-//            if (user.getImage().getFilePath().startsWith(baseLocalPath)) {
-//                String fileName = user.getImage().getFilePath().substring(baseLocalPath.length());
-//
-//                this.image = "http://localhost:8080/images/" + fileName;
-//            }
+
         if (!user.getHobbies().isEmpty()) {
             for (int i = 0; i < user.getHobbies().size(); i++) {
                 this.hobbies.add(user.getHobbies().get(i).getName());

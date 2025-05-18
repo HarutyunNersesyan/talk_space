@@ -17,6 +17,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @Entity
@@ -179,7 +180,7 @@ public class User {
         this.password = signUp.getPassword();
         this.gender = signUp.getGender();
     }
-
+Random random = new Random();
     public User(FillUsers fillUsers) {
         this.firstName = fillUsers.getFirstName();
         this.lastName = fillUsers.getLastName();
@@ -193,5 +194,6 @@ public class User {
         this.verifyMail = true;
         this.zodiacSign = Zodiac.fromMonthAndDay(fillUsers.getBirthDate().getMonthValue(), fillUsers.getBirthDate().getDayOfMonth());
         this.createdDate = LocalDate.now();
+
     }
 }

@@ -23,8 +23,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     private final Map<String, Long> blockedIps = new ConcurrentHashMap<>();
 
     private Bucket createNewBucket() {
-        Refill refill = Refill.intervally(10, Duration.ofSeconds(1));
-        Bandwidth limit = Bandwidth.classic(100000, refill);
+        Refill refill = Refill.intervally(25, Duration.ofSeconds(1));
+        Bandwidth limit = Bandwidth.classic(10000, refill);
         return Bucket.builder().addLimit(limit).build();
     }
 
