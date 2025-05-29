@@ -145,14 +145,14 @@ public class User {
     @Column(name = "about_me", length = 250)
     private String aboutMe;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private LikesCount likesCount;
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return userId != null && userId.equals(user.userId);
     }
@@ -166,7 +166,7 @@ public class User {
         LocalDate maxAllowedBirthDate = LocalDate.now().minusYears(16);
         LocalDate minAllowedBirthDate = LocalDate.now().minusYears(100);
         if (birthDate.isAfter(maxAllowedBirthDate) || birthDate.isBefore(minAllowedBirthDate)) {
-            throw new IllegalArgumentException("User`s birthday between " + minAllowedBirthDate + " and " + maxAllowedBirthDate);
+            throw new IllegalArgumentException("User`s birthday must be between " + minAllowedBirthDate + " and " + maxAllowedBirthDate);
         }
         return birthDate;
     }
@@ -180,7 +180,9 @@ public class User {
         this.password = signUp.getPassword();
         this.gender = signUp.getGender();
     }
-Random random = new Random();
+
+    Random random = new Random();
+
     public User(FillUsers fillUsers) {
         this.firstName = fillUsers.getFirstName();
         this.lastName = fillUsers.getLastName();
@@ -194,6 +196,5 @@ Random random = new Random();
         this.verifyMail = true;
         this.zodiacSign = Zodiac.fromMonthAndDay(fillUsers.getBirthDate().getMonthValue(), fillUsers.getBirthDate().getDayOfMonth());
         this.createdDate = LocalDate.now();
-
     }
 }

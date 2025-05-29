@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -53,14 +54,13 @@ public class UserService implements UserDetailsService {
 
     private final FeedBacksRepository feedBacksRepository;
 
-    Set<String> myLikes = new HashSet<>();
+    private final LikesCountRepository likesCountRepository;
 
-    private Map<String, Set<String>> existingUsersForSpecialities = new ConcurrentHashMap<>();
-    private Map<String, Set<String>> existingUsersForHobbies = new ConcurrentHashMap<>();
+    Set<String> myLikes = new HashSet<>();
 
 
     @Autowired
-    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService, @Lazy MailSenderService mailSenderService, LikeRepository likeRepository, ChatRepository chatRepository, SocialNetworksRepository socialNetworksRepository, FeedBacksRepository feedBacksRepository) {
+    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService, @Lazy MailSenderService mailSenderService, LikeRepository likeRepository, ChatRepository chatRepository, SocialNetworksRepository socialNetworksRepository, FeedBacksRepository feedBacksRepository, LikesCountRepository likesCountRepository) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
@@ -70,6 +70,7 @@ public class UserService implements UserDetailsService {
         this.chatRepository = chatRepository;
         this.socialNetworksRepository = socialNetworksRepository;
         this.feedBacksRepository = feedBacksRepository;
+        this.likesCountRepository = likesCountRepository;
     }
 
 
@@ -92,12 +93,6 @@ public class UserService implements UserDetailsService {
         user.setZodiacSign(Zodiac.fromMonthAndDay(user.getBirthDate().getMonthValue(), user.getBirthDate().getDayOfMonth()));
         user.setVerifyMail(false);
         user.setStatus(Status.ACTIVE);
-        Set<String> existingUsersH = new HashSet<>();
-        Set<String> existingUsersS = new HashSet<>();
-        existingUsersH.add(user.getUserName());
-        existingUsersS.add(user.getUserName());
-//        existingUsersForHobbies.put(user.getUserName(), existingUsersH);
-        existingUsersForSpecialities.put(user.getUserName(), existingUsersS);
         return userRepository.save(user);
     }
 
@@ -312,6 +307,12 @@ public class UserService implements UserDetailsService {
         return "User has been unblocked successfully";
     }
 
+    public List<String> viewTop() {
+        return likesCountRepository.findTop10LikesCounts().stream()
+                .map(likesCount -> likesCount.getUser().getUserName())
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public SearchUser findUsersByHobbies(String userName) {
@@ -371,7 +372,6 @@ public class UserService implements UserDetailsService {
         List<User> users = new ArrayList<>();
 
 
-
         User admin = new User(new FillUsers("Talk", "Space", "admin",
                 LocalDate.of(1999, 9, 19), "talkspace783@gmail.com",
                 hashPassword("Admin_783#"), Gender.MALE));
@@ -393,7 +393,6 @@ public class UserService implements UserDetailsService {
                 hashPassword("Narek_S00#"), Gender.MALE)));
 
 
-
         users.add(new User(new FillUsers("Ani", "Ghazaryan", "AniG96",
                 LocalDate.of(1996, 8, 19), "ani.ghaz96@gmail.com",
                 hashPassword("Ani_G96#"), Gender.FEMALE)));
@@ -408,7 +407,6 @@ public class UserService implements UserDetailsService {
                 hashPassword("Siran_H98#"), Gender.FEMALE)));
 
 
-
         users.add(new User(new FillUsers("Tigran", "Khachatryan", "TigranK99",
                 LocalDate.of(1999, 11, 30), "tigran.khac99@gmail.com",
                 hashPassword("Tigran_K99#"), Gender.MALE)));
@@ -419,11 +417,9 @@ public class UserService implements UserDetailsService {
                 hashPassword("Lusine_H01#"), Gender.FEMALE)));
 
 
-
         users.add(new User(new FillUsers("Karen", "Mkrtchyan", "KarenM92",
                 LocalDate.of(1992, 2, 11), "karen.mk92@gmail.com",
                 hashPassword("Karen_M92#"), Gender.MALE)));
-
 
 
         users.add(new User(new FillUsers("Hasmik", "Grigoryan", "HasmikG94",
@@ -431,11 +427,9 @@ public class UserService implements UserDetailsService {
                 hashPassword("Hasmik_G94#"), Gender.FEMALE)));
 
 
-
         users.add(new User(new FillUsers("Vahan", "Martirosyan", "VahanM90",
                 LocalDate.of(1990, 4, 7), "vahan.mar90@gmail.com",
                 hashPassword("Vahan_M90#"), Gender.MALE)));
-
 
 
         users.add(new User(new FillUsers("Elina", "Sahakyan", "ElinaS95",
@@ -451,7 +445,6 @@ public class UserService implements UserDetailsService {
         users.add(new User(new FillUsers("Sofya", "Vardanyan", "SofyaV96",
                 LocalDate.of(1996, 6, 18), "sofya.var96@gmail.com",
                 hashPassword("Sofya_V96#"), Gender.FEMALE)));
-
 
 
         users.add(new User(new FillUsers("David", "Karapetyan", "DavidK97",
@@ -472,7 +465,6 @@ public class UserService implements UserDetailsService {
         users.add(new User(new FillUsers("Arpi", "Hakobyan", "ArpiH95",
                 LocalDate.of(1995, 1, 27), "arpi.hak95@gmail.com",
                 hashPassword("Arpi_H95#"), Gender.FEMALE)));
-
 
 
         users.add(new User(new FillUsers("Stepan", "Manukyan", "StepanM92",

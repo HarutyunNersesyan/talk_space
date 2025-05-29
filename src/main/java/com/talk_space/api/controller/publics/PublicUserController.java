@@ -470,10 +470,15 @@ public class PublicUserController {
     }
 
 
-
     @GetMapping("/review/{userName}")
-    public List<FeedBacks> getAllFeedbacks(@PathVariable String userName){
+    public List<FeedBacks> getAllFeedbacks(@PathVariable String userName) {
         return feedBacksService.getAll(userName);
+    }
+
+
+    @GetMapping("/top")
+    public List<String> viewTop() {
+        return userService.viewTop();
     }
 
     @PostMapping("/review/add")

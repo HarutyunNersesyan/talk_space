@@ -3,9 +3,11 @@ package com.talk_space.service;
 
 import com.talk_space.model.domain.ChatMessage;
 import com.talk_space.model.domain.Like;
+import com.talk_space.model.domain.LikesCount;
 import com.talk_space.model.domain.User;
 import com.talk_space.repository.ChatRepository;
 import com.talk_space.repository.LikeRepository;
+import com.talk_space.repository.LikesCountRepository;
 import com.talk_space.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,6 +26,8 @@ public class LikeService {
     private final ChatRepository chatRepository;
 
     private final UserRepository userRepository;
+
+    private final LikesCountRepository likesCountRepository;
 
 
     public Boolean getLike(String liker, String liked) {
@@ -51,12 +55,25 @@ public class LikeService {
 
         Like like = new Like(liker, liked);
 
+
+
+
         // Check for existing like in reverse direction
         boolean reverseLikeExists = likeRepository.existsByLikerUserNameAndLikedUserName(
                 liked.getUserName(),
                 liker.getUserName()
         );
 
+
+        LikesCount likesCount = liked.getLikesCount();
+        if (likesCount == null) {
+            likesCount = new LikesCount();
+            likesCount.setUser(liked);
+            likesCount.setCount(1);
+        } else {
+            likesCount.setCount(likesCount.getCount() + 1);
+        }
+        likesCountRepository.save(likesCount);
         // If mutual like detected
         if (reverseLikeExists) {
             // Create mutual like notification messages
@@ -75,4 +92,5 @@ public class LikeService {
 
         return likeRepository.save(like);
     }
+
 }
