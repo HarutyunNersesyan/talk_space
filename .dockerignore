@@ -1,0 +1,11 @@
+.git
+.gitignore
+README.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+*.log
+.idea
+*.iml
+.vscode
+Dockerfile
+docker-compose.yml
