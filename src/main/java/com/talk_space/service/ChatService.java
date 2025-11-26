@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,39 +49,75 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public List<UserChatDto> getUserChats(String userName) {
+        // Debug logging
+        System.out.println("=== DEBUG getUserChats for: " + userName);
+
         // Get all messages involving the user
         List<ChatMessage> allMessages = chatRepository.findAllUserMessages(userName);
+        System.out.println("Found " + allMessages.size() + " messages");
 
-        // Track latest message with each partner
-        Map<String, ChatMessage> latestMessages = new HashMap<>();
+        // Get mutual like partners to include newly created chats
+        List<User> mutualLikePartners = userRepository.findMutualLikePartners(userName);
+        System.out.println("Found " + mutualLikePartners.size() + " mutual like partners");
 
+        mutualLikePartners.forEach(partner ->
+                System.out.println("Mutual like partner: " + partner.getUserName())
+        );
+
+        Map<String, UserChatDto> chatMap = new HashMap<>();
+
+        // Process existing messages
         for (ChatMessage message : allMessages) {
             String partner = message.getSender().getUserName().equals(userName)
                     ? message.getReceiver().getUserName()
                     : message.getSender().getUserName();
 
-            // Keep only the latest message per partner
-            if (!latestMessages.containsKey(partner) ||
-                    message.getTimestamp().isAfter(latestMessages.get(partner).getTimestamp())) {
-                latestMessages.put(partner, message);
+            if (!chatMap.containsKey(partner)) {
+                User partnerUser = message.getSender().getUserName().equals(partner)
+                        ? message.getSender()
+                        : message.getReceiver();
+
+                long unreadCount = chatRepository.countUnreadMessages(partner, userName);
+                UserChatDto dto = buildUserChatDto(partnerUser, message, unreadCount);
+                chatMap.put(partner, dto);
+            } else {
+                // Update with latest message if this one is newer
+                UserChatDto existingDto = chatMap.get(partner);
+                if (message.getTimestamp().isAfter(existingDto.getLastMessageTime())) {
+                    existingDto.setLastMessage(message.getContent());
+                    existingDto.setLastMessageTime(message.getTimestamp());
+                    existingDto.setUnreadCount(chatRepository.countUnreadMessages(partner, userName));
+                }
             }
         }
 
-        // Convert to DTOs with unread counts
-        return latestMessages.entrySet().stream()
-                .map(entry -> {
-                    String partner = entry.getKey();
-                    ChatMessage lastMessage = entry.getValue();
-                    User partnerUser = lastMessage.getSender().getUserName().equals(partner)
-                            ? lastMessage.getSender()
-                            : lastMessage.getReceiver();
+        // Add mutual like partners who don't have messages yet
+        for (User partnerUser : mutualLikePartners) {
+            String partnerUsername = partnerUser.getUserName();
+            if (!chatMap.containsKey(partnerUsername)) {
+                // Create a chat DTO for mutual like partners with no messages
+                UserChatDto dto = new UserChatDto();
+                dto.setPartnerUsername(partnerUsername);
+                dto.setPartnerName(partnerUser.getFirstName() + " " + partnerUser.getLastName());
+                dto.setLastMessage("Start a conversation...");
+                dto.setLastMessageTime(LocalDateTime.now());
+                dto.setUnreadCount(0L);
 
-                    long unreadCount = chatRepository.countUnreadMessages(partner, userName);
+                if (partnerUser.getImage() != null) {
+                    dto.setPartnerImage(partnerUser.getImage().getFilePath());
+                }
 
-                    return buildUserChatDto(partnerUser, lastMessage, unreadCount);
-                })
+                chatMap.put(partnerUsername, dto);
+                System.out.println("Added mutual like partner to chat list: " + partnerUsername);
+            }
+        }
+
+        List<UserChatDto> result = chatMap.values().stream()
                 .sorted((a, b) -> b.getLastMessageTime().compareTo(a.getLastMessageTime()))
                 .collect(Collectors.toList());
+
+        System.out.println("Total chats in result: " + result.size());
+        return result;
     }
 
     private UserChatDto buildUserChatDto(User partnerUser, ChatMessage lastMessage, long unreadCount) {

@@ -8,10 +8,10 @@ public class ChatMessageDto {
     private Long id;
     private String sender;
     private String senderName;
-    private String senderDisplayName;  // Combined first + last name
+    private String senderDisplayName;
     private String senderImage;
     private String receiver;
-    private String receiverDisplayName;  // Combined first + last name
+    private String receiverDisplayName;
     private String receiverImage;
     private String receiverName;
     private String content;
