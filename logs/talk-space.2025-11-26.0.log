@@ -1,0 +1,386 @@
+2025-11-26 21:33:00.891 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - Starting TalkSpaceApplication using Java 17.0.12 with PID 18752 (C:\Users\HARUT_037\Desktop\talk_space\target\classes started by HARUT_037 in C:\Users\HARUT_037\Desktop\talk_space)
+2025-11-26 21:33:00.901 [restartedMain] DEBUG com.talk_space.TalkSpaceApplication - Running with Spring Boot v3.3.3, Spring v6.1.12
+2025-11-26 21:33:00.902 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-26 21:33:00.940 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-26 21:33:00.940 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-26 21:33:02.106 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-26 21:33:02.175 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 65 ms. Found 9 JPA repository interfaces.
+2025-11-26 21:33:02.844 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-26 21:33:02.854 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-26 21:33:02.855 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+2025-11-26 21:33:02.901 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-26 21:33:02.903 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1961 ms
+2025-11-26 21:33:03.349 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-26 21:33:03.370 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-11-26 21:33:03.502 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5fff80fe
+2025-11-26 21:33:03.503 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-11-26 21:33:03.531 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-26 21:33:04.782 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.782 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uksysgmv0dvi7mlqanoy4gl22qd" of relation "image" does not exist, skipping
+2025-11-26 21:33:04.786 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.786 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "ukrapg4bawaa8gb3wpjnr85jcxp" of relation "image" does not exist, skipping
+2025-11-26 21:33:04.791 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.792 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uknx4fvo6tphxwifkig87ry0k4b" of relation "likes_count" does not exist, skipping
+2025-11-26 21:33:04.797 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.798 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uke2nhjot1xlj1xs1y98jgp86xv" of relation "social_networks" does not exist, skipping
+2025-11-26 21:33:04.802 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.802 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk4xad1enskw4j1t2866f7sodrx" of relation "user_entity" does not exist, skipping
+2025-11-26 21:33:04.806 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.806 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk9chx1dmnxuaapik68vwo6gvo7" of relation "user_entity" does not exist, skipping
+2025-11-26 21:33:04.811 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.811 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk3cc951vsmfajpva7uenwb5meu" of relation "user_hobbies" does not exist, skipping
+2025-11-26 21:33:04.819 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.819 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uknpvryw1vahhl9xh7mhnmt2uwr" of relation "user_likes" does not exist, skipping
+2025-11-26 21:33:04.823 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2025-11-26 21:33:04.823 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "ukr3lvc3k11u0guu5dlo8ljpwvp" of relation "user_specialities" does not exist, skipping
+2025-11-26 21:33:04.851 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-26 21:33:05.151 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-26 21:33:05.701 [restartedMain] DEBUG c.t.api.security.RateLimitingFilter - Filter 'rateLimitingFilter' configured for use
+2025-11-26 21:33:05.701 [restartedMain] DEBUG c.t.api.security.JwtRequestFilter - Filter 'jwtRequestFilter' configured for use
+2025-11-26 21:33:05.757 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2025-11-26 21:33:05.758 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-11-26 21:33:06.188 [restartedMain] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: ListCrudRepository.saveAll(..) took 404 ms
+2025-11-26 21:33:06.338 [restartedMain] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: ListCrudRepository.saveAll(..) took 127 ms
+2025-11-26 21:33:06.724 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-26 21:33:07.358 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-11-26 21:33:07.405 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-11-26 21:33:07.407 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
+2025-11-26 21:33:07.407 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@69926b2b]]
+2025-11-26 21:33:07.408 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
+2025-11-26 21:33:07.417 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - Started TalkSpaceApplication in 7.173 seconds (process running for 7.79)
+2025-11-26 21:34:07.392 [MessageBroker-1] INFO  o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2025-11-26 21:35:33.825 [http-nio-0.0.0.0-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-26 21:35:33.826 [http-nio-0.0.0.0-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-11-26 21:35:33.827 [http-nio-0.0.0.0-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-11-26 21:35:33.867 [http-nio-0.0.0.0-8080-exec-2] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: POST /account/auth
+2025-11-26 21:35:33.868 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:35:33.868 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:35:33.868 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: content-length: 57
+2025-11-26 21:35:33.868 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:35:33.868 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: content-type: application/json
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:35:33.869 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:35:33.928 [http-nio-0.0.0.0-8080-exec-2] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:35:33.994 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 63 ms
+2025-11-26 21:35:33.995 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 66 ms
+2025-11-26 21:35:33.997 [http-nio-0.0.0.0-8080-exec-2] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: AuthController.createAuthToken(..) took 69 ms
+2025-11-26 21:35:34.009 [http-nio-0.0.0.0-8080-exec-2] INFO  com.talk_space.util.LoggingUtil - API Call: POST /account/auth - 401 (142ms)
+2025-11-26 21:36:21.314 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopping...
+2025-11-26 21:36:21.315 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@69926b2b]]
+2025-11-26 21:36:21.315 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopped.
+2025-11-26 21:36:21.391 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-26 21:36:21.394 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-11-26 21:36:21.397 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-11-26 21:36:28.253 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - Starting TalkSpaceApplication using Java 17.0.12 with PID 2688 (C:\Users\HARUT_037\Desktop\talk_space\target\classes started by HARUT_037 in C:\Users\HARUT_037\Desktop\talk_space)
+2025-11-26 21:36:28.262 [restartedMain] DEBUG com.talk_space.TalkSpaceApplication - Running with Spring Boot v3.3.3, Spring v6.1.12
+2025-11-26 21:36:28.263 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-26 21:36:28.302 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-26 21:36:28.302 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-26 21:36:29.128 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-26 21:36:29.194 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 60 ms. Found 9 JPA repository interfaces.
+2025-11-26 21:36:29.815 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-26 21:36:29.831 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-26 21:36:29.832 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+2025-11-26 21:36:29.887 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-26 21:36:29.888 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1584 ms
+2025-11-26 21:36:30.385 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-26 21:36:30.404 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-11-26 21:36:30.656 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@364e207a
+2025-11-26 21:36:30.657 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-11-26 21:36:30.692 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-26 21:36:31.807 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-26 21:36:32.106 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-26 21:36:32.558 [restartedMain] INFO  com.talk_space.service.UserService - Starting to fill database with sample users
+2025-11-26 21:36:34.245 [restartedMain] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: ListCrudRepository.saveAll(..) took 112 ms
+2025-11-26 21:36:34.245 [restartedMain] INFO  com.talk_space.service.UserService - Database filled with 20 sample users
+2025-11-26 21:36:34.286 [restartedMain] DEBUG c.t.api.security.RateLimitingFilter - Filter 'rateLimitingFilter' configured for use
+2025-11-26 21:36:34.286 [restartedMain] DEBUG c.t.api.security.JwtRequestFilter - Filter 'jwtRequestFilter' configured for use
+2025-11-26 21:36:34.337 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2025-11-26 21:36:34.338 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-11-26 21:36:34.616 [restartedMain] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: ListCrudRepository.saveAll(..) took 257 ms
+2025-11-26 21:36:34.762 [restartedMain] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: ListCrudRepository.saveAll(..) took 121 ms
+2025-11-26 21:36:35.115 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-26 21:36:35.752 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-11-26 21:36:35.790 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-11-26 21:36:35.792 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
+2025-11-26 21:36:35.792 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@7326ed4f]]
+2025-11-26 21:36:35.793 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
+2025-11-26 21:36:35.802 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - Started TalkSpaceApplication in 8.214 seconds (process running for 8.857)
+2025-11-26 21:36:47.519 [http-nio-0.0.0.0-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-26 21:36:47.519 [http-nio-0.0.0.0-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-11-26 21:36:47.519 [http-nio-0.0.0.0-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: POST /account/auth
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: content-length: 57
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: content-type: application/json
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:47.552 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:47.619 [http-nio-0.0.0.0-8080-exec-1] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:47.719 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 91 ms
+2025-11-26 21:36:47.719 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 92 ms
+2025-11-26 21:36:47.719 [http-nio-0.0.0.0-8080-exec-1] DEBUG com.talk_space.service.UserService - Loading user by username (email): aram.hakob95@gmail.com
+2025-11-26 21:36:47.719 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 1 ms
+2025-11-26 21:36:47.719 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.loadUserByUsername(..) took 4 ms
+2025-11-26 21:36:47.802 [http-nio-0.0.0.0-8080-exec-1] DEBUG com.talk_space.service.UserService - Loading user by username (email): aram.hakob95@gmail.com
+2025-11-26 21:36:47.802 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 1 ms
+2025-11-26 21:36:47.802 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.loadUserByUsername(..) took 2 ms
+2025-11-26 21:36:47.918 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: AuthController.createAuthToken(..) took 291 ms
+2025-11-26 21:36:47.934 [http-nio-0.0.0.0-8080-exec-1] INFO  com.talk_space.util.LoggingUtil - API Call: POST /account/auth - 200 (382ms)
+2025-11-26 21:36:48.013 [http-nio-0.0.0.0-8080-exec-4] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.044 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 30 ms
+2025-11-26 21:36:48.045 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 31 ms
+2025-11-26 21:36:48.045 [http-nio-0.0.0.0-8080-exec-4] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 6 ms
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 6 ms
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.051 [http-nio-0.0.0.0-8080-exec-4] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 4 ms
+2025-11-26 21:36:48.067 [http-nio-0.0.0.0-8080-exec-4] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (16ms)
+2025-11-26 21:36:48.067 [http-nio-0.0.0.0-8080-exec-5] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.067 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.067 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 5 ms
+2025-11-26 21:36:48.067 [http-nio-0.0.0.0-8080-exec-5] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.084 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 5 ms
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 5 ms
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 4 ms
+2025-11-26 21:36:48.085 [http-nio-0.0.0.0-8080-exec-5] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (0ms)
+2025-11-26 21:36:48.102 [http-nio-0.0.0.0-8080-exec-6] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.108 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.109 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 5 ms
+2025-11-26 21:36:48.109 [http-nio-0.0.0.0-8080-exec-6] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.113 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.113 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.115 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.116 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.116 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.116 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.117 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.117 [http-nio-0.0.0.0-8080-exec-6] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.122 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 7 ms
+2025-11-26 21:36:48.122 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 7 ms
+2025-11-26 21:36:48.122 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.122 [http-nio-0.0.0.0-8080-exec-6] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 8 ms
+2025-11-26 21:36:48.122 [http-nio-0.0.0.0-8080-exec-6] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (7ms)
+2025-11-26 21:36:48.129 [http-nio-0.0.0.0-8080-exec-8] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.129 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.134 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.134 [http-nio-0.0.0.0-8080-exec-8] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.138 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.138 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 3 ms
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-8] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (0ms)
+2025-11-26 21:36:48.139 [http-nio-0.0.0.0-8080-exec-9] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 5 ms
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 6 ms
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.153 [http-nio-0.0.0.0-8080-exec-9] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.167 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.167 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.167 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.167 [http-nio-0.0.0.0-8080-exec-9] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 3 ms
+2025-11-26 21:36:48.169 [http-nio-0.0.0.0-8080-exec-9] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (16ms)
+2025-11-26 21:36:48.173 [http-nio-0.0.0.0-8080-exec-10] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.176 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.176 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.176 [http-nio-0.0.0.0-8080-exec-10] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.179 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.179 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.181 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.182 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.182 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.182 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.182 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.182 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.182 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.182 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.183 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.183 [http-nio-0.0.0.0-8080-exec-10] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.184 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 5 ms
+2025-11-26 21:36:48.184 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 5 ms
+2025-11-26 21:36:48.184 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.184 [http-nio-0.0.0.0-8080-exec-10] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 5 ms
+2025-11-26 21:36:48.190 [http-nio-0.0.0.0-8080-exec-10] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (9ms)
+2025-11-26 21:36:48.192 [http-nio-0.0.0.0-8080-exec-7] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.192 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.192 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.192 [http-nio-0.0.0.0-8080-exec-7] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.199 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.199 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 3 ms
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-7] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (0ms)
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-1] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 3 ms
+2025-11-26 21:36:48.201 [http-nio-0.0.0.0-8080-exec-1] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 4 ms
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] INFO  c.t.api.filter.RequestLoggingFilter - Incoming request: GET /api/public/user/get/userName/aram.hakob95@gmail.com
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: host: localhost:8080
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: connection: keep-alive
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-platform: "Windows"
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFyYW0uaGFrb2I5NUBnbWFpbC5jb20iLCJpYXQiOjE3NjQxNzg2MDcsImV4cCI6MTc2NDQzNzgwN30.4RL_c7b1Dkdu5KxGkV5zIUX3voUl2ElRpjP0UD8hXSw
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept: application/json, text/plain, */*
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-ch-ua-mobile: ?0
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: origin: http://localhost:3000
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-site: same-site
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-mode: cors
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: sec-fetch-dest: empty
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: referer: http://localhost:3000/
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-encoding: gzip, deflate, br, zstd
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.api.filter.RequestLoggingFilter - Header: accept-language: en-US,en;q=0.9,ru;q=0.8
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.a.c.publics.PublicUserController - Getting username by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG com.talk_space.service.UserService - Finding user by email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserRepository.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: UserService.findUserByEmail(..) took 2 ms
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.a.c.publics.PublicUserController - Found username: AramH95 for email: aram.hakob95@gmail.com
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] DEBUG c.t.monitoring.PerformanceMonitor - ✅ Method: PublicUserController.getUserNameByEmail(..) took 3 ms
+2025-11-26 21:36:48.217 [http-nio-0.0.0.0-8080-exec-1] INFO  com.talk_space.util.LoggingUtil - API Call: GET /api/public/user/get/userName/aram.hakob95@gmail.com - 200 (0ms)
+2025-11-26 21:37:07.950 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopping...
+2025-11-26 21:37:07.950 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@7326ed4f]]
+2025-11-26 21:37:07.950 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopped.
+2025-11-26 21:37:08.013 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-26 21:37:08.016 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-11-26 21:37:08.018 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

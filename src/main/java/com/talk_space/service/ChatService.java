@@ -6,8 +6,11 @@ import com.talk_space.model.dto.ChatMessageDto;
 import com.talk_space.model.dto.UserChatDto;
 import com.talk_space.repository.ChatRepository;
 import com.talk_space.repository.UserRepository;
+import com.talk_space.util.LoggingUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,18 +23,24 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
+    private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
+
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Transactional
     public ChatMessage saveMessage(ChatMessage message) {
+        logger.debug("Saving chat message from {} to {}",
+                message.getSender().getUserName(), message.getReceiver().getUserName());
         return chatRepository.save(message);
     }
 
     @Transactional(readOnly = true)
     public List<ChatMessageDto> getChatHistory(String user1, String user2) {
+        logger.debug("Getting chat history between {} and {}", user1, user2);
         List<ChatMessage> messages = chatRepository.findChatHistory(user1, user2);
+        logger.info("Retrieved {} messages between {} and {}", messages.size(), user1, user2);
         return messages.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -39,16 +48,23 @@ public class ChatService {
 
     @Transactional
     public void markMessagesAsRead(String sender, String receiver) {
+        logger.debug("Marking messages as read from {} to {}", sender, receiver);
         chatRepository.markMessagesAsRead(sender, receiver);
+        logger.info("Messages marked as read from {} to {}", sender, receiver);
     }
 
     @Transactional(readOnly = true)
     public long getUnreadCount(String sender, String receiver) {
-        return chatRepository.countUnreadMessages(sender, receiver);
+        logger.debug("Getting unread message count from {} to {}", sender, receiver);
+        long count = chatRepository.countUnreadMessages(sender, receiver);
+        logger.debug("Unread message count from {} to {}: {}", sender, receiver, count);
+        return count;
     }
 
     @Transactional(readOnly = true)
     public List<UserChatDto> getUserChats(String userName) {
+        logger.debug("Getting user chats for: {}", userName);
+
         // Debug logging
         System.out.println("=== DEBUG getUserChats for: " + userName);
 
@@ -117,6 +133,7 @@ public class ChatService {
                 .collect(Collectors.toList());
 
         System.out.println("Total chats in result: " + result.size());
+        logger.info("Retrieved {} chats for user: {}", result.size(), userName);
         return result;
     }
 
@@ -136,6 +153,8 @@ public class ChatService {
     }
 
     public ChatMessageDto convertToDto(ChatMessage message) {
+        logger.debug("Converting chat message to DTO, ID: {}", message.getId());
+
         ChatMessageDto dto = new ChatMessageDto();
 
         // Manual mapping to avoid ModelMapper confusion
