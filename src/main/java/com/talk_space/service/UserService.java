@@ -77,11 +77,6 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public Optional<User> getUserByEmail(String email) {
-        logger.debug("Fetching user by email: {}", email);
-        return userRepository.findUserByEmail(email);
-    }
-
     public Optional<User> getUserById(Long id) {
         logger.debug("Fetching user by ID: {}", id);
         return userRepository.findById(id);

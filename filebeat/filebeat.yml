@@ -1,0 +1,14 @@
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+
+    paths:
+      - /logs/talk-space.log
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+
+setup.kibana:
+  host: "kibana:5601"
+
+setup.template.enabled: true

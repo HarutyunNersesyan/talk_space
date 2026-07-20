@@ -173,12 +173,7 @@ public class PrivateAdminController {
     }
 
 
-    @GetMapping("/history/{user1}/{user2}")
-    public ResponseEntity<List<ChatMessageDto>> getChatHistory(
-            @PathVariable String user1,
-            @PathVariable String user2) {
-        return ResponseEntity.ok(chatService.getChatHistory(user1, user2));
-    }
+
 }
 
 

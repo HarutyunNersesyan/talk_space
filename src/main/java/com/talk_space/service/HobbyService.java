@@ -72,7 +72,7 @@ public class HobbyService {
         for (int i = 0; i < hobbyDto.getHobbies().size(); i++) {
             user.getHobbies().add(hobbyRepository.findHobbyByName((hobbyDto.getHobbies().get(i)).getName()).get());
         }
-        ;
+
         userRepository.save(user);
 
         return ("Hobby added successfully.");

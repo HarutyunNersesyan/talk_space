@@ -13,7 +13,6 @@ public class SocialMediaValidator {
 
     private static final String FACEBOOK_REGEX = "^(https?://)?(www\\.)?(facebook|fb)\\.com/([A-Za-z0-9\\.]+)(/)?(\\?.*)?$";
     private static final String INSTAGRAM_REGEX = "^(https?://)?(www\\.)?instagram\\.com/([A-Za-z0-9_\\.]+)(/)?(\\?.*)?$";
-    private static final String TWITTER_REGEX = "^(https?://)?(www\\.|mobile\\.)?twitter\\.com/([A-Za-z0-9_]+)(/)?(\\?.*)?$";
     private static final String LINKEDIN_REGEX = "^(https?://)?(www\\.)?linkedin\\.com/(in|company|school)/([A-Za-z0-9_-]+)(/)?(\\?.*)?$";
 
     private static final String YOUTUBE_REGEX = "^(https?://)?(www\\.)?(youtube\\.com/(channel|c|user)/([A-Za-z0-9_-]+)|youtu\\.be/([A-Za-z0-9_-]+))(/)?$";
@@ -22,7 +21,6 @@ public class SocialMediaValidator {
     private static final Map<String, Pattern> PATTERN_MAP = Map.of(
             "FACEBOOK", Pattern.compile(FACEBOOK_REGEX),
             "INSTAGRAM", Pattern.compile(INSTAGRAM_REGEX),
-            "TWITTER", Pattern.compile(TWITTER_REGEX),
             "LINKEDIN", Pattern.compile(LINKEDIN_REGEX),
             "YOUTUBE", Pattern.compile(YOUTUBE_REGEX)
     );

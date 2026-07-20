@@ -23,13 +23,10 @@ public class SecurityConfig {
     private final UserService userService;
     private final JwtRequestFilter jwtRequestFilter;
 
-    private final RateLimitingFilter rateLimitingFilter;
-
     @Autowired
-    public SecurityConfig(UserService userService, JwtRequestFilter jwtRequestFilter, RateLimitingFilter rateLimitingFilter) {
+    public SecurityConfig(UserService userService, JwtRequestFilter jwtRequestFilter) {
         this.userService = userService;
         this.jwtRequestFilter = jwtRequestFilter;
-        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     @Bean
@@ -37,7 +34,6 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .cors().and()
-                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/public/user/signUp").permitAll()
                         .requestMatchers("/api/public/user/verify").permitAll()
