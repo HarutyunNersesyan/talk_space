@@ -39,9 +39,10 @@ public class SpecialityService {
         return specialityRepository.findAll();
     }
 
-    public Optional<Speciality> getSpecialityByName(String specialityName){
+    public Optional<Speciality> getSpecialityByName(String specialityName) {
         return specialityRepository.findSpecialityByName(specialityName);
     }
+
     public Speciality update(Speciality speciality) {
         return specialityRepository.save(speciality);
     }
@@ -64,7 +65,7 @@ public class SpecialityService {
         }
 
         Optional<User> optionalUser = userRepository.findUserByUserName(specialityDto.getUserName());
-        if (optionalUser.isEmpty()){
+        if (optionalUser.isEmpty()) {
             throw new CustomExceptions.UserNotFoundException("User not found.");
         }
         User user = optionalUser.get();
@@ -73,7 +74,8 @@ public class SpecialityService {
 
         for (int i = 0; i < specialityDto.getSpecialities().size(); i++) {
             user.getSpecialities().add(specialityRepository.findSpecialityByName((specialityDto.getSpecialities().get(i)).getName()).get());
-        };
+        }
+        ;
         userRepository.save(user);
 
         return ("Specialities added successfully.");
@@ -754,14 +756,7 @@ public class SpecialityService {
         specialties.add(new Speciality("Industrial Pharmacist", 52L));
         specialties.add(new Speciality("Pharmaceutical Researcher", 52L));
 
-
-
-
-
-
-
         specialityRepository.saveAll(specialties);
     }
-
 
 }

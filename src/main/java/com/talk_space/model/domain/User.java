@@ -149,6 +149,10 @@ public class User {
     @JsonManagedReference
     private LikesCount likesCount;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Location location;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

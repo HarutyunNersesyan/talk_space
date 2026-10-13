@@ -16,13 +16,20 @@ public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
-    @JoinColumn(name = "sender_username", referencedColumnName = "user_name")
+    @JoinColumn(
+            name = "sender_user_id",
+            referencedColumnName = "user_id",
+            nullable = false
+    )
     private User sender;
 
     @ManyToOne
-    @JoinColumn(name = "receiver_username", referencedColumnName = "user_name")
+    @JoinColumn(
+            name = "receiver_user_id",
+            referencedColumnName = "user_id",
+            nullable = false
+    )
     private User receiver;
 
     @Column(nullable = false, columnDefinition = "TEXT")
