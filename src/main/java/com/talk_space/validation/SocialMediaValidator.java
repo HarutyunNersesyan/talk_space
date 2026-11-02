@@ -22,7 +22,8 @@ public class SocialMediaValidator {
             "FACEBOOK", Pattern.compile(FACEBOOK_REGEX),
             "INSTAGRAM", Pattern.compile(INSTAGRAM_REGEX),
             "LINKEDIN", Pattern.compile(LINKEDIN_REGEX),
-            "YOUTUBE", Pattern.compile(YOUTUBE_REGEX)
+            "YOUTUBE", Pattern.compile(YOUTUBE_REGEX),
+            "TWITTER", Pattern.compile("^https?://(?:(?:www|mobile)\\.)?(?:twitter|x)\\.com/[A-Za-z0-9_]+/?(?:\\?.*)?$")
     );
 
 
@@ -34,7 +35,8 @@ public class SocialMediaValidator {
      * @return true if the URL is valid for the platform, false otherwise
      */
     public static boolean mediaValidation(String platform, String url) {
-        Pattern pattern = PATTERN_MAP.get(platform.toUpperCase());
-        return pattern.matcher(url).matches();
+        if (platform == null || url == null) return false;
+        Pattern pattern = PATTERN_MAP.get(platform.toUpperCase(java.util.Locale.ROOT));
+        return pattern != null && pattern.matcher(url).matches();
     }
 }

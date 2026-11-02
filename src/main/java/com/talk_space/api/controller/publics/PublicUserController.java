@@ -37,7 +37,7 @@ public class PublicUserController {
 
     private final UserService userService;
     private final MailSenderService mailSenderService;
-    private final LikeService likeService;
+    private final com.talk_space.connections.NetworkAccess networkAccess;
     private final ImageService imageService;
     private final HobbyService hobbyService;
     private final SocialNetworksService socialNetworksService;
@@ -48,6 +48,7 @@ public class PublicUserController {
 
     @GetMapping("/get/userName/{email}")
     public ResponseEntity<String> getUserNameByEmail(@PathVariable String email) {
+        networkAccess.requireOwnEmail(email);
         logger.debug("Getting username by email: {}", email);
         Optional<User> userOptional = userService.findUserByEmail(email);
 
@@ -62,6 +63,7 @@ public class PublicUserController {
 
     @GetMapping("/profile/{email}")
     public ResponseEntity<SearchUser> getProfile(@PathVariable String email) {
+        networkAccess.requireOwnEmail(email);
         logger.debug("Getting profile for email: {}", email);
         Optional<User> userOptional = userService.findUserByEmail(email);
         SearchUser searchUser = new SearchUser(userOptional.get());
@@ -78,6 +80,7 @@ public class PublicUserController {
 
     @GetMapping("/edit/{email}")
     public ResponseEntity<EditUser> getInfo(@PathVariable String email) {
+        networkAccess.requireOwnEmail(email);
         logger.debug("Getting edit info for email: {}", email);
         Optional<User> userOptional = userService.findUserByEmail(email);
         EditUser editUser = new EditUser(userOptional.get());
@@ -86,6 +89,7 @@ public class PublicUserController {
 
     @GetMapping("/get/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        networkAccess.requireOwnEmail(email);
         logger.debug("Getting user by email: {}", email);
         Optional<User> userOptional = userService.findUserByEmail(email);
         return userOptional
@@ -302,57 +306,6 @@ public class PublicUserController {
     }
 
 
-    @PostMapping("/like")
-    public ResponseEntity<?> like(@RequestParam String liker,
-                                  @RequestParam String liked) {
-        logger.debug("Like action from {} to {}", liker, liked);
-        try {
-            Like savedLike = likeService.saveLike(liker, liked);
-            LoggingUtil.logUserAction(liker, "LIKE", "Liked user: " + liked);
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    Map.of(
-                            "status", "success",
-                            "message", "Like saved successfully",
-                            "data", savedLike
-                    )
-            );
-        } catch (NoSuchElementException e) {
-            logger.warn("Like failed - user not found: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    Map.of(
-                            "status", "error",
-                            "message", "User not found: " + e.getMessage()
-                    )
-            );
-        } catch (DataIntegrityViolationException e) {
-            logger.warn("Like failed - already exists: {} -> {}", liker, liked);
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    Map.of(
-                            "status", "error",
-                            "message", "Like already exists"
-                    )
-            );
-        } catch (Exception e) {
-            logger.error("Like failed - internal error: {} -> {}", liker, liked, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(
-                            Map.of(
-                                    "status", "error",
-                                    "message", "An unexpected error occurred: " + e.getMessage()
-                            )
-                    );
-        }
-    }
-
-    @GetMapping("/like/get")
-    public Boolean getLike(
-            @RequestParam String liker,
-            @RequestParam String liked
-    ) {
-        logger.debug("Checking like from {} to {}", liker, liked);
-        return likeService.getLike(liker, liked);
-    }
-
     @PutMapping("/update/speciality")
     public ResponseEntity<String> updateSpecialities(@RequestBody SpecialityDto specialityDto) {
         logger.debug("Updating specialities for user: {}", specialityDto.getUserName());
@@ -420,6 +373,7 @@ public class PublicUserController {
 
     @GetMapping("/searchByHobbies/{userName}")
     public ResponseEntity<?> findUsersByHobbies(@PathVariable String userName) {
+        networkAccess.requireRestActor(userName);
         logger.debug("Searching users by hobbies for: {}", userName);
         try {
             SearchUser searchUser = userService.findUsersByHobbies(userName);
@@ -440,6 +394,7 @@ public class PublicUserController {
 
     @GetMapping("/searchBySpecialities/{userName}")
     public ResponseEntity<?> findUsersBySpecialities(@PathVariable String userName) {
+        networkAccess.requireRestActor(userName);
         logger.debug("Searching users by specialities for: {}", userName);
         try {
             SearchUser searchUser = userService.findUsersBySpecialities(userName);
@@ -460,6 +415,7 @@ public class PublicUserController {
 
     @GetMapping("/username/{userName}")
     public ResponseEntity<User> getUserByUserName(@PathVariable String userName) {
+        networkAccess.requireCurrentVisible(userName);
         logger.debug("Getting user by username: {}", userName);
         Optional<User> userOptional = userService.getUserByUserName(userName);
         return userOptional
@@ -488,10 +444,11 @@ public class PublicUserController {
 
     @GetMapping("/image/{userName}")
     public ResponseEntity<Resource> getUserImage(@PathVariable String userName) {
+        networkAccess.requireCurrentVisible(userName);
         logger.debug("Getting user image for: {}", userName);
         try {
             String fileName = imageService.getUserImage(userName);
-            Path filePath = Paths.get("C:/Users/HARUT_037/Desktop/talk_space/images/" + fileName).normalize();
+            Path filePath = imageService.resolveImagePath(fileName);
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {
@@ -530,6 +487,7 @@ public class PublicUserController {
 
     @GetMapping("/socialNetworks/{userName}")
     public ResponseEntity<List<SocialNetworksGetterDto>> getAllSocialNetworks(@PathVariable String userName) {
+        networkAccess.requireCurrentVisible(userName);
         logger.debug("Getting social networks for user: {}", userName);
         List<SocialNetworksGetterDto> socialNetworks = socialNetworksService.getAllSocialNetworks(userName);
         return new ResponseEntity<>(socialNetworks, HttpStatus.OK);
@@ -569,6 +527,7 @@ public class PublicUserController {
 
     @GetMapping("/get/specialities/{userName}")
     public ResponseEntity<List<Speciality>> getSpecialitiesByUserName(@PathVariable String userName) {
+        networkAccess.requireCurrentVisible(userName);
         logger.debug("Getting specialities for user: {}", userName);
         return userService.getUserByUserName(userName)
                 .map(user -> ResponseEntity.ok(user.getSpecialities()))
@@ -581,6 +540,7 @@ public class PublicUserController {
 
     @GetMapping("/get/hobbies/{userName}")
     public ResponseEntity<List<Hobby>> getHobbiesByUserName(@PathVariable String userName) {
+        networkAccess.requireCurrentVisible(userName);
         logger.debug("Getting hobbies for user: {}", userName);
         return userService.getUserByUserName(userName)
                 .map(user -> ResponseEntity.ok(user.getHobbies()))
@@ -597,12 +557,6 @@ public class PublicUserController {
         return feedBacksService.getAll(userName);
     }
 
-
-    @GetMapping("/top")
-    public List<String> viewTop() {
-        logger.debug("Getting top users");
-        return userService.viewTop();
-    }
 
     @PostMapping("/review/add")
     public ResponseEntity<?> addReview(

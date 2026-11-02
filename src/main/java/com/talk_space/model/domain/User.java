@@ -85,14 +85,6 @@ public class User {
     @Column(name = "verify_mail")
     private Boolean verifyMail;
 
-    @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Like> liker;
-
-    @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Like> liked;
-
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ChatMessage> sentMessages;
@@ -104,6 +96,7 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "user_hobbies",
+            indexes = @Index(name="idx_user_hobbies_trait", columnList="hobby_name,user_name"),
             joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
             inverseJoinColumns = @JoinColumn(name = "hobby_name", referencedColumnName = "name"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_name", "hobby_name"})
@@ -113,6 +106,7 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "user_specialities",
+            indexes = @Index(name="idx_user_specialities_trait", columnList="speciality_name,user_name"),
             joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
             inverseJoinColumns = @JoinColumn(name = "speciality_name", referencedColumnName = "name"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_name", "speciality_name"})
@@ -144,10 +138,6 @@ public class User {
 
     @Column(name = "about_me", length = 250)
     private String aboutMe;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private LikesCount likesCount;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference

@@ -6,7 +6,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "hobby")
+@Table(name = "hobby", indexes = @Index(name="idx_hobby_parent", columnList="parent_id"))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

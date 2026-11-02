@@ -1,180 +1,100 @@
 package com.talk_space.service;
 
+import com.talk_space.connections.NetworkAccess;
 import com.talk_space.model.domain.ChatMessage;
-import com.talk_space.model.domain.User;
-import com.talk_space.model.dto.ChatMessageDto;
-import com.talk_space.model.dto.UserChatDto;
-import com.talk_space.repository.ChatRepository;
-import com.talk_space.repository.UserRepository;
-import com.talk_space.util.LoggingUtil;
+import com.talk_space.model.dto.*;
+import com.talk_space.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-@Service
-@RequiredArgsConstructor
+@Service @RequiredArgsConstructor
 public class ChatService {
-    private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
-
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final NetworkAccess access;
 
     @Transactional
-    public ChatMessage saveMessage(ChatMessage message) {
-        logger.debug("Saving chat message from {} to {}",
-                message.getSender().getUserName(), message.getReceiver().getUserName());
-        return chatRepository.save(message);
+    public ChatMessageDto send(String sender, String receiver, String content) {
+        return send(sender, receiver, content, null);
     }
-
-    @Transactional(readOnly = true)
-    public List<ChatMessageDto> getChatHistory(String user1, String user2) {
-        logger.debug("Getting chat history between {} and {}", user1, user2);
-        List<ChatMessage> messages = chatRepository.findChatHistory(user1, user2);
-        logger.info("Retrieved {} messages between {} and {}", messages.size(), user1, user2);
-        return messages.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
-    public void markMessagesAsRead(String sender, String receiver) {
-        logger.debug("Marking messages as read from {} to {}", sender, receiver);
-        chatRepository.markMessagesAsRead(sender, receiver);
-        logger.info("Messages marked as read from {} to {}", sender, receiver);
+    public ChatMessageDto send(String sender, String receiver, String content, String clientMessageId) {
+        if (receiver==null || content==null || content.isBlank() || content.length()>4000)
+            throw new ResponseStatusException(BAD_REQUEST,"Message must contain 1–4000 characters");
+        access.lockPair(sender,receiver);
+        access.requireChat(sender,receiver);
+        if (clientMessageId != null) {
+            try { java.util.UUID.fromString(clientMessageId); }
+            catch (IllegalArgumentException ex) { throw new ResponseStatusException(BAD_REQUEST,"Invalid message id"); }
+            var existing = chatRepository.findBySenderUserNameAndClientMessageId(sender,clientMessageId);
+            if (existing.isPresent()) {
+                ChatMessage saved=existing.get();
+                if (!saved.getReceiver().getUserName().equals(receiver) || !saved.getContent().equals(content.trim()))
+                    throw new ResponseStatusException(org.springframework.http.HttpStatus.CONFLICT,"Message id already used");
+                return convertToDto(saved);
+            }
+        }
+        ChatMessage message=new ChatMessage();
+        message.setClientMessageId(clientMessageId);
+        message.setSender(access.member(sender)); message.setReceiver(access.member(receiver));
+        message.setContent(content.trim()); message.setTimestamp(LocalDateTime.now()); message.setRead(false);
+        return convertToDto(chatRepository.saveAndFlush(message));
     }
+    @Transactional(readOnly=true)
+    public void requireChat(String sender,String receiver) { access.requireChat(sender,receiver); }
 
-    @Transactional(readOnly = true)
-    public long getUnreadCount(String sender, String receiver) {
-        logger.debug("Getting unread message count from {} to {}", sender, receiver);
-        long count = chatRepository.countUnreadMessages(sender, receiver);
-        logger.debug("Unread message count from {} to {}: {}", sender, receiver, count);
-        return count;
+    @Transactional(readOnly=true)
+    public List<ChatMessageDto> getChatHistory(String user1,String user2) {
+        access.requireRestActor(user1); access.requireChat(user1,user2);
+        return chatRepository.findChatHistory(user1,user2).stream().map(this::convertToDto).toList();
     }
-
-    @Transactional(readOnly = true)
+    @Transactional
+    public void markMessagesAsRead(String sender,String receiver) {
+        access.requireRestActor(receiver); access.requireChat(sender,receiver);
+        chatRepository.markMessagesAsRead(sender,receiver);
+    }
+    @Transactional(readOnly=true)
+    public long getUnreadCount(String sender,String receiver) {
+        access.requireRestActor(receiver); access.requireChat(sender,receiver);
+        return chatRepository.countUnreadMessages(sender,receiver);
+    }
+    @Transactional(readOnly=true)
     public List<UserChatDto> getUserChats(String userName) {
-        logger.debug("Getting user chats for: {}", userName);
-
-        // Debug logging
-        System.out.println("=== DEBUG getUserChats for: " + userName);
-
-        // Get all messages involving the user
-        List<ChatMessage> allMessages = chatRepository.findAllUserMessages(userName);
-        System.out.println("Found " + allMessages.size() + " messages");
-
-        // Get mutual like partners to include newly created chats
-        List<User> mutualLikePartners = userRepository.findMutualLikePartners(userName);
-        System.out.println("Found " + mutualLikePartners.size() + " mutual like partners");
-
-        mutualLikePartners.forEach(partner ->
-                System.out.println("Mutual like partner: " + partner.getUserName())
-        );
-
-        Map<String, UserChatDto> chatMap = new HashMap<>();
-
-        // Process existing messages
-        for (ChatMessage message : allMessages) {
-            String partner = message.getSender().getUserName().equals(userName)
-                    ? message.getReceiver().getUserName()
-                    : message.getSender().getUserName();
-
-            if (!chatMap.containsKey(partner)) {
-                User partnerUser = message.getSender().getUserName().equals(partner)
-                        ? message.getSender()
-                        : message.getReceiver();
-
-                long unreadCount = chatRepository.countUnreadMessages(partner, userName);
-                UserChatDto dto = buildUserChatDto(partnerUser, message, unreadCount);
-                chatMap.put(partner, dto);
-            } else {
-                // Update with latest message if this one is newer
-                UserChatDto existingDto = chatMap.get(partner);
-                if (message.getTimestamp().isAfter(existingDto.getLastMessageTime())) {
-                    existingDto.setLastMessage(message.getContent());
-                    existingDto.setLastMessageTime(message.getTimestamp());
-                    existingDto.setUnreadCount(chatRepository.countUnreadMessages(partner, userName));
-                }
+        access.requireRestActor(userName);
+        Map<String,UserChatDto> chats=new LinkedHashMap<>();
+        for (var partner:userRepository.findConnectionPartners(userName)) {
+            UserChatDto dto=new UserChatDto(); dto.setPartnerUsername(partner.getUserName());
+            dto.setPartnerName(partner.getFirstName()+" "+partner.getLastName());
+            dto.setLastMessage(""); dto.setLastMessageTime(null); dto.setUnreadCount(0L);
+            if (partner.getImage()!=null) dto.setPartnerImage(partner.getImage().getFilePath());
+            chats.put(partner.getUserName(),dto);
+        }
+        // Existing history alone never grants permission to appear in the chat list.
+        for (var message:chatRepository.findAllUserMessages(userName)) {
+            String other=message.getSender().getUserName().equals(userName)?message.getReceiver().getUserName():message.getSender().getUserName();
+            var dto=chats.get(other);
+            if (dto!=null && (dto.getLastMessageTime()==null || message.getTimestamp().isAfter(dto.getLastMessageTime()))) {
+                dto.setLastMessage(message.getContent()); dto.setLastMessageTime(message.getTimestamp());
+                dto.setUnreadCount(chatRepository.countUnreadMessages(other,userName));
             }
         }
-
-        // Add mutual like partners who don't have messages yet
-        for (User partnerUser : mutualLikePartners) {
-            String partnerUsername = partnerUser.getUserName();
-            if (!chatMap.containsKey(partnerUsername)) {
-                // Create a chat DTO for mutual like partners with no messages
-                UserChatDto dto = new UserChatDto();
-                dto.setPartnerUsername(partnerUsername);
-                dto.setPartnerName(partnerUser.getFirstName() + " " + partnerUser.getLastName());
-                dto.setLastMessage("Start a conversation...");
-                dto.setLastMessageTime(LocalDateTime.now());
-                dto.setUnreadCount(0L);
-
-                if (partnerUser.getImage() != null) {
-                    dto.setPartnerImage(partnerUser.getImage().getFilePath());
-                }
-
-                chatMap.put(partnerUsername, dto);
-                System.out.println("Added mutual like partner to chat list: " + partnerUsername);
-            }
-        }
-
-        List<UserChatDto> result = chatMap.values().stream()
-                .sorted((a, b) -> b.getLastMessageTime().compareTo(a.getLastMessageTime()))
-                .collect(Collectors.toList());
-
-        System.out.println("Total chats in result: " + result.size());
-        logger.info("Retrieved {} chats for user: {}", result.size(), userName);
-        return result;
+        return chats.values().stream().sorted(Comparator.comparing(UserChatDto::getLastMessageTime,
+            Comparator.nullsLast(Comparator.reverseOrder())).thenComparing(UserChatDto::getPartnerUsername)).toList();
     }
-
-    private UserChatDto buildUserChatDto(User partnerUser, ChatMessage lastMessage, long unreadCount) {
-        UserChatDto dto = new UserChatDto();
-        dto.setPartnerUsername(partnerUser.getUserName());
-        dto.setPartnerName(partnerUser.getFirstName() + " " + partnerUser.getLastName());
-        dto.setLastMessage(lastMessage.getContent());
-        dto.setLastMessageTime(lastMessage.getTimestamp());
-        dto.setUnreadCount(unreadCount);
-
-        if (partnerUser.getImage() != null) {
-            dto.setPartnerImage(partnerUser.getImage().getFilePath());
-        }
-
-        return dto;
-    }
-
     public ChatMessageDto convertToDto(ChatMessage message) {
-        logger.debug("Converting chat message to DTO, ID: {}", message.getId());
-
-        ChatMessageDto dto = new ChatMessageDto();
-
-        // Manual mapping to avoid ModelMapper confusion
-        dto.setId(message.getId());
+        ChatMessageDto dto=new ChatMessageDto(); dto.setId(message.getId());
         dto.setSender(message.getSender().getUserName());
-        dto.setSenderDisplayName(message.getSender().getFirstName() + " " + message.getSender().getLastName());
+        dto.setSenderDisplayName(message.getSender().getFirstName()+" "+message.getSender().getLastName());
         dto.setReceiver(message.getReceiver().getUserName());
-        dto.setReceiverDisplayName(message.getReceiver().getFirstName() + " " + message.getReceiver().getLastName());
-        dto.setContent(message.getContent());
-        dto.setTimestamp(message.getTimestamp());
-        dto.setRead(message.isRead());
-
-        // Handle images if they exist
-        if (message.getSender().getImage() != null) {
-            dto.setSenderImage(message.getSender().getImage().getFilePath());
-        }
-        if (message.getReceiver().getImage() != null) {
-            dto.setReceiverImage(message.getReceiver().getImage().getFilePath());
-        }
-
+        dto.setReceiverDisplayName(message.getReceiver().getFirstName()+" "+message.getReceiver().getLastName());
+        dto.setContent(message.getContent()); dto.setTimestamp(message.getTimestamp()); dto.setRead(message.isRead());
+        if (message.getSender().getImage()!=null) dto.setSenderImage(message.getSender().getImage().getFilePath());
+        if (message.getReceiver().getImage()!=null) dto.setReceiverImage(message.getReceiver().getImage().getFilePath());
         return dto;
     }
 }

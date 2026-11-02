@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatApiController {
     private final ChatService chatService;
+    private final org.springframework.messaging.simp.SimpMessagingTemplate websocket;
 
     @GetMapping("/history/{user1}/{user2}")
     public ResponseEntity<List<ChatMessageDto>> getChatHistory(
@@ -27,6 +28,7 @@ public class ChatApiController {
             @PathVariable String sender,
             @PathVariable String receiver) {
         chatService.markMessagesAsRead(sender, receiver);
+        websocket.convertAndSendToUser(sender,"/queue/receipts",java.util.Map.of("reader",receiver));
         return ResponseEntity.ok().build();
     }
 

@@ -23,6 +23,7 @@ public class HobbyService {
     private final HobbyRepository hobbyRepository;
 
     private final UserRepository userRepository;
+    private final com.talk_space.infrastructure.RedisSupport redis;
 
     public Hobby save(Hobby hobby) {
         return hobbyRepository.save(hobby);
@@ -74,12 +75,17 @@ public class HobbyService {
         }
 
         userRepository.save(user);
+        redis.evict("matching:" + user.getUserName());
 
         return ("Hobby added successfully.");
     }
 
+    @org.springframework.beans.factory.annotation.Value("${app.demo-seed.enabled:true}")
+    private boolean demoSeedEnabled = true;
+
     @PostConstruct
     public void fillDb() {
+        if (!demoSeedEnabled || hobbyRepository.count() > 0) return;
         List<Hobby> hobbies = new ArrayList<>();
 
         // Top-level categories (parentId = null)

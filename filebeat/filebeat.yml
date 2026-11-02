@@ -1,14 +1,21 @@
 filebeat.inputs:
   - type: filestream
+    id: talkspace-json
     enabled: true
-
-    paths:
-      - /logs/talk-space.log
-
+    paths: ["/logs/talk-space-json.log"]
+    parsers:
+      - ndjson:
+          target: ""
+          add_error_key: true
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
-
 setup.kibana:
   host: "kibana:5601"
-
 setup.template.enabled: true
+processors:
+  - convert:
+      fields:
+        - {from: "httpStatus", type: long}
+        - {from: "durationMs", type: long}
+      ignore_missing: true
+      fail_on_error: false

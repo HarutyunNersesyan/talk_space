@@ -49,7 +49,7 @@ public class UserService implements UserDetailsService {
 
     private final MailSenderService mailSenderService;
 
-    private final LikeRepository likeRepository;
+
 
     private final ChatRepository chatRepository;
 
@@ -57,23 +57,26 @@ public class UserService implements UserDetailsService {
 
     private final FeedBacksRepository feedBacksRepository;
 
-    private final LikesCountRepository likesCountRepository;
 
-    Set<String> myLikes = new HashSet<>();
+
+    private final com.talk_space.matching.MatchingService matchingService;
+    private final com.talk_space.connections.FeatureDataCleanup featureDataCleanup;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService, @Lazy MailSenderService mailSenderService, LikeRepository likeRepository, ChatRepository chatRepository, SocialNetworksRepository socialNetworksRepository, FeedBacksRepository feedBacksRepository, LikesCountRepository likesCountRepository) {
+    public UserService(UserRepository userRepository, @Lazy AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, ImageService imageService, @Lazy MailSenderService mailSenderService, ChatRepository chatRepository, SocialNetworksRepository socialNetworksRepository, FeedBacksRepository feedBacksRepository, com.talk_space.matching.MatchingService matchingService, com.talk_space.connections.FeatureDataCleanup featureDataCleanup) {
         this.userRepository = userRepository;
+        this.matchingService = matchingService;
+        this.featureDataCleanup = featureDataCleanup;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
         this.mailSenderService = mailSenderService;
-        this.likeRepository = likeRepository;
+
         this.chatRepository = chatRepository;
         this.socialNetworksRepository = socialNetworksRepository;
         this.feedBacksRepository = feedBacksRepository;
-        this.likesCountRepository = likesCountRepository;
+
     }
 
 
@@ -147,6 +150,7 @@ public class UserService implements UserDetailsService {
     /**
      * @param deleteAccount
      */
+    @Transactional
     public void delete(DeleteAccount deleteAccount) {
         logger.debug("Attempting to delete account for email: {}", deleteAccount.getEmail());
         Optional<User> userOptional = userRepository.findUserByEmail(deleteAccount.getEmail());
@@ -189,10 +193,12 @@ public class UserService implements UserDetailsService {
             feedBacksRepository.deleteAll(feedBacks);
         }
 
+        featureDataCleanup.remove(user.getUserName());
         userRepository.delete(user);
         logger.info("Account deleted successfully for: {}", deleteAccount.getEmail());
     }
 
+    @Transactional
     public void deleteVerify(String email) {
         logger.debug("Deleting unverified user: {}", email);
         Optional<User> userOptional = userRepository.findUserByEmail(email);
@@ -202,6 +208,7 @@ public class UserService implements UserDetailsService {
             throw new CustomExceptions.UserNotFoundException("User not found.");
         }
 
+        featureDataCleanup.remove(userOptional.get().getUserName());
         userRepository.delete(userOptional.get());
         logger.info("Unverified user deleted: {}", email);
     }
@@ -362,69 +369,12 @@ public class UserService implements UserDetailsService {
         return "User has been unblocked successfully";
     }
 
-    public List<String> viewTop() {
-        logger.debug("Fetching top users by likes");
-        return likesCountRepository.findTop10LikesCounts().stream()
-                .map(likesCount -> likesCount.getUser().getUserName())
-                .collect(Collectors.toList());
-    }
-
-
-    @Transactional
     public SearchUser findUsersByHobbies(String userName) {
-        logger.debug("Finding users by hobbies for: {}", userName);
-        Optional<User> optionalUser = userRepository.findUserByUserName(userName);
-        if (optionalUser.isEmpty()) {
-            logger.warn("User not found for hobby matching: {}", userName);
-            throw new CustomExceptions.UserNotFoundException("User not found.");
-        }
-        User user = optionalUser.get();
-
-        if (user.getHobbies() == null || user.getHobbies().isEmpty()) {
-            logger.warn("User hobbies empty for: {}", userName);
-            throw new IllegalArgumentException("User hobbies cannot be empty");
-        }
-
-        if (!myLikes.isEmpty()) {
-            myLikes = likeRepository.findLikesByLiker(userName);
-        }
-        Optional<User> nextUser = userRepository.findNextUserByHobbies(user.getUserName(), myLikes);
-
-        if (nextUser.isEmpty()) {
-            logger.warn("No users found by hobbies for: {}", userName);
-            throw new CustomExceptions.UserNotFoundException("Profiles are out of date, please try again later.");
-        }
-        myLikes.add(nextUser.get().getUserName());
-        logger.info("Found user by hobbies: {} for {}", nextUser.get().getUserName(), userName);
-        return new SearchUser(nextUser.get());
+        return matchingService.next(userName, com.talk_space.matching.MatchMode.HOBBIES);
     }
 
-    @Transactional
     public SearchUser findUsersBySpecialities(String userName) {
-        logger.debug("Finding users by specialities for: {}", userName);
-        Optional<User> optionalUser = userRepository.findUserByUserName(userName);
-        if (optionalUser.isEmpty()) {
-            logger.warn("User not found for speciality matching: {}", userName);
-            throw new CustomExceptions.UserNotFoundException("User not found.");
-        }
-        User user = optionalUser.get();
-        if (optionalUser.get().getSpecialities() == null || optionalUser.get().getSpecialities().isEmpty()) {
-            logger.warn("User specialities empty for: {}", userName);
-            throw new IllegalArgumentException("User specialities cannot be empty");
-        }
-
-        if (!myLikes.isEmpty()) {
-            myLikes = likeRepository.findLikesByLiker(userName);
-        }
-
-        Optional<User> nextUser = userRepository.findNextUserBySpecialities(user.getUserName(), myLikes);
-        if (nextUser.isEmpty()) {
-            logger.warn("No users found by specialities for: {}", userName);
-            throw new CustomExceptions.UserNotFoundException("Profiles are out of date, please try again later.");
-        }
-        myLikes.add(nextUser.get().getUserName());
-        logger.info("Found user by specialities: {} for {}", nextUser.get().getUserName(), userName);
-        return new SearchUser(nextUser.get());
+        return matchingService.next(userName, com.talk_space.matching.MatchMode.SPECIALITIES);
     }
 
 
@@ -434,8 +384,12 @@ public class UserService implements UserDetailsService {
     }
 
 
+    @org.springframework.beans.factory.annotation.Value("${app.demo-seed.enabled:true}")
+    private boolean demoSeedEnabled = true;
+
     @PostConstruct
     public void fillDB() {
+        if (!demoSeedEnabled || userRepository.count() > 0) return;
         logger.info("Starting to fill database with sample users");
         List<User> users = new ArrayList<>();
 

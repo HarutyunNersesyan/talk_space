@@ -24,6 +24,7 @@ public class SpecialityService {
     private final SpecialityRepository specialityRepository;
 
     private final UserRepository userRepository;
+    private final com.talk_space.infrastructure.RedisSupport redis;
 
 
     public Speciality save(Speciality speciality) {
@@ -77,12 +78,17 @@ public class SpecialityService {
         }
         ;
         userRepository.save(user);
+        redis.evict("matching:" + user.getUserName());
 
         return ("Specialities added successfully.");
     }
 
+    @org.springframework.beans.factory.annotation.Value("${app.demo-seed.enabled:true}")
+    private boolean demoSeedEnabled = true;
+
     @PostConstruct
     public void fillDb() {
+        if (!demoSeedEnabled || specialityRepository.count() > 0) return;
         List<Speciality> specialties = new ArrayList<>();
 
         // Parent specialties (with null parentId)

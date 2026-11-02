@@ -22,7 +22,15 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
 
-    private static final String IMAGE_DIR = "C:/Users/HARUT_037/Desktop/talk_space/images/";
+    @org.springframework.beans.factory.annotation.Value("${app.images.directory:C:/Users/HARUT_037/Desktop/talk_space/images/}")
+    private String imageDirectory;
+
+    public java.nio.file.Path resolveImagePath(String fileName) {
+        var root = java.nio.file.Paths.get(imageDirectory).toAbsolutePath().normalize();
+        var path = root.resolve(fileName).normalize();
+        if (!path.startsWith(root)) throw new IllegalArgumentException("Invalid image path");
+        return path;
+    }
 
     @Transactional
     public String uploadProfilePicture(MultipartFile file, String userName) {
@@ -43,7 +51,7 @@ public class ImageService {
         }
 
         String fileName = generateUniqueFileName(Objects.requireNonNull(file.getContentType()));
-        String filePath = IMAGE_DIR + fileName;
+        String filePath = resolveImagePath(fileName).toString();
         storeFile(file, filePath);
 
         Image image = new Image();
@@ -58,9 +66,9 @@ public class ImageService {
 
 
     private void ensureDirectoryExists() {
-        File directory = new File(IMAGE_DIR);
+        File directory = new File(imageDirectory);
         if (!directory.exists() && !directory.mkdirs()) {
-            throw new RuntimeException("Failed to create directory: " + IMAGE_DIR);
+            throw new RuntimeException("Failed to create directory: " + imageDirectory);
         }
     }
 

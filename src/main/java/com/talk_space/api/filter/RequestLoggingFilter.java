@@ -1,62 +1,28 @@
-
 package com.talk_space.api.filter;
-
-import com.talk_space.util.LoggingUtil;
 import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
+import org.slf4j.*;
 import org.springframework.stereotype.Component;
-
+import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
+import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.util.Collections;
-
-@Component
-public class RequestLoggingFilter implements Filter {
-
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-
-        String correlationId = LoggingUtil.generateCorrelationId();
-        LoggingUtil.setCorrelationId(correlationId);
-
-        long startTime = System.currentTimeMillis();
-
-        try {
-            // Log request
-            logRequest(httpRequest);
-
-            chain.doFilter(request, response);
-
-        } finally {
-            long duration = System.currentTimeMillis() - startTime;
-            logResponse(httpRequest, httpResponse, duration);
-            LoggingUtil.clearCorrelationId();
+import java.util.UUID;
+@Component @Order(Ordered.HIGHEST_PRECEDENCE + 10)
+public class RequestLoggingFilter extends OncePerRequestFilter {
+    private static final Logger log = LoggerFactory.getLogger(RequestLoggingFilter.class);
+    @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
+        String id = UUID.randomUUID().toString();
+        MDC.put("correlationId", id); response.setHeader("X-Correlation-ID", id);
+        long start = System.nanoTime();
+        try { chain.doFilter(request, response); }
+        finally {
+            long duration = (System.nanoTime() - start) / 1000000;
+            MDC.put("httpMethod", request.getMethod()); MDC.put("httpPath", request.getRequestURI());
+            MDC.put("httpStatus", String.valueOf(response.getStatus())); MDC.put("durationMs", String.valueOf(duration));
+            log.info("HTTP request completed");
+            MDC.remove("correlationId"); MDC.remove("httpMethod"); MDC.remove("httpPath"); MDC.remove("httpStatus"); MDC.remove("durationMs");
         }
-    }
-
-    private void logRequest(HttpServletRequest request) {
-        String method = request.getMethod();
-        String uri = request.getRequestURI();
-        String queryString = request.getQueryString();
-        String fullUrl = queryString == null ? uri : uri + "?" + queryString;
-
-        LoggingUtil.logInfo(this.getClass(), "Incoming request: {} {}", method, fullUrl);
-
-        // Log headers (optional - be careful with sensitive headers)
-        Collections.list(request.getHeaderNames()).forEach(headerName ->
-                LoggingUtil.logDebug(this.getClass(), "Header: {}: {}", headerName, request.getHeader(headerName))
-        );
-    }
-
-    private void logResponse(HttpServletRequest request, HttpServletResponse response, long duration) {
-        String method = request.getMethod();
-        String uri = request.getRequestURI();
-        int status = response.getStatus();
-
-        LoggingUtil.logApiCall(method, uri, String.valueOf(status), duration);
     }
 }

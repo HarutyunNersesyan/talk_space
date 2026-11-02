@@ -17,6 +17,8 @@ import java.util.*;
 public class SearchUser {
 
 
+    private com.talk_space.matching.MatchEvaluation matching;
+
     private String firstName;
 
     private String lastName;
@@ -63,7 +65,7 @@ public class SearchUser {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.userName = user.getUserName();
-        this.age = LocalDate.now().getYear() - user.getBirthDate().getYear();
+        this.age = user.getBirthDate()==null ? null : java.time.Period.between(user.getBirthDate(), LocalDate.now()).getYears();
         this.gender = user.getGender();
         this.zodiac = user.getZodiacSign();
         this.about = user.getAboutMe();
@@ -71,19 +73,19 @@ public class SearchUser {
             this.image = user.getImage().getFilePath();
         }
 
-        if (!user.getHobbies().isEmpty()) {
+        if (user.getHobbies() != null && !user.getHobbies().isEmpty()) {
             for (int i = 0; i < user.getHobbies().size(); i++) {
                 this.hobbies.add(user.getHobbies().get(i).getName());
             }
         }
 
-        if (!user.getSpecialities().isEmpty()) {
+        if (user.getSpecialities() != null && !user.getSpecialities().isEmpty()) {
             for (int i = 0; i < user.getSpecialities().size(); i++) {
                 this.specialities.add(user.getSpecialities().get(i).getName());
             }
         }
 
-        if (!user.getSocialNetworks().isEmpty()) {
+        if (user.getSocialNetworks() != null && !user.getSocialNetworks().isEmpty()) {
             for (int i = 0; i < user.getSocialNetworks().size(); i++) {
                 this.socialNetworks.add(user.getSocialNetworks().get(i).getUrl());
             }

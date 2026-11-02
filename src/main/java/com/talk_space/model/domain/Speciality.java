@@ -3,7 +3,7 @@ package com.talk_space.model.domain;
 import jakarta.persistence.*;
 import lombok.*;
 @Entity
-@Table(name = "speciality")
+@Table(name = "speciality", indexes = @Index(name="idx_speciality_parent", columnList="parent_id"))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

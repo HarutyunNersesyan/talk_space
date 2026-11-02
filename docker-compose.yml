@@ -1,140 +1,90 @@
-version: "3.9"
-
 services:
-
   db:
-    image: postgres:15
-    container_name: postgres
-
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: talk_space
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-
-    ports:
-      - "5432:5432"
-
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["db_data:/var/lib/postgresql/data"]
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d talk_space"]
       interval: 5s
       timeout: 5s
-      retries: 5
-
-    networks:
-      - appnet
-
-
-
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: ["redis_data:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-    container_name: elasticsearch
-
     environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-
-    ports:
-      - "9200:9200"
-
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-
-    networks:
-      - appnet
-
-
-
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    ports: ["127.0.0.1:9200:9200"]
+    volumes: ["elasticsearch_data:/usr/share/elasticsearch/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.3
-    container_name: kibana
-
     depends_on:
-      - elasticsearch
-
+      elasticsearch:
+        condition: service_healthy
     environment:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-
-    ports:
-      - "5601:5601"
-
-    networks:
-      - appnet
-
-
-
+    ports: ["127.0.0.1:5601:5601"]
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-
+    build: .
     depends_on:
       db:
         condition: service_healthy
-
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/talk_space
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: admin
-
-    ports:
-      - "8080:8080"
-
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-admin}
+      IMAGE_DIRECTORY: /app/images
+      REDIS_ENABLED: 'true'
+      REDIS_HOST: redis
+      SEARCH_ENABLED: 'true'
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports: ["8080:8080"]
+    volumes: ["backend_logs:/app/logs", "image_data:/app/images"]
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.15.3
+    user: root
+    command: ["filebeat", "-e", "-strict.perms=false"]
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     volumes:
-      - ./logs:/app/logs
-
-    networks:
-      - appnet
-
-
-
+      - backend_logs:/logs:ro
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - filebeat_data:/usr/share/filebeat/data
   frontend:
+    profiles: ["frontend"]
     build:
       context: ../talk_space_ui
       dockerfile: Dockerfile
-
-    ports:
-      - "3000:80"
-
-    depends_on:
-      - backend
-
-    restart: always
-
-    networks:
-      - appnet
-
-
-
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:8.15.3
-    container_name: filebeat
-
-    user: root
-
-    depends_on:
-      - elasticsearch
-
-    command: filebeat -e -strict.perms=false
-
-    volumes:
-      - ./logs:/logs
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
-
-    networks:
-      - appnet
-
-
-
-networks:
-  appnet:
-    driver: bridge
-
-
-
+    ports: ["3000:80"]
+    depends_on: [backend]
 volumes:
   db_data:
+  redis_data:
   elasticsearch_data:
+  filebeat_data:
+  backend_logs:
+  image_data:

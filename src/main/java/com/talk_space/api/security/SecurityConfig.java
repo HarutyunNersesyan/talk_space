@@ -22,10 +22,12 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final JwtRequestFilter jwtRequestFilter;
+    private final com.talk_space.api.filter.RateLimitFilter rateLimitFilter;
 
     @Autowired
-    public SecurityConfig(UserService userService, JwtRequestFilter jwtRequestFilter) {
+    public SecurityConfig(UserService userService, JwtRequestFilter jwtRequestFilter, com.talk_space.api.filter.RateLimitFilter rateLimitFilter) {
         this.userService = userService;
+        this.rateLimitFilter = rateLimitFilter;
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
@@ -35,16 +37,20 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/public/user/signUp").permitAll()
                         .requestMatchers("/api/public/user/verify").permitAll()
                         .requestMatchers("/api/public/user/forgotPassword").permitAll()
                         .requestMatchers("/api/public/user/hobby").permitAll()
                         .requestMatchers("/api/public/user/delete/verify/**").permitAll()
                         .requestMatchers("/api/public/**").authenticated()
+                        .requestMatchers("/api/private/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/private/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitFilter, JwtRequestFilter.class);
 
         return http.build();
     }

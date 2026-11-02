@@ -7,7 +7,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "chat_messages")
+@Table(name = "chat_messages", uniqueConstraints = @UniqueConstraint(name = "uq_chat_sender_client_id", columnNames = {"sender_user_id", "client_message_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,6 +31,9 @@ public class ChatMessage {
             nullable = false
     )
     private User receiver;
+
+    @Column(name = "client_message_id", length = 36)
+    private String clientMessageId;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;

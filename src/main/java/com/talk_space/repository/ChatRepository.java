@@ -15,6 +15,7 @@ import java.util.List;
 
 @Repository
 public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
+    java.util.Optional<ChatMessage> findBySenderUserNameAndClientMessageId(String sender, String clientMessageId);
 
 
     @Query("SELECT m FROM ChatMessage m WHERE " +

@@ -20,60 +20,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByUserName(String userName);
 
 
-    @Query(value = """
-                SELECT u.* 
-                FROM user_entity u
-                JOIN user_hobbies us ON u.user_name = us.user_name
-                JOIN hobby s ON us.hobby_name = s.name
-                WHERE u.status = 'ACTIVE'
-                AND u.user_name != :userName
-                AND (:excludedUserNames IS NULL OR u.user_name NOT IN (:excludedUserNames))
-                AND (
-                    s.name IN (SELECT hobby_name FROM user_hobbies WHERE user_name = :userName)
-                    OR s.parent_id IN (
-                        SELECT parent_id FROM hobby 
-                        WHERE name IN (
-                            SELECT hobby_name FROM user_hobbies WHERE user_name = :userName
-                        ) AND parent_id IS NOT NULL
-                    )
-                )
-                ORDER BY RANDOM()
-                LIMIT 1
-            """, nativeQuery = true)
-    Optional<User> findNextUserByHobbies(
-            @Param("userName") String userName,
-            @Param("excludedUserNames") Set<String> excludedUserNames
-    );
-
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("select u from User u where u.userName = :userName")
+    Optional<User> lockMatchingViewer(@Param("userName") String userName);
 
     @Query(value = """
-                SELECT u.* 
-                FROM user_entity u
-                JOIN user_specialities us ON u.user_name = us.user_name
-                JOIN speciality s ON us.speciality_name = s.name
-                WHERE u.status = 'ACTIVE'
-                AND u.user_name != :userName
-                AND (:excludedUserNames IS NULL OR u.user_name NOT IN (:excludedUserNames))
-                AND (
-                    s.name IN (SELECT speciality_name FROM user_specialities WHERE user_name = :userName)
-                    OR s.parent_id IN (SELECT parent_id FROM speciality WHERE name IN 
-                                       (SELECT speciality_name FROM user_specialities WHERE user_name = :userName) 
-                                       AND parent_id IS NOT NULL)
-                )
-                ORDER BY RANDOM()
-                LIMIT 1
-            """, nativeQuery = true)
-    Optional<User> findNextUserBySpecialities(
-            @Param("userName") String userName,
-            @Param("excludedUserNames") Set<String> excludedUserNames
-    );
-
-
-
-
-    @Query("SELECT DISTINCT l.liker FROM Like l " +
-            "WHERE l.liked.userName = :userName " +
-            "AND EXISTS (SELECT l2 FROM Like l2 WHERE l2.liker.userName = :userName AND l2.liked = l.liker)")
-    List<User> findMutualLikePartners(@Param("userName") String userName);
+        select distinct u.* from user_entity u join user_connections c
+          on (c.sender = :userName and u.user_name = c.receiver)
+          or (c.receiver = :userName and u.user_name = c.sender)
+        where c.status = 'ACCEPTED' and u.status = 'ACTIVE' and u.role='USER' and u.verify_mail=true
+          and not exists (select 1 from user_blocks b where (b.blocker=:userName and b.blocked=u.user_name)
+            or (b.blocker=u.user_name and b.blocked=:userName))
+        """, nativeQuery = true)
+    List<User> findConnectionPartners(@Param("userName") String userName);
 
 }
