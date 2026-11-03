@@ -26,6 +26,7 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock private com.talk_space.user.service.UserProfileService profiles;
     @InjectMocks
     private UserService userService;
 
@@ -71,14 +72,14 @@ public class UserServiceTest {
         String email = "notfound@example.com";
         EditUser editUser = new EditUser();
 
-        when(userRepository.findUserByEmail(email)).thenReturn(Optional.empty());
+        when(profiles.updateUserByEmail(email, editUser)).thenThrow(new IllegalArgumentException("User with email " + email + " not found"));
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             userService.updateUserByEmail(email, editUser);
         });
 
         assertEquals("User with email notfound@example.com not found", thrown.getMessage());
-        verify(userRepository, times(1)).findUserByEmail(email);
+        verify(profiles, times(1)).updateUserByEmail(email, editUser);
         verify(userRepository, never()).save(any(User.class));
     }
 }

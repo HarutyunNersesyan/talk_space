@@ -44,6 +44,15 @@ public class ChatMessage {
     @Column(nullable = false)
     private boolean isRead = false;
 
+    @Column(nullable = false)
+    private boolean edited = false;
+
+    @Column(name = "deleted_for_sender", nullable = false)
+    private boolean deletedForSender = false;
+
+    @Column(name = "deleted_for_receiver", nullable = false)
+    private boolean deletedForReceiver = false;
+
     @PrePersist
     protected void onCreate() {
         timestamp = LocalDateTime.now();

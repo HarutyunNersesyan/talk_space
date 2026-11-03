@@ -29,6 +29,7 @@ public class LocationController {
     public ResponseEntity<?> updateLocation(
             @PathVariable String userName,
             @Valid @RequestBody LocationDto locationDto) {
+        access.requireRestActor(userName);
         logger.debug("Updating location for user: {}", userName);
         logger.debug("Location data: country={}, region={}, city={}, village={}, lat={}, lng={}",
                 locationDto.getCountry(), locationDto.getRegion(), locationDto.getCity(),
@@ -66,6 +67,7 @@ public class LocationController {
 
     @DeleteMapping("/{userName}")
     public ResponseEntity<?> deleteLocation(@PathVariable String userName) {
+        access.requireRestActor(userName);
         logger.debug("Deleting location for user: {}", userName);
 
         try {

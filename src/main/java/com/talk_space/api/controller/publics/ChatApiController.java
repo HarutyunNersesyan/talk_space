@@ -2,7 +2,7 @@ package com.talk_space.api.controller.publics;
 
 import com.talk_space.model.dto.ChatMessageDto;
 import com.talk_space.model.dto.UserChatDto;
-import com.talk_space.service.ChatService;
+import com.talk_space.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

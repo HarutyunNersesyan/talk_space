@@ -33,6 +33,14 @@ public class NetworkAccess {
         var actor=actors.current();
         if (actor.getRole()!=Role.ADMIN) { requireVisible(actor.getUserName(),target); member(target); }
     }
+    public void requireAdmin() {
+        if (actors.current().getRole() != Role.ADMIN) throw new ResponseStatusException(FORBIDDEN);
+    }
+    public void requireOwnUserId(Long id) {
+        var actor = actors.current();
+        if (actor.getRole() != Role.ADMIN && !java.util.Objects.equals(actor.getUserId(), id))
+            throw new ResponseStatusException(FORBIDDEN);
+    }
     public void requireOwnEmail(String email) {
         var actor=actors.current();
         if (actor.getRole()!=Role.ADMIN && !actor.getEmail().equalsIgnoreCase(email)) throw new ResponseStatusException(FORBIDDEN);

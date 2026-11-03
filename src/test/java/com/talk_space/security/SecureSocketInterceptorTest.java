@@ -43,4 +43,13 @@ class SecureSocketInterceptorTest {
         var a=accessor(StompCommand.SUBSCRIBE,true);a.setUser(()->"alice");a.setDestination("/queue/connection-notifications");
         assertThrows(MessageDeliveryException.class,()->interceptor.preSend(message(a),null));
     }
+    @Test void chatChangeSubscriptionIsPrivateAndAllowed() {
+        var a=accessor(StompCommand.SUBSCRIBE,true); a.setUser(()->"alice");
+        a.setDestination("/user/queue/chat-changes");
+        assertDoesNotThrow(()->interceptor.preSend(message(a),null));
+        for (String destination : List.of("/queue/chat-changes", "/user/bob/queue/chat-changes", "/topic/chat-changes")) {
+            a.setDestination(destination);
+            assertThrows(MessageDeliveryException.class,()->interceptor.preSend(message(a),null));
+        }
+    }
 }

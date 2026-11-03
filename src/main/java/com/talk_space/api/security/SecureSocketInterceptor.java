@@ -16,7 +16,7 @@ public class SecureSocketInterceptor implements ChannelInterceptor {
     private final UserRepository users;
     private static final Set<String> SUBSCRIPTIONS=Set.of(
         "/user/queue/connection-notifications", "/user/queue/presence", "/user/queue/messages",
-        "/user/queue/typing", "/user/queue/errors", "/user/queue/receipts");
+        "/user/queue/typing", "/user/queue/errors", "/user/queue/receipts", "/user/queue/chat-changes");
     private static final Set<String> SENDS=Set.of("/app/presence.heartbeat", "/app/chat.send", "/app/typing");
     @Override public Message<?> preSend(Message<?> message,MessageChannel channel) {
         var headers=MessageHeaderAccessor.getAccessor(message,StompHeaderAccessor.class);

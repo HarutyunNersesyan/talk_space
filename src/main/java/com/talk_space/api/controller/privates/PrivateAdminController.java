@@ -1,5 +1,7 @@
 package com.talk_space.api.controller.privates;
 
+import com.talk_space.chat.service.ChatService;
+
 import com.talk_space.exceptions.CustomExceptions;
 import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.APIResponse;

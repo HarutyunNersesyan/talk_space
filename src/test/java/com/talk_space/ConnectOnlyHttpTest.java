@@ -1,5 +1,7 @@
 package com.talk_space;
 
+import com.talk_space.chat.repository.ChatRepository;
+
 import com.talk_space.blocks.*;
 import com.talk_space.connections.*;
 import com.talk_space.matching.*;
@@ -7,7 +9,7 @@ import com.talk_space.model.domain.*;
 import com.talk_space.model.dto.ChatMessageDto;
 import com.talk_space.model.enums.*;
 import com.talk_space.repository.*;
-import com.talk_space.service.ChatService;
+import com.talk_space.chat.service.ChatService;
 import com.talk_space.api.controller.publics.ChatController;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,8 @@ class ConnectOnlyHttpTest {
     @Autowired ChatRepository messages;
     @Autowired MatchingRepository matching;
     @Autowired ConnectionRepository connectionRecords;
+    @Autowired ImageRepository images;
+    @Autowired com.talk_space.service.ImageService imageService;
     @BeforeEach void setup() {
         Hobby hobby=new Hobby("Music",null); hobbies.saveAndFlush(hobby);
         Speciality speciality=new Speciality("Java",null); specialities.saveAndFlush(speciality);
@@ -50,6 +54,29 @@ class ConnectOnlyHttpTest {
         users.flush();
     }
     Connection accepted() { var c=connections.request("alice","bob"); return connections.transition("bob",c.getId(),"accept"); }
+    @Test void absentImageIsNormalAndUnknownProfileIsStillNotFound() throws Exception {
+        http.perform(get("/api/public/user/image/bob").with(user("alice@gmail.com")))
+            .andExpect(status().isNoContent()).andExpect(content().string(""));
+        http.perform(get("/api/public/user/image/missing").with(user("alice@gmail.com")))
+            .andExpect(status().isNotFound());
+    }
+    @Test void existingImageIsStillServed(@org.junit.jupiter.api.io.TempDir java.nio.file.Path directory) throws Exception {
+        Object previous = org.springframework.test.util.ReflectionTestUtils.getField(imageService, "imageDirectory");
+        org.springframework.test.util.ReflectionTestUtils.setField(imageService, "imageDirectory", directory.toString());
+        try {
+            byte[] photo = new byte[] {1, 2, 3};
+            java.nio.file.Files.write(directory.resolve("photo.png"), photo);
+            Image image = new Image(); image.setFileName("photo.png"); image.setFileType("image/png");
+            image.setFilePath(directory.resolve("photo.png").toString()); image.setUser(users.findUserByUserName("bob").orElseThrow());
+            images.saveAndFlush(image);
+            http.perform(get("/api/public/user/image/bob").with(user("alice@gmail.com")))
+                .andExpect(status().isOk()).andExpect(content().contentType("image/png")).andExpect(content().bytes(photo));
+            java.nio.file.Files.delete(directory.resolve("photo.png"));
+            http.perform(get("/api/public/user/image/bob").with(user("alice@gmail.com"))).andExpect(status().isNoContent());
+        } finally {
+            org.springframework.test.util.ReflectionTestUtils.setField(imageService, "imageDirectory", previous);
+        }
+    }
     @Test void requestContainsFullPublicProfileAndRecipientCanReadIt() throws Exception {
         connections.request("alice","bob");
         http.perform(get("/api/public/connections").with(user("bob@gmail.com")))
@@ -104,7 +131,7 @@ class ConnectOnlyHttpTest {
     }
     @Test void httpSendConfirmsSaveAndDuplicateRetryDoesNotInsertTwice() throws Exception {
         accepted();
-        String body="{\"receiver\":\"bob\",\"content\":\"hello\",\"clientMessageId\":\"550e8400-e29b-41d4-a716-446655440000\",\"sender\":\"eve\"}";
+        String body="{\"receiver\":\"bob\",\"content\":\"hello\",\"clientMessageId\":\"550e8400-e29b-41d4-a716-446655440000\"}";
         for (int i=0; i<2; i++) http.perform(post("/api/public/chat/messages").with(user("alice@gmail.com"))
             .contentType("application/json").content(body)).andExpect(status().isOk())
             .andExpect(jsonPath("sender").value("alice")).andExpect(jsonPath("content").value("hello"));
@@ -184,6 +211,36 @@ class ConnectOnlyHttpTest {
         assertThrows(ResponseStatusException.class,()->chat.send("alice","bob","new message"));
         http.perform(get("/api/public/chat/history/alice/bob").with(user("alice@gmail.com"))).andExpect(status().isForbidden());
     }
+    @Test void usersCannotModifyAnotherUsersProfileOrLocation() throws Exception {
+        http.perform(put("/api/public/user/update/aboutMe").with(user("alice@gmail.com"))
+            .contentType("application/json").content("{\"userName\":\"bob\",\"aboutMe\":\"stolen\"}"))
+            .andExpect(status().isForbidden());
+        http.perform(put("/api/public/user/update/hobby").with(user("alice@gmail.com"))
+            .contentType("application/json").content("{\"userName\":\"bob\",\"hobbies\":[]}"))
+            .andExpect(status().isForbidden());
+        http.perform(put("/api/public/user/update/speciality").with(user("alice@gmail.com"))
+            .contentType("application/json").content("{\"userName\":\"bob\",\"specialities\":[]}"))
+            .andExpect(status().isForbidden());
+        http.perform(delete("/api/public/user/image/delete/bob").with(user("alice@gmail.com")))
+            .andExpect(status().isForbidden());
+        http.perform(delete("/api/public/location/bob").with(user("alice@gmail.com")))
+            .andExpect(status().isForbidden());
+        http.perform(post("/api/public/location/update/bob").with(user("alice@gmail.com"))
+            .contentType("application/json").content("{\"country\":\"Armenia\",\"region\":\"Yerevan\",\"latitude\":40.1,\"longitude\":44.5}"))
+            .andExpect(status().isForbidden());
+        assertEquals("Hello from bob",users.findUserByUserName("bob").orElseThrow().getAboutMe());
+        assertEquals(1,users.findUserByUserName("bob").orElseThrow().getHobbies().size());
+    }
+    @Test void verifiedAccountCannotBeDeletedViaPublicCancellation() throws Exception {
+        http.perform(delete("/api/public/user/delete/verify/bob@gmail.com")).andExpect(status().isBadRequest());
+        assertTrue(users.findUserByUserName("bob").isPresent());
+    }
+    @Test void usersCanStillModifyTheirOwnProfile() throws Exception {
+        http.perform(put("/api/public/user/update/aboutMe").with(user("alice@gmail.com"))
+            .contentType("application/json").content("{\"userName\":\"alice\",\"aboutMe\":\"New biography\"}"))
+            .andExpect(status().isOk());
+        assertEquals("New biography",users.findUserByUserName("alice").orElseThrow().getAboutMe());
+    }
     @Test void regularUsersCannotBypassProfileVisibilityViaAdminDirectory() throws Exception {
         http.perform(get("/api/private/admin/getAll").with(user("alice@gmail.com").authorities(()->"USER")))
             .andExpect(status().isForbidden());
@@ -191,5 +248,38 @@ class ConnectOnlyHttpTest {
     @Test void likingEndpointsAreRemoved() throws Exception {
         http.perform(post("/api/public/user/like").with(user("alice@gmail.com"))).andExpect(status().is4xxClientError());
         http.perform(get("/api/public/user/like/get").with(user("alice@gmail.com"))).andExpect(status().isNotFound());
+    }
+
+    @Test void browserPreflightAllowsChatMutations() throws Exception {
+        for (String method : List.of("PATCH", "DELETE", "POST")) {
+            http.perform(options("/api/public/chat/messages/1")
+                .header("Origin", "http://localhost:3000")
+                .header("Access-Control-Request-Method", method)
+                .header("Access-Control-Request-Headers", "authorization,content-type"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:3000"))
+                .andExpect(header().string("Access-Control-Allow-Methods", org.hamcrest.Matchers.containsString(method)));
+        }
+    }
+    @Test void editAndDeletePersistThroughHttpForBothParticipants() throws Exception {
+        accepted();
+        var sent=chat.send("alice", "bob", "original");
+        String url="/api/public/chat/messages/"+sent.getId();
+        http.perform(patch(url).with(user("bob@gmail.com")).contentType("application/json").content("{\"content\":\"illegal\"}"))
+            .andExpect(status().isForbidden());
+        http.perform(patch(url).with(user("alice@gmail.com")).header("Origin", "http://localhost:3000")
+            .contentType("application/json").content("{\"content\":\"updated\"}"))
+            .andExpect(status().isOk()).andExpect(jsonPath("edited").value(true)).andExpect(jsonPath("content").value("updated"));
+        http.perform(get("/api/public/chat/history/bob/alice").with(user("bob@gmail.com")))
+            .andExpect(status().isOk()).andExpect(jsonPath("[0].content").value("updated"));
+        http.perform(delete(url).param("everyone","true").with(user("bob@gmail.com"))).andExpect(status().isForbidden());
+        http.perform(delete(url).param("everyone","false").with(user("bob@gmail.com"))).andExpect(status().isNoContent());
+        http.perform(get("/api/public/chat/history/bob/alice").with(user("bob@gmail.com")))
+            .andExpect(status().isOk()).andExpect(jsonPath("$").isEmpty());
+        http.perform(get("/api/public/chat/history/alice/bob").with(user("alice@gmail.com")))
+            .andExpect(status().isOk()).andExpect(jsonPath("[0].content").value("updated"));
+        http.perform(delete(url).param("everyone","true").with(user("alice@gmail.com"))).andExpect(status().isNoContent());
+        http.perform(get("/api/public/chat/history/alice/bob").with(user("alice@gmail.com")))
+            .andExpect(status().isOk()).andExpect(jsonPath("$").isEmpty());
     }
 }

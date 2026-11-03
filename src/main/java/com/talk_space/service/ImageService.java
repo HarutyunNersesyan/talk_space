@@ -37,6 +37,8 @@ public class ImageService {
         User user = userRepository.findUserByUserName(userName)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        validatePhoto(file);
+
         Optional<Image> existingImage = imageRepository.findByUserUserName(userName);
         if (existingImage.isPresent()) {
 
@@ -45,10 +47,6 @@ public class ImageService {
             imageRepository.flush();
         }
         ensureDirectoryExists();
-        if (!isValidFileType(file.getContentType())) {
-            throw new IllegalArgumentException("Invalid file type: " + file.getContentType() +
-                    ". Only JPEG and PNG are allowed.");
-        }
 
         String fileName = generateUniqueFileName(Objects.requireNonNull(file.getContentType()));
         String filePath = resolveImagePath(fileName).toString();
@@ -92,10 +90,33 @@ public class ImageService {
         return "image/jpeg".equalsIgnoreCase(fileType) || "image/png".equalsIgnoreCase(fileType);
     }
 
-    public String getUserImage(String userName) {
-        Image image = imageRepository.findByUserUserName(userName)
-                .orElseThrow(() -> new IllegalArgumentException("No image found for user"));
-        return image.getFileName();
+    private void validatePhoto(MultipartFile file) {
+        if (file == null || file.isEmpty() || file.getSize() > 5L * 1024 * 1024)
+            throw new IllegalArgumentException("Choose an image up to 5 MB.");
+        if (!isValidFileType(file.getContentType()))
+            throw new IllegalArgumentException("Only JPG and PNG images are allowed.");
+        try (var input = javax.imageio.ImageIO.createImageInputStream(file.getInputStream())) {
+            if (input == null) throw new IllegalArgumentException("The image could not be opened.");
+            var readers = javax.imageio.ImageIO.getImageReaders(input);
+            if (!readers.hasNext()) throw new IllegalArgumentException("The image could not be opened.");
+            var reader = readers.next();
+            try {
+                reader.setInput(input, true, true);
+                String format = reader.getFormatName();
+                boolean matchingFormat = ("image/png".equalsIgnoreCase(file.getContentType()) && "png".equalsIgnoreCase(format))
+                        || ("image/jpeg".equalsIgnoreCase(file.getContentType()) && ("jpeg".equalsIgnoreCase(format) || "jpg".equalsIgnoreCase(format)));
+                int width = reader.getWidth(0), height = reader.getHeight(0);
+                if (!matchingFormat) throw new IllegalArgumentException("The file contents do not match the image type.");
+                if (width < 400 || height < 300 || width > 10000 || height > 10000 || (long) width * 3 != (long) height * 4)
+                    throw new IllegalArgumentException("The profile photo must be 4:3 and at least 400 × 300 pixels.");
+            } finally { reader.dispose(); }
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("The image could not be opened.", ex);
+        }
+    }
+
+    public Optional<String> getUserImage(String userName) {
+        return imageRepository.findByUserUserName(userName).map(Image::getFileName);
     }
 
     @Transactional

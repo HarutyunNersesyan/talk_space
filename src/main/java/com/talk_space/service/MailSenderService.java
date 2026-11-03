@@ -21,7 +21,6 @@ public class MailSenderService {
 
     private final JavaMailSender mailSender;
 
-    private final UserService userService;
 
     private final ForgotPassword forgotPassword;
 
@@ -41,7 +40,7 @@ public class MailSenderService {
 
     public String handlePinRequest(String email, boolean checkVerifyMail) {
 
-        User user = userService.findUserByEmail(email)
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new CustomExceptions.UserNotFoundException("User not found with email: " + email));
 
         if (checkVerifyMail && !user.getVerifyMail()) {
@@ -50,7 +49,7 @@ public class MailSenderService {
 
         String pin = forgotPassword.generatePin();
         user.setPin(pin);
-        userService.update(user);
+        userRepository.save(user);
 
         sendEmail(email, "Verify code", pin + "\n\n Welcome to Talk Space, thank you for using our system.");
 
@@ -63,12 +62,12 @@ public class MailSenderService {
     public void schedulePinReset(String mail) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(() -> {
-            userService.findUserByEmail(mail)
+            userRepository.findUserByEmail(mail)
                     .ifPresent(user -> {
                         if (!user.getVerifyMail()) {
                             userRepository.delete(user);
                         } else {
-                            userService.update(user);
+                            userRepository.save(user);
                         }
                     });
         }, 30, TimeUnit.MINUTES);

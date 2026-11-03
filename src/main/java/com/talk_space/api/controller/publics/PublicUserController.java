@@ -100,6 +100,7 @@ public class PublicUserController {
 
     @PutMapping("/update/hobby")
     public ResponseEntity<String> updateHobbies(@RequestBody HobbyDto hobbyDto) {
+        networkAccess.requireRestActor(hobbyDto.getUserName());
         logger.debug("Updating hobbies for user: {}", hobbyDto.getUserName());
         try {
             String result = hobbyService.addHobbyForUser(hobbyDto);
@@ -120,6 +121,7 @@ public class PublicUserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
+        networkAccess.requireOwnUserId(id);
         logger.debug("Getting user by ID: {}", id);
         return ResponseEntity.ok(userService.getUserById(id).orElseThrow(() -> {
             logger.warn("User not found with ID: {}", id);
@@ -128,7 +130,7 @@ public class PublicUserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(@javax.validation.Valid @RequestBody SignUp signUp, BindingResult result) {
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUp signUp, BindingResult result) {
         logger.info("Received signup request for username: {}", signUp.getUserName());
 
         if (result.hasErrors()) {
@@ -169,6 +171,7 @@ public class PublicUserController {
 
     @PutMapping("/update")
     public ResponseEntity<?> update(@Valid @RequestBody User user, BindingResult result) {
+        networkAccess.requireAdmin();
         logger.debug("Updating user: {}", user.getUserName());
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors()
@@ -190,6 +193,7 @@ public class PublicUserController {
     @PutMapping("/editUser")
     public ResponseEntity<User> editUser(@RequestParam String email,
                                          @RequestBody @Valid EditUser editUser) {
+        networkAccess.requireOwnEmail(email);
         logger.debug("Editing user with email: {}", email);
         User updatedUser = userService.updateUserByEmail(email, editUser);
         return ResponseEntity.ok(updatedUser);
@@ -198,6 +202,7 @@ public class PublicUserController {
     @PutMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestParam String email,
                                             @Valid @RequestBody ChangePassword changePassword, BindingResult result) {
+        networkAccess.requireOwnEmail(email);
         logger.debug("Password change request for: {}", email);
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors()
@@ -272,6 +277,7 @@ public class PublicUserController {
 
     @DeleteMapping("/delete/account")
     public ResponseEntity<String> delete(@RequestBody DeleteAccount deleteAccount) {
+        networkAccess.requireOwnEmail(deleteAccount.getEmail());
         logger.debug("Account deletion request for: {}", deleteAccount.getEmail());
         try {
             userService.delete(deleteAccount);
@@ -299,6 +305,8 @@ public class PublicUserController {
         } catch (CustomExceptions.UserNotFoundException e) {
             logger.warn("Cancel verification failed - user not found: {}", email);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             logger.error("Cancel verification failed for: {}", email, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
@@ -308,6 +316,7 @@ public class PublicUserController {
 
     @PutMapping("/update/speciality")
     public ResponseEntity<String> updateSpecialities(@RequestBody SpecialityDto specialityDto) {
+        networkAccess.requireRestActor(specialityDto.getUserName());
         logger.debug("Updating specialities for user: {}", specialityDto.getUserName());
         try {
             String result = specialityService.addSpecialityForUser(specialityDto);
@@ -328,6 +337,7 @@ public class PublicUserController {
 
     @PutMapping("/update/socialNetworks")
     public ResponseEntity<String> updateSocialNetworks(@RequestBody SocialNetworksDto socialNetworksDto) {
+        networkAccess.requireRestActor(socialNetworksDto.getUserName());
         logger.debug("Updating social networks for user: {}", socialNetworksDto.getUserName());
         try {
             String result = socialNetworksService.updateSocialNetworks(socialNetworksDto);
@@ -348,6 +358,7 @@ public class PublicUserController {
 
     @PutMapping("/update/aboutMe")
     public ResponseEntity<String> updateAboutMe(@RequestBody AboutMe aboutMe) {
+        networkAccess.requireRestActor(aboutMe.getUserName());
         logger.debug("Updating about me for user: {}", aboutMe.getUserName());
         try {
             String result = userService.updateAboutMe(aboutMe);
@@ -361,6 +372,7 @@ public class PublicUserController {
 
     @GetMapping("/aboutMe/{userName}")
     public ResponseEntity<String> getAboutMe(@PathVariable String userName) {
+        networkAccess.requireCurrentVisible(userName);
         logger.debug("Getting about me for user: {}", userName);
         try {
             String result = userService.getUserByUserName(userName).get().getAboutMe();
@@ -427,6 +439,7 @@ public class PublicUserController {
     public ResponseEntity<String> uploadProfilePicture(
             @RequestParam("file") MultipartFile file,
             @RequestParam("userName") String userName) {
+        networkAccess.requireRestActor(userName);
         logger.debug("Uploading profile picture for user: {}", userName);
         try {
             String filePath = imageService.uploadProfilePicture(file, userName);
@@ -447,7 +460,9 @@ public class PublicUserController {
         networkAccess.requireCurrentVisible(userName);
         logger.debug("Getting user image for: {}", userName);
         try {
-            String fileName = imageService.getUserImage(userName);
+            var imageName = imageService.getUserImage(userName);
+            if (imageName.isEmpty()) return ResponseEntity.noContent().build();
+            String fileName = imageName.get();
             Path filePath = imageService.resolveImagePath(fileName);
             Resource resource = new UrlResource(filePath.toUri());
 
@@ -460,7 +475,7 @@ public class PublicUserController {
                         .body(resource);
             } else {
                 logger.warn("Image not found for user: {}", userName);
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.noContent().build();
             }
         } catch (Exception e) {
             logger.error("Error getting image for user: {}", userName, e);
@@ -470,6 +485,7 @@ public class PublicUserController {
 
     @DeleteMapping("/image/delete/{userName}")
     public ResponseEntity<String> deleteUserImage(@PathVariable String userName) {
+        networkAccess.requireRestActor(userName);
         logger.debug("Deleting user image for: {}", userName);
         try {
             imageService.deleteUserImage(userName);
@@ -563,6 +579,7 @@ public class PublicUserController {
             @RequestBody Map<String, Object> requestBody) {
 
         String userName = (String) requestBody.get("userName");
+        networkAccess.requireRestActor(userName);
         String message = (String) requestBody.get("message");
         Double rating = ((Number) requestBody.get("rating")).doubleValue();
 

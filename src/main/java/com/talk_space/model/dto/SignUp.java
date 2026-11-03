@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 
 import jakarta.validation.constraints.Pattern;
@@ -32,7 +33,7 @@ public class SignUp {
     @Pattern(regexp = "[A-Z][a-z]+", message = "Last name must start with a capital letter followed by lowercase letters")
     private String lastName;
 
-    @NotNull(message = "User name cannot be null")
+    @NotBlank(message = "User name cannot be empty")
     private String userName;
 
     @NotNull(message = "Birth date cannot be empty")
@@ -40,6 +41,7 @@ public class SignUp {
     private LocalDate birthDate;
 
 
+    @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email should be valid")
     @Pattern(
             regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
@@ -47,6 +49,7 @@ public class SignUp {
     )
     private String email;
 
+    @NotBlank(message = "Password cannot be empty")
     private String password;
 
     @NotNull(message = "Gender cannot be empty")
