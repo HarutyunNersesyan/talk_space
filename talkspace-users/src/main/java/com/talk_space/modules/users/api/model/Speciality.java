@@ -1,0 +1,28 @@
+package com.talk_space.modules.users.api.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+@Entity
+@Table(name = "speciality", indexes = @Index(name="idx_speciality_parent", columnList="parent_id"))
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Speciality {
+
+    @Column(name = "speciality_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "parent_id")
+    private Long parentId;
+
+
+    public Speciality(String name, Long parentId) {
+        this.name = name;
+        this.parentId = parentId;
+    }
+}

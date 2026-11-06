@@ -1,0 +1,190 @@
+package com.talk_space.modules.users.api.model;
+
+import com.fasterxml.jackson.annotation.*;
+import com.talk_space.modules.users.api.dto.FillUsers;
+import com.talk_space.modules.users.api.dto.SignUp;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+@Entity
+@Table(name = "user_entity")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId"
+)
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long userId;
+
+    @NotNull(message = "First name cannot be null")
+    @Pattern(regexp = "[A-Z][a-z]+", message = "First name must start with a capital letter followed by lowercase letters")
+    @Column(name = "first_name", nullable = false, length = 20)
+    private String firstName;
+
+    @NotNull(message = "Last name cannot be null")
+    @Pattern(regexp = "[A-Z][a-z]+", message = "Last name must start with a capital letter followed by lowercase letters")
+    @Column(name = "last_name", nullable = false, length = 20)
+    private String lastName;
+
+    @NotNull(message = "User name cannot be null")
+    @Column(name = "user_name", nullable = false, unique = true, length = 20)
+    private String userName;
+
+    @Column(name = "birth_date", nullable = false)
+    @NotNull(message = "Birth date cannot be empty")
+    @PastOrPresent(message = "Birth date must be a past date")
+    private LocalDate birthDate;
+
+    @NotNull(message = "Gender cannot be empty")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @Column(name = "email", nullable = false, unique = true)
+    @Email(message = "Email should be valid")
+    @Pattern(
+            regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
+            message = "Email should be a valid Gmail address (example@gmail.com)"
+    )
+    private String email;
+
+    @NotNull(message = "Password should be valid and can`t be empty")
+    @Column(name = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+
+    @CreatedDate
+    @Column(name = "created")
+    private LocalDate createdDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "zodiac")
+    private Zodiac zodiacSign;
+
+    @Column(name = "verify_mail")
+    private Boolean verifyMail;
+
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Image image;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_hobbies",
+            indexes = @Index(name="idx_user_hobbies_trait", columnList="hobby_name,user_name"),
+            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
+            inverseJoinColumns = @JoinColumn(name = "hobby_name", referencedColumnName = "name"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_name", "hobby_name"})
+    )
+    private List<Hobby> hobbies;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_specialities",
+            indexes = @Index(name="idx_user_specialities_trait", columnList="speciality_name,user_name"),
+            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
+            inverseJoinColumns = @JoinColumn(name = "speciality_name", referencedColumnName = "name"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_name", "speciality_name"})
+    )
+    private List<Speciality> specialities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<SocialNetworks> socialNetworks;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Pattern(regexp = "^[1-9][0-9]{5}$")
+    @Column(name = "pin")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String pin;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Column(name = "blocked_message")
+    private String blockedMessage;
+
+    @Column(name = "blocked_date")
+    private LocalDate untilBlockedDate;
+
+    @Column(name = "about_me", length = 250)
+    private String aboutMe;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Location location;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId != null && userId.equals(user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    public static LocalDate validateBirthDate(LocalDate birthDate) {
+        LocalDate maxAllowedBirthDate = LocalDate.now().minusYears(16);
+        LocalDate minAllowedBirthDate = LocalDate.now().minusYears(100);
+        if (birthDate.isAfter(maxAllowedBirthDate) || birthDate.isBefore(minAllowedBirthDate)) {
+            throw new IllegalArgumentException("User`s birthday must be between " + minAllowedBirthDate + " and " + maxAllowedBirthDate);
+        }
+        return birthDate;
+    }
+
+    public User(SignUp signUp) {
+        this.firstName = signUp.getFirstName();
+        this.lastName = signUp.getLastName();
+        this.userName = signUp.getUserName();
+        this.birthDate = validateBirthDate(signUp.getBirthDate());
+        this.email = signUp.getEmail();
+        this.password = signUp.getPassword();
+        this.gender = signUp.getGender();
+    }
+
+    Random random = new Random();
+
+    public User(FillUsers fillUsers) {
+        this.firstName = fillUsers.getFirstName();
+        this.lastName = fillUsers.getLastName();
+        this.userName = fillUsers.getUserName();
+        this.birthDate = validateBirthDate(fillUsers.getBirthDate());
+        this.email = fillUsers.getEmail();
+        this.password = fillUsers.getPassword();
+        this.gender = fillUsers.getGender();
+        this.role = Role.USER;
+        this.status = Status.ACTIVE;
+        this.verifyMail = true;
+        this.zodiacSign = Zodiac.fromMonthAndDay(fillUsers.getBirthDate().getMonthValue(), fillUsers.getBirthDate().getDayOfMonth());
+        this.createdDate = LocalDate.now();
+    }
+}

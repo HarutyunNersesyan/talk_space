@@ -1,7 +1,7 @@
 .git
 .gitignore
 README.md
-target/
+**/target/
 .mvn/wrapper/maven-wrapper.jar
 *.log
 .idea
@@ -9,3 +9,4 @@ target/
 .vscode
 Dockerfile
 docker-compose.yml
+**/logs/

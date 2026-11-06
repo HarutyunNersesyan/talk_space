@@ -1,0 +1,76 @@
+package com.talk_space.modules.users.api;
+import com.talk_space.modules.users.api.dto.Verify;
+
+
+import com.talk_space.shared.error.CustomExceptions;
+import com.talk_space.modules.users.api.model.User;
+import com.talk_space.modules.users.api.dto.ForgotPassword;
+import com.talk_space.modules.users.internal.persistence.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+@Service
+@RequiredArgsConstructor
+public class MailSenderService {
+
+    private final JavaMailSender mailSender;
+
+
+    private final ForgotPassword forgotPassword;
+
+    private final UserRepository userRepository;
+
+    @Value("$(TalkSpace)")
+    private String fromMail;
+
+    public void sendEmail(String mail, String subject, String message) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom(fromMail);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(message);
+        simpleMailMessage.setTo(mail);
+        mailSender.send(simpleMailMessage);
+    }
+
+    public String handlePinRequest(String email, boolean checkVerifyMail) {
+
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new CustomExceptions.UserNotFoundException("User not found with email: " + email));
+
+        if (checkVerifyMail && !user.getVerifyMail()) {
+            throw new CustomExceptions.UserNotActiveException("User is not active. Please verify your email.");
+        }
+
+        String pin = forgotPassword.generatePin();
+        user.setPin(pin);
+        userRepository.save(user);
+
+        sendEmail(email, "Verify code", pin + "\n\n Welcome to Talk Space, thank you for using our system.");
+
+        schedulePinReset(email);
+
+        return "A verification code has been sent to your email.";
+    }
+
+
+    public void schedulePinReset(String mail) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.schedule(() -> {
+            userRepository.findUserByEmail(mail)
+                    .ifPresent(user -> {
+                        if (!user.getVerifyMail()) {
+                            userRepository.delete(user);
+                        } else {
+                            userRepository.save(user);
+                        }
+                    });
+        }, 30, TimeUnit.MINUTES);
+    }
+}

@@ -1,0 +1,56 @@
+2026-07-23 09:16:00.279 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - Starting TalkSpaceApplication using Java 17.0.12 with PID 15636 (C:\Users\HARUT_037\Desktop\talk_space\target\classes started by HARUT_037 in C:\Users\HARUT_037\Desktop\talk_space)
+2026-07-23 09:16:00.304 [restartedMain] DEBUG com.talk_space.TalkSpaceApplication - Running with Spring Boot v3.3.3, Spring v6.1.12
+2026-07-23 09:16:00.307 [restartedMain] INFO  com.talk_space.TalkSpaceApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-23 09:16:00.376 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-07-23 09:16:00.377 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-07-23 09:16:03.018 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-23 09:16:03.133 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 100 ms. Found 9 JPA repository interfaces.
+2026-07-23 09:16:04.215 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-23 09:16:04.232 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-23 09:16:04.232 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+2026-07-23 09:16:04.316 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-23 09:16:04.318 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3940 ms
+2026-07-23 09:16:05.159 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-23 09:16:05.195 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-23 09:16:05.520 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@14d0395a
+2026-07-23 09:16:05.522 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-23 09:16:05.620 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-23 09:16:07.293 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.293 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - relation "chat_messages" does not exist, skipping
+2026-07-23 09:16:07.294 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.295 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - relation "chat_messages" does not exist, skipping
+2026-07-23 09:16:07.295 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.296 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - relation "image" does not exist, skipping
+2026-07-23 09:16:07.296 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.296 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - relation "likes_count" does not exist, skipping
+2026-07-23 09:16:07.297 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.297 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - relation "social_networks" does not exist, skipping
+2026-07-23 09:16:07.298 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.298 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - relation "user_likes" does not exist, skipping
+2026-07-23 09:16:07.299 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.299 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - relation "user_likes" does not exist, skipping
+2026-07-23 09:16:07.301 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.301 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "chat_messages" does not exist, skipping
+2026-07-23 09:16:07.301 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.302 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "feed_backs" does not exist, skipping
+2026-07-23 09:16:07.302 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.302 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "hobby" does not exist, skipping
+2026-07-23 09:16:07.303 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.303 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "image" does not exist, skipping
+2026-07-23 09:16:07.304 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.304 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "likes_count" does not exist, skipping
+2026-07-23 09:16:07.304 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.304 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "social_networks" does not exist, skipping
+2026-07-23 09:16:07.305 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.305 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "speciality" does not exist, skipping
+2026-07-23 09:16:07.305 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.305 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "user_entity" does not exist, skipping
+2026-07-23 09:16:07.306 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.306 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "user_hobbies" does not exist, skipping
+2026-07-23 09:16:07.307 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.307 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "user_likes" does not exist, skipping
+2026-07-23 09:16:07.308 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-07-23 09:16:07.308 [restartedMain] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - table "user_specialities" does not exist, skipping
+2026-07-23 09:16:07.759 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-23 09:16:08.935 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-23 09:16:09.657 [restartedMain] INFO  com.talk_space.service.UserService - Starting to fill database with sample users
