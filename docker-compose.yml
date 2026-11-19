@@ -1,40 +1,48 @@
+
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_DB: talk_space
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
-    ports: ["127.0.0.1:5432:5432"]
-    volumes: ["db_data:/var/lib/postgresql/data"]
+    volumes:
+      - db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d talk_space"]
       interval: 5s
       timeout: 5s
       retries: 10
+
   redis:
     image: redis:7-alpine
     command: ["redis-server", "--appendonly", "yes"]
-    ports: ["127.0.0.1:6379:6379"]
-    volumes: ["redis_data:/data"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
       retries: 10
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
     environment:
       discovery.type: single-node
       xpack.security.enabled: 'false'
       ES_JAVA_OPTS: -Xms512m -Xmx512m
-    ports: ["127.0.0.1:9200:9200"]
-    volumes: ["elasticsearch_data:/usr/share/elasticsearch/data"]
+    ports:
+      - "127.0.0.1:9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 30
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.3
     depends_on:
@@ -42,7 +50,9 @@ services:
         condition: service_healthy
     environment:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    ports: ["127.0.0.1:5601:5601"]
+    ports:
+      - "127.0.0.1:5601:5601"
+
   backend:
     build: .
     depends_on:
@@ -61,8 +71,12 @@ services:
       REDIS_HOST: redis
       SEARCH_ENABLED: 'true'
       ELASTICSEARCH_URL: http://elasticsearch:9200
-    ports: ["8080:8080"]
-    volumes: ["backend_logs:/app/logs", "image_data:/app/images"]
+    ports:
+      - "8080:8080"
+    volumes:
+      - backend_logs:/app/logs
+      - image_data:/app/images
+
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.15.3
     user: root
@@ -74,13 +88,18 @@ services:
       - backend_logs:/logs:ro
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - filebeat_data:/usr/share/filebeat/data
+
   frontend:
-    profiles: ["frontend"]
+    profiles:
+      - frontend
     build:
       context: ../talk_space_ui
       dockerfile: Dockerfile
-    ports: ["3000:80"]
-    depends_on: [backend]
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
 volumes:
   db_data:
   redis_data:

@@ -35,6 +35,9 @@ public class AuthService {
             User user = userService.findUserByEmail(userDto.getEmail())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
+            if (!Boolean.TRUE.equals(user.getVerifyMail())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Please verify your email before signing in.");
+            }
             if (user.getStatus() != Status.ACTIVE) {
                 StringBuilder message = new StringBuilder();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

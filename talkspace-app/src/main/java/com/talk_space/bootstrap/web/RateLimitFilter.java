@@ -18,6 +18,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         if ("OPTIONS".equals(request.getMethod())) { chain.doFilter(request, response); return; }
         String group = null; int limit = 60;
         if (path.equals("/account/auth") || path.endsWith("/signUp") || path.endsWith("/forgotPassword")) { group="auth"; limit=10; }
+        else if (path.endsWith("/captcha") || path.endsWith("/verify") || path.contains("/verification/")) { group="verification"; limit=30; }
         else if (path.equals("/account/refresh")) { group="refresh"; limit=60; }
         else if (path.contains("/searchBy")) group="matching";
         else if (path.startsWith("/api/public/connections") || path.startsWith("/api/public/blocks")) group="connections";

@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
                         .requestMatchers("/actuator/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/public/user/signUp").permitAll()
-                        .requestMatchers("/api/public/user/verify").permitAll()
+                        .requestMatchers("/api/public/user/verify", "/api/public/user/captcha", "/api/public/user/captcha/verify", "/api/public/user/verification/**").permitAll()
                         .requestMatchers("/api/public/user/forgotPassword").permitAll()
                         .requestMatchers("/api/public/user/hobby").permitAll()
                         .requestMatchers("/api/public/user/delete/verify/**").permitAll()

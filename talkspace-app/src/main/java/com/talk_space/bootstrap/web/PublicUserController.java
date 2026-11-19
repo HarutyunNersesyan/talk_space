@@ -59,6 +59,8 @@ public class PublicUserController {
     private static final Logger logger = LoggerFactory.getLogger(PublicUserController.class);
 
     private final UserService userService;
+    private final com.talk_space.modules.users.api.RegistrationService registration;
+    private final com.talk_space.modules.users.api.CaptchaService captcha;
     private final com.talk_space.modules.discovery.api.MatchingService matchingService;
     private final MailSenderService mailSenderService;
     private final com.talk_space.modules.network.api.NetworkAccess networkAccess;
@@ -166,31 +168,30 @@ public class PublicUserController {
             return ResponseEntity.badRequest().body(errors);
         }
 
-        if (userService.findUserByUserName(signUp.getUserName()).isPresent()) {
-            logger.warn("Signup failed - username already taken: {}", signUp.getUserName());
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("This username is already taken. Please use a different username.");
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).header("Cache-Control", "no-store").body(registration.start(signUp));
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email or username is already registered or awaiting verification.");
         }
+    }
 
-        if (userService.findUserByEmail(signUp.getEmail()).isPresent()) {
-            logger.warn("Signup failed - email already registered: {}", signUp.getEmail());
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("This email address is already registered. Please use a different email.");
-        }
-
-        if (!PasswordValidator.isValidPassword(signUp.getPassword())) {
-            logger.warn("Signup failed - invalid password for: {}", signUp.getUserName());
-            return ResponseEntity.badRequest()
-                    .body("Invalid password: password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
-        }
-
-        User createdUser = new User(signUp);
-        userService.signUp(createdUser);
-
-        mailSenderService.handlePinRequest(signUp.getEmail(), false);
-
-        logger.info("Signup completed successfully for: {}", signUp.getUserName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    @GetMapping("/captcha")
+    public ResponseEntity<?> captcha() {
+        return ResponseEntity.ok().header("Cache-Control", "no-store").body(captcha.create());
+    }
+    public record CaptchaRequest(String id, String answer) {}
+    @PostMapping("/captcha/verify")
+    public ResponseEntity<?> verifyCaptcha(@RequestBody CaptchaRequest request) {
+        return ResponseEntity.ok().header("Cache-Control", "no-store").body(captcha.verify(request.id(),request.answer()));
+    }
+    public record VerificationRequest(String token, String pin) {}
+    @PostMapping("/verification/status")
+    public ResponseEntity<?> verificationStatus(@RequestBody VerificationRequest request) {
+        return ResponseEntity.ok().header("Cache-Control", "no-store").body(registration.status(request.token()));
+    }
+    @PostMapping("/verification/resend")
+    public ResponseEntity<?> resend(@RequestBody VerificationRequest request) {
+        return ResponseEntity.ok().header("Cache-Control", "no-store").body(registration.resend(request.token()));
     }
 
     @PutMapping("/update")
@@ -280,24 +281,10 @@ public class PublicUserController {
 
 
     @PutMapping("/verify")
-    public ResponseEntity<String> verify(@RequestBody Verify verify) {
-        logger.debug("Email verification request for: {}", verify.getEmail());
-        try {
-            String result = userService.verify(verify);
-            logger.info("Email verified successfully: {}", verify.getEmail());
-            return ResponseEntity.ok(result);
-        } catch (CustomExceptions.AlreadyVerifiedEmail e) {
-            logger.warn("Email already verified: {}", verify.getEmail());
-            return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(e.getMessage());
-        } catch (CustomExceptions.InvalidPinExceptions e) {
-            logger.warn("Invalid PIN for email verification: {}", verify.getEmail());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            logger.error("Email verification failed for: {}", verify.getEmail(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<?> verify(@RequestBody VerificationRequest request) {
+        var result = registration.verify(request.token(), request.pin());
+        return ResponseEntity.status(result.verified() ? 200 : 400).body(result);
     }
-
 
     @DeleteMapping("/delete/account")
     public ResponseEntity<String> delete(@RequestBody DeleteAccount deleteAccount) {

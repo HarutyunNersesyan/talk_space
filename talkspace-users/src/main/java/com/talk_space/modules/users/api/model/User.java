@@ -153,7 +153,7 @@ public class User {
     }
 
     public static LocalDate validateBirthDate(LocalDate birthDate) {
-        LocalDate maxAllowedBirthDate = LocalDate.now().minusYears(16);
+        LocalDate maxAllowedBirthDate = LocalDate.now().minusYears(18);
         LocalDate minAllowedBirthDate = LocalDate.now().minusYears(100);
         if (birthDate.isAfter(maxAllowedBirthDate) || birthDate.isBefore(minAllowedBirthDate)) {
             throw new IllegalArgumentException("User`s birthday must be between " + minAllowedBirthDate + " and " + maxAllowedBirthDate);

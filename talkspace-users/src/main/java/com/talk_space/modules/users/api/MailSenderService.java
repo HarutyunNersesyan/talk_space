@@ -27,7 +27,7 @@ public class MailSenderService {
 
     private final UserRepository userRepository;
 
-    @Value("$(TalkSpace)")
+    @Value("${spring.mail.username}")
     private String fromMail;
 
     public void sendEmail(String mail, String subject, String message) {

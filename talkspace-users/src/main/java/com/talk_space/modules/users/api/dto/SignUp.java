@@ -27,14 +27,17 @@ public class SignUp {
 
     @NotNull(message = "First name cannot be null")
     @Pattern(regexp = "[A-Z][a-z]+", message = "First name must start with a capital letter followed by lowercase letters")
+    @jakarta.validation.constraints.Size(max = 20, message = "firstName must not exceed 20 characters")
     private String firstName;
 
 
     @NotNull(message = "Last name cannot be null")
     @Pattern(regexp = "[A-Z][a-z]+", message = "Last name must start with a capital letter followed by lowercase letters")
+    @jakarta.validation.constraints.Size(max = 20, message = "lastName must not exceed 20 characters")
     private String lastName;
 
     @NotBlank(message = "User name cannot be empty")
+    @jakarta.validation.constraints.Size(max = 20, message = "userName must not exceed 20 characters")
     private String userName;
 
     @NotNull(message = "Birth date cannot be empty")
@@ -56,6 +59,12 @@ public class SignUp {
     @NotNull(message = "Gender cannot be empty")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @NotBlank(message = "Please repeat your password")
+    private String confirmPassword;
+    @NotBlank(message = "Please complete human verification")
+    private String captchaId;
+
 
 
 }
